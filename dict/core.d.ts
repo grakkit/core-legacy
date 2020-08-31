@@ -1,29 +1,11 @@
 import { types } from './types';
 import { events } from './events';
+import { imports } from './imports';
 
 import { CommandMap, File, Player, Plugin, PluginManager } from './classes';
 
 export interface core {
-   /**
-    * Creates a function which passes its first argument and itself into the `modifier` and calls this function with the supplied `object`.
-    * @example
-    * // create sample
-    * const sample = { a: { b: 'cccc' }, d: { e: 'ff' }, g: { h: 'iii' } };
-    * 
-    * // recursively remove all string properties whose length is not equal to 3
-    * core.chain(sample, (input, loop) => {
-    *    switch (typeof input) {
-    *       case 'object':
-    *          for (let key in input) loop(input[key]) || delete input[key];
-    *          return true;
-    *       case 'string':
-    *          return input.length === 3;
-    *    }
-    * });
-    * 
-    * // outputs: { a: {}, d: {}, g: { h: 'iii' } }
-    * console.log(sample);
-    */
+   /** A utility function used for recursive operations. */
    chain: (base: any, modifier: (object: any, chain: () => {}) => void) => void;
    /** Registers a custom command to the server with the given options. */
    command: (
@@ -64,7 +46,7 @@ export interface core {
    /** Returns an object with various utility methods for operating on the filesystem. */
    file: (...path: string[]) => core$file;
    /** Imports a module, prefixed with `@`, or a file relative to the current origin. */
-   import: (source: string) => any;
+   import: typeof imports.import;
    /** Initializes the grakkit core. */
    init: () => void;
    /** The server's plugin manager. */
@@ -76,6 +58,8 @@ export interface core {
       add: (key: string) => void;
       /** Deletes a module from the server. */
       delete: (key: string) => void;
+      /** Generates typescript references for all installed modules. */
+      dict: () => void;
       /** Downloads a module's latest release to the server and returns that release's tag name. */
       download: (key: string) => string;
       /** Returns the info on the latest release of a module. */
@@ -91,6 +75,8 @@ export interface core {
          };
          node_id: string;
       };
+      /** Returns a hash map of all installed modules and their verions. */
+      list: any;
       /** Deletes and unregisters a module from the server. */
       remove: (key: string) => void;
       /** Updates a module if the latest release is not already installed. */

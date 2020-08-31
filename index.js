@@ -237,7 +237,6 @@
                thing.children.forEach((file) => {
                   if (file.name.endsWith('.js')) {
                      try {
-                        console.log(`Evaluating... ${file.path}`);
                         core.import(file.name);
                      } catch (error) {
                         console.error(error.stack || error.message || error);
@@ -534,7 +533,7 @@
             console.error('An error occured while attempting to download the official module list!');
             console.error(error.stack || error.message || error);
          }
-         [ 'classes.d.ts', 'core.d.ts', 'events.d.ts', 'types.d.ts' ].forEach((name) => {
+         [ 'classes.d.ts', 'core.d.ts', 'events.d.ts', 'imports.d.ts', 'types.d.ts' ].forEach((name) => {
             const target = core.root.file('dict', name);
             if (!target.exists) {
                try {
@@ -554,7 +553,6 @@
                   "/** @type {import('./dict/core').core} */ const core = global.core;\n/** @type {import('./dict/classes').Server} */ const server = global.server;\n"
                );
          try {
-            console.log(`Evaluating... ${user.path}`);
             core.import(user.name);
          } catch (error) {
             console.error(error.stack || error.message || error);
