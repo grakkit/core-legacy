@@ -533,7 +533,7 @@
             console.error('An error occured while attempting to download the official module list!');
             console.error(error.stack || error.message || error);
          }
-         [ 'classes.d.ts', 'core.d.ts', 'events.d.ts', 'imports.d.ts', 'types.d.ts' ].forEach((name) => {
+         [ 'classes.d.ts', 'core.d.ts', 'events.d.ts', 'types.d.ts' ].forEach((name) => {
             const target = core.root.file('dict', name);
             if (!target.exists) {
                try {
@@ -545,6 +545,7 @@
                }
             }
          });
+         core.module.dict();
          const user = core.root.file('user.js');
          user.exists ||
             user
@@ -599,10 +600,24 @@
                throw 'module-already-installed';
             } else {
                core.module.list[key] = core.module.download(key);
+               core.module.dict();
             }
          },
          delete: (key) => {
             core.root.file('modules', key).remove();
+         },
+         dict: () => {
+            const keys = Object.keys(core.module.list);
+            keys.length === 0 && keys.push('    static import (name: string): any;');
+            core.root.file('dict/imports.d.ts').add().write(
+               [
+                  'export class imports {',
+                  ...keys.map((key) => {
+                     return `    static import (name: '@${key}'): import('./../modules/${key}/module').Main;`;
+                  }),
+                  '}'
+               ].join('\n')
+            );
          },
          download: (key) => {
             const latest = core.module.latest(key);
@@ -636,6 +651,7 @@
             if (core.module.list[key]) {
                core.module.delete(key);
                delete core.module.list[key];
+               core.module.dict();
             } else {
                throw 'module-not-installed';
             }
@@ -644,6 +660,7 @@
          update: (key) => {
             if (core.module.list[key]) {
                core.module.list[key] = core.module.download(key);
+               core.module.dict();
             } else {
                throw 'module-not-installed';
             }
