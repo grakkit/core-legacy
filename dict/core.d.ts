@@ -128,7 +128,7 @@ export interface core {
 type core$file = {
    /** Makes a file at the current path if one does not exist. */
    add: () => core$file;
-   /** If the current path is a folder, gets the [index] child within it. */
+   /** If the current path is a folder, returns an array of its contents. */
    children: core$file[];
    /** Makes a folder at the current path if one does not exist. */
    dir: () => core$file;
