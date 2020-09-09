@@ -9,6 +9,10 @@ export class events {
         ...listeners: ((event: classes.AreaEffectCloudApplyEvent) => {})[]
     ): void;
     static event (
+        name: 'org.bukkit.event.entity.ArrowBodyCountChangeEvent',
+        ...listeners: ((event: classes.ArrowBodyCountChangeEvent) => {})[]
+    ): void;
+    static event (
         name: 'org.bukkit.event.player.AsyncPlayerChatEvent',
         ...listeners: ((event: classes.AsyncPlayerChatEvent) => {})[]
     ): void;
@@ -27,6 +31,10 @@ export class events {
     static event (
         name: 'com.destroystokyo.paper.event.block.BeaconEffectEvent',
         ...listeners: ((event: classes.BeaconEffectEvent) => {})[]
+    ): void;
+    static event (
+        name: 'io.papermc.paper.event.block.BellRingEvent',
+        ...listeners: ((event: classes.BellRingEvent) => {})[]
     ): void;
     static event (
         name: 'org.bukkit.event.block.BlockBreakEvent',

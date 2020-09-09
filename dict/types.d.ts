@@ -24,6 +24,7 @@ export class types {
     static type (name: 'org.bukkit.entity.ArmorStand.LockType'): typeof classes.ArmorStand$LockType;
     static type (name: 'com.destroystokyo.paper.inventory.meta.ArmorStandMeta'): typeof classes.ArmorStandMeta;
     static type (name: 'org.bukkit.entity.Arrow'): typeof classes.Arrow;
+    static type (name: 'org.bukkit.event.entity.ArrowBodyCountChangeEvent'): typeof classes.ArrowBodyCountChangeEvent;
     static type (name: 'org.bukkit.Art'): typeof classes.Art;
     static type (name: 'com.destroystokyo.paper.event.executor.asm.ASMEventExecutorGenerator'): typeof classes.ASMEventExecutorGenerator;
     static type (name: 'org.bukkit.event.player.AsyncPlayerChatEvent'): typeof classes.AsyncPlayerChatEvent;
@@ -63,6 +64,7 @@ export class types {
     static type (name: 'org.bukkit.block.Bell'): typeof classes.Bell;
     static type (name: 'org.bukkit.block.data.type.Bell'): typeof classes.Bell;
     static type (name: 'org.bukkit.block.data.type.Bell.Attachment'): typeof classes.Bell$Attachment;
+    static type (name: 'io.papermc.paper.event.block.BellRingEvent'): typeof classes.BellRingEvent;
     static type (name: 'org.bukkit.block.Biome'): typeof classes.Biome;
     static type (name: 'org.bukkit.block.data.Bisected'): typeof classes.Bisected;
     static type (name: 'org.bukkit.block.data.Bisected.Half'): typeof classes.Bisected$Half;
@@ -295,6 +297,7 @@ export class types {
     static type (name: 'org.bukkit.block.EntityBlockStorage'): typeof classes.EntityBlockStorage;
     static type (name: 'org.bukkit.event.entity.EntityBreakDoorEvent'): typeof classes.EntityBreakDoorEvent;
     static type (name: 'org.bukkit.event.entity.EntityBreedEvent'): typeof classes.EntityBreedEvent;
+    static type (name: 'org.bukkit.entity.EntityCategory'): typeof classes.EntityCategory;
     static type (name: 'org.bukkit.event.entity.EntityChangeBlockEvent'): typeof classes.EntityChangeBlockEvent;
     static type (name: 'org.bukkit.event.entity.EntityCombustByBlockEvent'): typeof classes.EntityCombustByBlockEvent;
     static type (name: 'org.bukkit.event.entity.EntityCombustByEntityEvent'): typeof classes.EntityCombustByEntityEvent;

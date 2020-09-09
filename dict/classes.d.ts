@@ -5,8 +5,8 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 export type bridge$consumer<X> = (x: X) => any;
-export class bridge$iterable<X> {
-   [Symbol.iterator](): Iterator<X>;
+export interface bridge$iterable<X> {
+   [Symbol.iterator](): IterableIterator<X>;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +84,7 @@ export class Class<T> extends Object implements Serializable, GenericDeclaration
    toGenericString (): string;
    toString (): string;
 }
-export class Collection<E> extends Iterable<E> {
+export interface Collection<E> extends Iterable<E> {
    add(e: E): boolean;
    addAll(c: Collection<E>): boolean;
    clear(): void;
@@ -105,7 +105,7 @@ export class Collection<E> extends Iterable<E> {
    toArray(): Object[];
    toArray<T>(a: T[]): T[];
 }
-export class Consumer<T> extends bridge$consumer<T> {
+export interface Consumer<T> extends bridge$consumer<T> {
    accept(t: T): void;
    andThen(after: Consumer<T>): Consumer<T>;
 }
@@ -165,12 +165,12 @@ export class File extends Object implements Serializable, Comparable<File> {
    toURI (): URI;
    toURL (): URL;
 }
-export class Iterable<T> extends bridge$iterable<T> {
+export interface Iterable<T> extends bridge$iterable<T> {
    forEach(action: Consumer<T>): void;
    iterator(): Iterator<T>;
    spliterator(): Spliterator<T>;
 }
-export class Iterator<E> {
+export interface Iterator<E> {
    forEachRemaining(action: Consumer<E>): void;
    hasNext(): boolean;
    next(): E;
@@ -190,7 +190,7 @@ export class Object {
    wait (timeout: number): void;
    wait (timeout: number, nanos: number): void;
 }
-export class List<E> extends Collection<E> {
+export interface List<E> extends Collection<E> {
    add(index: number, element: E): void;
    add(e: E): boolean;
    addAll(index: number, c: Collection<E>): boolean;
@@ -233,7 +233,7 @@ export class List<E> extends Collection<E> {
    toArray(): Object[];
    toArray<T>(a: T[]): T[];
 }
-export class Map<K, V> {
+export interface Map<K, V> {
    clear(): void;
    compute(key: K, remapping_funktion: BiFunction<K, V, V>): V;
    computeIfAbsent(key: K, mapping_funktion: Function<K, V>): V;
@@ -346,7 +346,7 @@ export class Map<K, V> {
    size(): number;
    values(): Collection<V>;
 }
-export class Path extends Comparable<Path>, Iterable<Path>, Watchable {
+export interface Path extends Comparable<Path>, Iterable<Path>, Watchable {
    compareTo(other: Path): number;
    endsWith(other: string): boolean;
    endsWith(other: Path): boolean;
@@ -377,14 +377,14 @@ export class Path extends Comparable<Path>, Iterable<Path>, Watchable {
    toString(): string;
    toUri(): URI;
 }
-export class Predicate<T> {
+export interface Predicate<T> {
    and(other: Predicate<T>): Predicate<T>;
    static isEqual<T>(target_ref: Object): Predicate<T>;
    negate(): Predicate<T>;
    or(other: Predicate<T>): Predicate<T>;
    test(t: T): boolean;
 }
-export class Set<E> extends Collection<E> {
+export interface Set<E> extends Collection<E> {
    add(e: E): boolean;
    addAll(c: Collection<E>): boolean;
    clear(): void;
@@ -423,7 +423,7 @@ export class Set<E> extends Collection<E> {
 ///////////////////////////////////////////////////////////////////////////////
 
 /**Represents an arrow.*/
-export class AbstractArrow extends Projectile {
+export interface AbstractArrow extends Projectile {
     /**Gets the block to which this arrow is attached.*/
     getAttachedBlock (): Block;
     /**Gets the base amount of damage this arrow will do.*/
@@ -467,7 +467,7 @@ export class AbstractArrow$PickupStatus extends Enum<AbstractArrow$PickupStatus>
 }
 
 /**Represents a Horse-like creature.*/
-export class AbstractHorse extends Vehicle, InventoryHolder, Tameable {
+export interface AbstractHorse extends Vehicle, InventoryHolder, Tameable {
     /**Gets the domestication level of this horse.*/
     getDomestication (): number;
     /**Get the object's inventory.*/
@@ -485,7 +485,7 @@ export class AbstractHorse extends Vehicle, InventoryHolder, Tameable {
 }
 
 /**An interface to the inventory of an AbstractHorse.*/
-export class AbstractHorseInventory extends Inventory {
+export interface AbstractHorseInventory extends Inventory {
     /**Gets the item in the horse's saddle slot.*/
     getSaddle (): ItemStack;
     /**Sets the item in the horse's saddle slot.*/
@@ -493,7 +493,7 @@ export class AbstractHorseInventory extends Inventory {
 }
 
 /**Represents a villager NPC*/
-export class AbstractVillager extends Breedable, NPC, InventoryHolder, Merchant {
+export interface AbstractVillager extends Breedable, NPC, InventoryHolder, Merchant {
     /**Gets this villager's inventory.*/
     getInventory (): Inventory
 }
@@ -512,13 +512,13 @@ export class Action extends Enum<Action> {
 }
 
 /**Represents an advancement that may be awarded to a player. This class is not  reference safe as the underlying advancement may be reloaded.*/
-export class Advancement extends Keyed {
+export interface Advancement extends Keyed {
     /**Get all the criteria present in this advancement.*/
     getCriteria (): Collection<String>
 }
 
 /**The individual status of an advancement for a player. This class is not  reference safe as the underlying advancement may be reloaded.*/
-export class AdvancementProgress {
+export interface AdvancementProgress {
     /**Mark the specified criteria as awarded at the current time.*/
     awardCriteria (criteria: String): boolean;
     /**The advancement this progress is concerning.*/
@@ -536,7 +536,7 @@ export class AdvancementProgress {
 }
 
 /**'age' represents the different growth stages that a crop-like block can go  through.    A value of 0 indicates that the crop was freshly planted, whilst a value  equal to getMaximumAge() indicates that the crop is ripe and ready  to be harvested.*/
-export class Ageable extends BlockData {
+export interface Ageable extends BlockData {
     /**Gets the value of the 'age' property.*/
     getAge (): number;
     /**Gets the maximum allowed value of the 'age' property.*/
@@ -546,7 +546,7 @@ export class Ageable extends BlockData {
 }
 
 /**Represents an entity that can age.*/
-export class Ageable extends Creature {
+export interface Ageable extends Creature {
     /**Gets the age of this mob.*/
     getAge (): number;
     /**Returns true if the mob is an adult.*/
@@ -560,12 +560,12 @@ export class Ageable extends Creature {
 }
 
 /**Represents an ambient mob*/
-export class Ambient extends Mob {
+export interface Ambient extends Mob {
 
 }
 
 /**'power' represents the redstone power level currently being emitted or  transmitted via this block.    May not be over 9000 or getMaximumPower() (usually 15).*/
-export class AnaloguePowerable extends BlockData {
+export interface AnaloguePowerable extends BlockData {
     /**Gets the maximum allowed value of the 'power' property.*/
     getMaximumPower (): number;
     /**Gets the value of the 'power' property.*/
@@ -575,7 +575,7 @@ export class AnaloguePowerable extends BlockData {
 }
 
 /**Represents an Animal.*/
-export class Animals extends Breedable {
+export interface Animals extends Breedable {
     /**Get the UUID of the entity that caused this entity to enter the  Breedable.canBreed() state.*/
     getBreedCause (): UUID;
     /**Get the amount of ticks remaining for this entity in love mode.*/
@@ -588,7 +588,7 @@ export class Animals extends Breedable {
     setLoveModeTicks (ticks: number): void
 }
 
-export class AnimalTamer {
+export interface AnimalTamer {
     /**This is the name of the specified AnimalTamer.*/
     getName (): String;
     /**This is the UUID of the specified AnimalTamer.*/
@@ -624,7 +624,7 @@ export class AnvilDamagedEvent$DamageState extends Enum<AnvilDamagedEvent$Damage
 }
 
 /**Interface to the inventory of an Anvil.*/
-export class AnvilInventory extends Inventory {
+export interface AnvilInventory extends Inventory {
     /**Gets the item in the left input slot.*/
     getFirstItem (): ItemStack;
     /**Get the maximum experience cost (in levels) to be allowed by the current  repair.*/
@@ -650,7 +650,7 @@ export class AnvilInventory extends Inventory {
 }
 
 /**Represents an area effect cloud which will imbue a potion effect onto  entities which enter it.*/
-export class AreaEffectCloud extends Entity {
+export interface AreaEffectCloud extends Entity {
     /**Adds a custom potion effect to this cloud.*/
     addCustomEffect (effect: PotionEffect, overwrite: boolean): boolean;
     /**Removes all custom potion effects from this cloud.*/
@@ -725,14 +725,14 @@ export class AreaEffectCloudApplyEvent extends EntityEvent implements Cancellabl
     setCancelled (cancel: boolean): void
 }
 
-export class ArmoredHorseInventory extends AbstractHorseInventory {
+export interface ArmoredHorseInventory extends AbstractHorseInventory {
     /**Gets the item in the horse's armor slot.*/
     getArmor (): ItemStack;
     /**Sets the item in the horse's armor slot.*/
     setArmor (stack: ItemStack): void
 }
 
-export class ArmorStand extends LivingEntity {
+export interface ArmorStand extends LivingEntity {
     /**Disable specific slots, adding them  to the currently disabled slots   This makes it so a player is unable to interact with the Armor Stand to place, remove, or replace an item in the given slot(s)  Note: Once a slot is disabled, the only way to get an item back it to break the armor stand.*/
     addDisabledSlots (...slots: EquipmentSlot[]): void;
     /**Locks the equipment slot with the specified  locking mechanism.*/
@@ -817,7 +817,7 @@ export class ArmorStand$LockType extends Enum<ArmorStand$LockType> {
     static REMOVING_OR_CHANGING: ArmorStand$LockType
 }
 
-export class ArmorStandMeta extends ItemMeta {
+export interface ArmorStandMeta extends ItemMeta {
     /**Gets whether this ArmorStand should have no base plate when spawned*/
     hasNoBasePlate (): boolean;
     /**Gets whether the ArmorStand should be invisible when spawned*/
@@ -840,7 +840,7 @@ export class ArmorStandMeta extends ItemMeta {
     shouldShowArms (): boolean
 }
 
-export class Arrow extends AbstractArrow {
+export interface Arrow extends AbstractArrow {
     /**Adds a custom potion effect to this arrow.*/
     addCustomEffect (effect: PotionEffect, overwrite: boolean): boolean;
     /**Removes all custom potion effects from this arrow.*/
@@ -861,6 +861,25 @@ export class Arrow extends AbstractArrow {
     setBasePotionData (data: PotionData): void;
     /**Sets the color of this arrow.*/
     setColor (color: Color): void
+}
+
+/**Called when an arrow enters or exists an entity's body.*/
+export class ArrowBodyCountChangeEvent extends EntityEvent implements Cancellable {
+    /**Returns the Entity involved in this event*/
+    getEntity (): LivingEntity;
+    getHandlers (): HandlerList;
+    /**Get the new amount of arrows in the entity's body.*/
+    getNewAmount (): number;
+    /**Gets the old amount of arrows in the entity's body.*/
+    getOldAmount (): number;
+    /**Gets the cancellation state of this event.*/
+    isCancelled (): boolean;
+    /**Whether the event was called because the entity was reset.*/
+    isReset (): boolean;
+    /**Sets the cancellation state of this event.*/
+    setCancelled (cancel: boolean): void;
+    /**Sets the final amount of arrows in the entity's body.*/
+    setNewAmount (newAmount: number): void
 }
 
 /**Represents the art on a painting*/
@@ -984,7 +1003,7 @@ export class AsyncTabCompleteEvent extends Event implements Cancellable {
 }
 
 /**'attached' denotes whether a tripwire hook or string forms a complete  tripwire circuit and is ready to trigger.    Updating the property on a tripwire hook will change the texture to indicate  a connected string, but will not have any effect when used on the tripwire  string itself. It may however still be used to check whether the string forms  a circuit.*/
-export class Attachable extends BlockData {
+export interface Attachable extends BlockData {
     /**Gets the value of the 'attached' property.*/
     isAttached (): boolean;
     /**Sets the value of the 'attached' property.*/
@@ -992,13 +1011,13 @@ export class Attachable extends BlockData {
 }
 
 /**Indicates that a block can be attached to another block*/
-export class Attachable extends Directional {
+export interface Attachable extends Directional {
     /**Gets the face that this block is attached on*/
     getAttachedFace (): BlockFace
 }
 
 /**Represents an object which may contain attributes.*/
-export class Attributable {
+export interface Attributable {
     /**Gets the specified attribute instance from the object.*/
     getAttribute (attribute: Attribute): AttributeInstance
 }
@@ -1034,7 +1053,7 @@ export class Attribute extends Enum<Attribute> implements Keyed {
 }
 
 /**Represents a mutable instance of an attribute and its associated modifiers  and values.*/
-export class AttributeInstance {
+export interface AttributeInstance {
     /**Add a modifier to this instance.*/
     addModifier (modifier: AttributeModifier): void;
     /**The attribute pertaining to this instance.*/
@@ -1098,7 +1117,7 @@ export class Axis extends Enum<Axis> {
 }
 
 /**'leaves' represents the size of the leaves on this bamboo block.*/
-export class Bamboo extends Ageable, Sapling {
+export interface Bamboo extends Ageable, Sapling {
     /**Gets the value of the 'leaves' property.*/
     getLeaves (): Bamboo$Leaves;
     /**Sets the value of the 'leaves' property.*/
@@ -1116,7 +1135,7 @@ export class Bamboo$Leaves extends Enum<Bamboo$Leaves> {
 }
 
 /**A single entry from a ban list. This may represent either a player ban or  an IP ban.    Ban entries include the following properties:    Property information        Property      Description        Target Name / IP Address      The target name or IP address        Creation Date      The creation date of the ban        Source      The source of the ban, such as a player, console, plugin, etc        Expiration Date      The expiration date of the ban        Reason      The reason for the ban        Unsaved information is not automatically written to the implementation's  ban list, instead, the save() method must be called to write the  changes to the ban list. If this ban entry has expired (such as from an  unban) and is no longer found in the list, the save() call will  re-add it to the list, therefore banning the victim specified.    Likewise, changes to the associated BanList or other entries may or  may not be reflected in this entry.*/
-export class BanEntry {
+export interface BanEntry {
     /**Gets the date this ban entry was created.*/
     getCreated (): Date;
     /**Gets the date this ban expires on, or null for no defined end date.*/
@@ -1140,7 +1159,7 @@ export class BanEntry {
 }
 
 /**A ban list, containing bans of some BanList.Type.*/
-export class BanList {
+export interface BanList {
     /**Adds a ban to the this list.*/
     addBan (target: String, reason: String, expires: Date, source: String): BanEntry;
     /**Gets a set containing every BanEntry in this list.*/
@@ -1162,7 +1181,7 @@ export class BanList$Type extends Enum<BanList$Type> {
 }
 
 /**Represents a captured state of a banner.*/
-export class Banner extends TileState {
+export interface Banner extends TileState {
     /**Adds a new pattern on top of the existing  patterns*/
     addPattern (pattern: Pattern): void;
     /**Returns the base color for this banner*/
@@ -1183,7 +1202,7 @@ export class Banner extends TileState {
     setPatterns (patterns: List<Pattern>): void
 }
 
-export class BannerMeta extends ItemMeta {
+export interface BannerMeta extends ItemMeta {
     /**Adds a new pattern on top of the existing  patterns*/
     addPattern (pattern: Pattern): void;
     /**Returns the pattern at the specified index*/
@@ -1220,7 +1239,7 @@ export class BarFlag extends Enum<BarFlag> {
 }
 
 /**Represents a captured state of a Barrel.*/
-export class Barrel extends Container, Lootable, Lidded {
+export interface Barrel extends Container, Lootable, Lidded {
 
 }
 
@@ -1238,7 +1257,7 @@ export class BarStyle extends Enum<BarStyle> {
 }
 
 /**Represents a Bat*/
-export class Bat extends Ambient {
+export interface Bat extends Ambient {
     /**Checks the current waking state of this bat.*/
     isAwake (): boolean;
     /**This method modifies the current waking state of this bat.*/
@@ -1258,7 +1277,7 @@ export class BatToggleSleepEvent extends EntityEvent implements Cancellable {
 }
 
 /**Represents a captured state of a beacon.*/
-export class Beacon extends TileState, Lockable, Nameable {
+export interface Beacon extends TileState, Lockable, Nameable {
     /**Returns the list of players within the beacon's range of effect.*/
     getEntitiesInRange (): Collection<LivingEntity>;
     /**Returns the primary effect set on the beacon*/
@@ -1292,7 +1311,7 @@ export class BeaconEffectEvent extends BlockEvent implements Cancellable {
 }
 
 /**Interface to the inventory of a Beacon.*/
-export class BeaconInventory extends Inventory {
+export interface BeaconInventory extends Inventory {
     /**Get the item powering the beacon.*/
     getItem (): ItemStack;
     /**Set the item powering the beacon.*/
@@ -1300,7 +1319,7 @@ export class BeaconInventory extends Inventory {
 }
 
 /**Similar to Bisected, 'part' denotes which half of the bed this block  corresponds to.    'occupied' property is a quick flag to check if a player is currently  sleeping in this bed block.*/
-export class Bed extends Directional {
+export interface Bed extends Directional {
     /**Gets the value of the 'part' property.*/
     getPart (): Bed$Part;
     /**Gets the value of the 'occupied' property.*/
@@ -1318,7 +1337,7 @@ export class Bed$Part extends Enum<Bed$Part> {
 }
 
 /**Represents a Bee.*/
-export class Bee extends Animals {
+export interface Bee extends Animals {
     /**Get the bee's anger level.*/
     getAnger (): number;
     /**Get the amount of ticks the bee cannot enter the hive for.*/
@@ -1346,7 +1365,7 @@ export class Bee extends Animals {
 }
 
 /**Represents a captured state of a bee hive.*/
-export class Beehive extends EntityBlockStorage<Bee> {
+export interface Beehive extends EntityBlockStorage<Bee> {
     /**Get the hive's flower location.*/
     getFlower (): Location;
     /**Check if the hive is sedated due to smoke from a nearby campfire.*/
@@ -1356,7 +1375,7 @@ export class Beehive extends EntityBlockStorage<Bee> {
 }
 
 /**'honey_level' represents the amount of honey stored in the hive.*/
-export class Beehive extends Directional {
+export interface Beehive extends Directional {
     /**Gets the value of the 'honey_level' property.*/
     getHoneyLevel (): number;
     /**Gets the maximum allowed value of the 'honey_level' property.*/
@@ -1366,12 +1385,12 @@ export class Beehive extends Directional {
 }
 
 /**Represents a captured state of Bell.*/
-export class Bell extends TileState {
+export interface Bell extends TileState {
 
 }
 
 /**'attachment' denotes how the bell is attached to its block.*/
-export class Bell extends Directional, Powerable {
+export interface Bell extends Directional, Powerable {
     /**Gets the value of the 'attachment' property.*/
     getAttachment (): Bell$Attachment;
     /**Sets the value of the 'attachment' property.*/
@@ -1388,6 +1407,18 @@ export class Bell$Attachment extends Enum<Bell$Attachment> {
     static FLOOR: Bell$Attachment;
     /**Placed on one wall.*/
     static SINGLE_WALL: Bell$Attachment
+}
+
+/**Called when a bell is rung.*/
+export class BellRingEvent extends BlockEvent implements Cancellable {
+    /**Gets the entity that rang the bell.*/
+    getEntity (): Entity;
+    static getHandlerList (): HandlerList;
+    getHandlers (): HandlerList;
+    /**Gets the cancellation state of this event.*/
+    isCancelled (): boolean;
+    /**Sets the cancellation state of this event.*/
+    setCancelled (cancelled: boolean): void
 }
 
 /**Holds all accepted Biomes in the default server*/
@@ -1474,7 +1505,7 @@ export class Biome extends Enum<Biome> implements Keyed {
 }
 
 /**'half' denotes which half of a two block tall material this block is.    In game it may be referred to as either (top, bottom) or (upper, lower).*/
-export class Bisected extends BlockData {
+export interface Bisected extends BlockData {
     /**Gets the value of the 'half' property.*/
     getHalf (): Bisected$Half;
     /**Sets the value of the 'half' property.*/
@@ -1490,7 +1521,7 @@ export class Bisected$Half extends Enum<Bisected$Half> {
 }
 
 /**Represents a captured state of a blast furnace.*/
-export class BlastFurnace extends Furnace {
+export interface BlastFurnace extends Furnace {
 
 }
 
@@ -1500,12 +1531,14 @@ export class BlastingRecipe extends CookingRecipe<BlastingRecipe> {
 }
 
 /**Represents a Blaze monster*/
-export class Blaze extends Monster {
+export interface Blaze extends Monster {
 
 }
 
 /**Represents a block. This is a live object, and only one Block may exist for  any given location in a world. The state of the block may change  concurrently to your own handling of it; use block.getState() to get a  snapshot state of a block which will not be modified.     Note that parts of this class which require access to the world at large  (i.e. lighting and power) may not be able to be safely accessed during world  generation when used in cases like BlockPhysicsEvent!!!!*/
-export class Block extends Metadatable {
+export interface Block extends Metadatable {
+    /**Simulate bone meal application to this block (if possible).*/
+    applyBoneMeal (face: BlockFace): boolean;
     /**Breaks the block and spawns items as if a player had digged it regardless  of the tool.*/
     breakNaturally (): boolean;
     /**Breaks the block and spawns items as if a player had digged it with a  specific tool*/
@@ -1569,6 +1602,8 @@ export class Block extends Metadatable {
     getState (useSnapshot: boolean): BlockState;
     /**Gets the temperature of this block.*/
     getTemperature (): number;
+    /**Return the translation key for the Block, so the client can translate it into the active  locale when using a TranslatableComponent.*/
+    getTranslationKey (): String;
     /**Gets the type of this block*/
     getType (): Material;
     /**Gets the world which contains this Block*/
@@ -1650,7 +1685,7 @@ export class BlockCanBuildEvent extends BlockEvent {
 }
 
 /**A delegate for handling block changes. This serves as a direct interface  between generation algorithms in the server implementation and utilizing  code.*/
-export class BlockChangeDelegate {
+export interface BlockChangeDelegate {
     /**Get the block data at the location.*/
     getBlockData (x: number, y: number, z: number): BlockData;
     /**Gets the height of the world.*/
@@ -1661,7 +1696,7 @@ export class BlockChangeDelegate {
     setBlockData (x: number, y: number, z: number, blockData: BlockData): boolean
 }
 
-export class BlockCommandSender extends CommandSender {
+export interface BlockCommandSender extends CommandSender {
     /**Returns the block this command sender belongs to*/
     getBlock (): Block
 }
@@ -1700,7 +1735,7 @@ export class BlockDamageEvent extends BlockEvent implements Cancellable {
     setInstaBreak (bool: boolean): void
 }
 
-export class BlockData extends Cloneable {
+export interface BlockData extends Cloneable {
     /**Returns a copy of this BlockData.*/
     clone (): BlockData;
     /**Gets a string, which when passed into a method such as  Server.createBlockData(java.lang.String) will unambiguously  recreate this instance.*/
@@ -1715,7 +1750,7 @@ export class BlockData extends Cloneable {
     merge (data: BlockData): BlockData
 }
 
-export class BlockDataMeta extends ItemMeta {
+export interface BlockDataMeta extends ItemMeta {
     /**Returns the currently attached block data for this item or creates a new  one if one doesn't exist.*/
     getBlockData (material: Material): BlockData;
     /**Returns whether the item has block data currently attached to it.*/
@@ -1930,7 +1965,7 @@ export class BlockIgniteEvent$IgniteCause extends Enum<BlockIgniteEvent$IgniteCa
 }
 
 /**Represents a block inventory holder - either a BlockState, or a regular  Block.*/
-export class BlockInventoryHolder extends InventoryHolder {
+export interface BlockInventoryHolder extends InventoryHolder {
     /**Gets the block associated with this holder.*/
     getBlock (): Block
 }
@@ -2024,7 +2059,7 @@ export class BlockPopulator extends Object {
     populate (world: World, random: Random, source: Chunk): void
 }
 
-export class BlockProjectileSource extends ProjectileSource {
+export interface BlockProjectileSource extends ProjectileSource {
     /**Gets the block this projectile source belongs to.*/
     getBlock (): Block
 }
@@ -2056,7 +2091,7 @@ export class BlockShearEntityEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents the sounds that a Block makes in certain situations    The sound group includes break, step, place, hit, and fall sounds.*/
-export class BlockSoundGroup {
+export interface BlockSoundGroup {
     /**Gets the sound that plays when breaking this block*/
     getBreakSound (): Sound;
     /**Gets the sound that plays when this block falls*/
@@ -2078,7 +2113,7 @@ export class BlockSpreadEvent extends BlockFormEvent {
 }
 
 /**Represents a captured state of a block, which will not change  automatically.    Unlike Block, which only one object can exist per coordinate, BlockState  can exist multiple times for any given Block. Note that another plugin may  change the state of the block and you will not know, or they may change the  block to another type entirely, causing your BlockState to become invalid.*/
-export class BlockState extends Metadatable {
+export interface BlockState extends Metadatable {
     /**Gets the block represented by this block state.*/
     getBlock (): Block;
     /**Gets the data for this block state.*/
@@ -2119,7 +2154,7 @@ export class BlockState extends Metadatable {
     update (force: boolean, applyPhysics: boolean): boolean
 }
 
-export class BlockStateMeta extends ItemMeta {
+export interface BlockStateMeta extends ItemMeta {
     /**Returns the currently attached block state for this  item or creates a new one if one doesn't exist.*/
     getBlockState (): BlockState;
     /**Returns whether the item has a block state currently  attached to it.*/
@@ -2140,7 +2175,7 @@ export class BlockVector extends Vector {
 }
 
 /**Represents a boat entity.*/
-export class Boat extends Vehicle {
+export interface Boat extends Vehicle {
     /**Gets the wood type of the boat.*/
     getWoodType (): TreeSpecies;
     /**Sets the wood type of the boat.*/
@@ -2148,7 +2183,7 @@ export class Boat extends Vehicle {
 }
 
 /**Represents a book (Material.WRITABLE_BOOK or Material.WRITTEN_BOOK) that can have a title, an author, and pages.*/
-export class BookMeta extends ItemMeta {
+export interface BookMeta extends ItemMeta {
     /**Adds new pages to the end of the book.*/
     addPage (...pages: String[]): void;
     clone (): BookMeta;
@@ -2225,12 +2260,12 @@ export class BooleanPrompt extends ValidatingPrompt {
 }
 
 /**Represents the Boss Entity.*/
-export class Boss extends Entity {
+export interface Boss extends Entity {
     /**Returns the BossBar of the Boss*/
     getBossBar (): BossBar
 }
 
-export class BossBar {
+export interface BossBar {
     /**Add an optional flag to this boss bar*/
     addFlag (flag: BarFlag): void;
     /**Adds the player to this boss bar causing it to display on their screen.*/
@@ -2376,7 +2411,7 @@ export class BoundingBox extends Object implements Cloneable, ConfigurationSeria
 }
 
 /**Represents an entity that can age and breed.*/
-export class Breedable extends Ageable {
+export interface Breedable extends Ageable {
     /**Return the ability to breed of the animal.*/
     canBreed (): boolean;
     /**Gets the current agelock.*/
@@ -2388,7 +2423,7 @@ export class Breedable extends Ageable {
 }
 
 /**Interface to the inventory of a Brewing Stand.*/
-export class BrewerInventory extends Inventory {
+export interface BrewerInventory extends Inventory {
     /**Get the current fuel for brewing.*/
     getFuel (): ItemStack;
     /**Gets the block or entity belonging to the open inventory*/
@@ -2416,7 +2451,7 @@ export class BrewEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a captured state of a brewing stand.*/
-export class BrewingStand extends Container {
+export interface BrewingStand extends Container {
     /**How much time is left in the brewing cycle.*/
     getBrewingTime (): number;
     /**Get the level of current fuel for brewing.*/
@@ -2432,7 +2467,7 @@ export class BrewingStand extends Container {
 }
 
 /**Interface to the 'has_bottle_0', 'has_bottle_1', 'has_bottle_2' flags on a  brewing stand which indicate which bottles are rendered on the outside.    Stand may have 0, 1... getMaximumBottles()-1 bottles.*/
-export class BrewingStand extends BlockData {
+export interface BrewingStand extends BlockData {
     /**Get the indexes of all the bottles present on this block.*/
     getBottles (): Set<Integer>;
     /**Get the maximum amount of bottles present on this stand.*/
@@ -2484,7 +2519,7 @@ export class BroadcastPermissions extends Object {
 }
 
 /**'drag' indicates whether a force will be applied on entities moving through  this block.*/
-export class BubbleColumn extends BlockData {
+export interface BubbleColumn extends BlockData {
     /**Gets the value of the 'drag' property.*/
     isDrag (): boolean;
     /**Sets the value of the 'drag' property.*/
@@ -2809,7 +2844,7 @@ export class BukkitRunnable extends Object implements Runnable {
     runTaskTimerAsynchronously (plugin: Plugin, delay: number, period: number): BukkitTask
 }
 
-export class BukkitScheduler {
+export interface BukkitScheduler {
     /**Calls a method on the main thread and returns a Future object.*/
     callSyncMethod <T>(plugin: Plugin, task: Callable<T>): Future<T>;
     /**Removes task from scheduler.*/
@@ -2857,7 +2892,7 @@ export class BukkitScheduler {
 }
 
 /**Represents a task being executed by the scheduler*/
-export class BukkitTask {
+export interface BukkitTask {
     /**Will attempt to cancel this task.*/
     cancel (): void;
     /**Returns the Plugin that owns this task.*/
@@ -2871,7 +2906,7 @@ export class BukkitTask {
 }
 
 /**Represents a worker thread for the scheduler. This gives information about  the Thread object for the task, owner of the task and the taskId.    Workers are used to execute async tasks.*/
-export class BukkitWorker {
+export interface BukkitWorker {
     /**Returns the Plugin that owns this task.*/
     getOwner (): Plugin;
     /**Returns the taskId for the task being executed by this worker.*/
@@ -2881,7 +2916,7 @@ export class BukkitWorker {
 }
 
 /**This is a cached version of a server-icon. It's internal representation  and implementation is undefined.*/
-export class CachedServerIcon {
+export interface CachedServerIcon {
     getData (): String;
     isEmpty (): boolean
 }
@@ -2893,7 +2928,7 @@ export class CachedSizeConcurrentLinkedQueue<E> extends ConcurrentLinkedQueue<E>
 }
 
 /**'bites' represents the amount of bites which have been taken from this slice  of cake.    A value of 0 indicates that the cake has not been eaten, whilst a value of  getMaximumBites() indicates that it is all gone :(*/
-export class Cake extends BlockData {
+export interface Cake extends BlockData {
     /**Gets the value of the 'bites' property.*/
     getBites (): number;
     /**Gets the maximum allowed value of the 'bites' property.*/
@@ -2903,7 +2938,7 @@ export class Cake extends BlockData {
 }
 
 /**Represents a captured state of a campfire.*/
-export class Campfire extends TileState {
+export interface Campfire extends TileState {
     /**Get cook time.*/
     getCookTime (index: number): number;
     /**Get cook time total.*/
@@ -2918,7 +2953,7 @@ export class Campfire extends TileState {
 }
 
 /**'signal_fire' denotes whether the fire is extra smokey due to having a hay  bale placed beneath it.*/
-export class Campfire extends Directional, Lightable, Waterlogged {
+export interface Campfire extends Directional, Lightable, Waterlogged {
     /**Gets the value of the 'signal_fire' property.*/
     isSignalFire (): boolean;
     /**Sets the value of the 'signal_fire' property.*/
@@ -2930,7 +2965,7 @@ export class CampfireRecipe extends CookingRecipe<CampfireRecipe> {
 
 }
 
-export class Cancellable {
+export interface Cancellable {
     /**Gets the cancellation state of this event.*/
     isCancelled (): boolean;
     /**Sets the cancellation state of this event.*/
@@ -2938,12 +2973,12 @@ export class Cancellable {
 }
 
 /**Interface to the inventory of a Cartography table.*/
-export class CartographyInventory extends Inventory {
+export interface CartographyInventory extends Inventory {
 
 }
 
 /**Meow.*/
-export class Cat extends Tameable, Sittable {
+export interface Cat extends Tameable, Sittable {
     /**Gets the current type of this cat.*/
     getCatType (): Cat$Type;
     /**Get the collar color of this cat*/
@@ -3006,11 +3041,11 @@ export class CauldronLevelChangeEvent$ChangeReason extends Enum<CauldronLevelCha
 }
 
 /**Represents a Spider.*/
-export class CaveSpider extends Spider {
+export interface CaveSpider extends Spider {
 
 }
 
-export class Chain extends Orientable, Waterlogged {
+export interface Chain extends Orientable, Waterlogged {
 
 }
 
@@ -3089,13 +3124,13 @@ export class ChatPaginator$ChatPage extends Object {
 }
 
 /**Represents a captured state of a chest.*/
-export class Chest extends Container, LootableBlockInventory, Lidded {
+export interface Chest extends Container, LootableBlockInventory, Lidded {
     /**Gets the inventory of the chest block represented by this block state.*/
     getBlockInventory (): Inventory
 }
 
 /**'type' represents which part of a double chest this block is, or if it is a  single chest.*/
-export class Chest extends Directional, Waterlogged {
+export interface Chest extends Directional, Waterlogged {
     /**Gets the value of the 'type' property.*/
     getType (): Chest$Type;
     /**Sets the value of the 'type' property.*/
@@ -3113,7 +3148,7 @@ export class Chest$Type extends Enum<Chest$Type> {
 }
 
 /**Represents Horse-like creatures which can carry an inventory.*/
-export class ChestedHorse extends AbstractHorse {
+export interface ChestedHorse extends AbstractHorse {
     /**Gets whether the horse has a chest equipped.*/
     isCarryingChest (): boolean;
     /**Sets whether the horse has a chest equipped.*/
@@ -3121,12 +3156,12 @@ export class ChestedHorse extends AbstractHorse {
 }
 
 /**Represents a Chicken.*/
-export class Chicken extends Animals {
+export interface Chicken extends Animals {
 
 }
 
 /**Represents a chunk of blocks*/
-export class Chunk {
+export interface Chunk {
     /**Adds a plugin ticket for this chunk, loading this chunk if it is not  already loaded.*/
     addPluginChunkTicket (plugin: Plugin): boolean;
     /**Tests if this chunk contains the specified block.*/
@@ -3211,7 +3246,7 @@ export class ChunkGenerator extends Object {
 }
 
 /**Interface to biome section for chunk to be generated: initialized with  default values for world type and seed.    Custom generator is free to access and tailor values during  generateBlockSections() or generateExtBlockSections().*/
-export class ChunkGenerator$BiomeGrid {
+export interface ChunkGenerator$BiomeGrid {
     /**Get biome at x, z within chunk being generated*/
     getBiome (x: number, y: number, z: number): Biome;
     /**Set biome at x, z within chunk being generated*/
@@ -3219,7 +3254,7 @@ export class ChunkGenerator$BiomeGrid {
 }
 
 /**Data for a Chunk.*/
-export class ChunkGenerator$ChunkData {
+export interface ChunkGenerator$ChunkData {
     /**Get the type and data of the block at x, y, z.*/
     getBlockData (x: number, y: number, z: number): BlockData;
     /**Get the maximum height for the chunk.*/
@@ -3257,7 +3292,7 @@ export class ChunkPopulateEvent extends ChunkEvent {
 }
 
 /**Represents a static, thread-safe snapshot of chunk of blocks.    Purpose is to allow clean, efficient copy of a chunk data to be made, and  then handed off for processing in another thread (e.g. map rendering)*/
-export class ChunkSnapshot {
+export interface ChunkSnapshot {
     /**Tests if this snapshot contains the specified block.*/
     contains (block: BlockData): boolean;
     /**Get biome at given coordinates*/
@@ -3296,7 +3331,7 @@ export class ChunkUnloadEvent extends ChunkEvent {
     setSaveChunk (saveChunk: boolean): void
 }
 
-export class ClassDefiner {
+export interface ClassDefiner {
     /**Define a class*/
     defineClass (parentLoader: ClassLoader, name: String, data: number[]): Class<X>;
     static getInstance (): ClassDefiner;
@@ -3353,7 +3388,7 @@ export class CoalType extends Enum<CoalType> {
     static COAL: CoalType
 }
 
-export class Cocoa extends Ageable, Directional {
+export interface Cocoa extends Ageable, Directional {
 
 }
 
@@ -3364,7 +3399,7 @@ export class CocoaPlant$CocoaPlantSize extends Enum<CocoaPlant$CocoaPlantSize> {
 }
 
 /**Represents a cod fish.*/
-export class Cod extends Fish {
+export interface Cod extends Fish {
 
 }
 
@@ -3407,7 +3442,7 @@ export class Color extends Object implements ConfigurationSerializable {
 }
 
 /**An object that can be colored.*/
-export class Colorable {
+export interface Colorable {
     /**Gets the color of this object.*/
     getColor (): DyeColor;
     /**Sets the color of this object to the specified DyeColor.*/
@@ -3467,7 +3502,7 @@ export class Command extends Object {
 }
 
 /**Represents a captured state of a command block.*/
-export class CommandBlock extends TileState {
+export interface CommandBlock extends TileState {
     /**Gets the command that this CommandBlock will run when powered.*/
     getCommand (): String;
     /**Gets the name of this CommandBlock.*/
@@ -3479,7 +3514,7 @@ export class CommandBlock extends TileState {
 }
 
 /**'conditional' denotes whether this command block is conditional or not, i.e.  will only execute if the preceeding command block also executed successfully.*/
-export class CommandBlock extends Directional {
+export interface CommandBlock extends Directional {
     /**Gets the value of the 'conditional' property.*/
     isConditional (): boolean;
     /**Sets the value of the 'conditional' property.*/
@@ -3492,12 +3527,12 @@ export class CommandException extends RuntimeException {
 }
 
 /**Represents a class which contains a single method for executing commands*/
-export class CommandExecutor {
+export interface CommandExecutor {
     /**Executes the given command, returning its success.*/
     onCommand (sender: CommandSender, command: Command, label: String, args: String[]): boolean
 }
 
-export class CommandMap {
+export interface CommandMap {
     /**Clears all registered commands.*/
     clearCommands (): void;
     /**Looks for the requested command and executes it if found.*/
@@ -3518,7 +3553,7 @@ export class CommandMap {
     tabComplete (sender: CommandSender, cmdLine: String, location: Location): List<String>
 }
 
-export class CommandMinecart extends Minecart {
+export interface CommandMinecart extends Minecart {
     /**Gets the command that this CommandMinecart will run when activated.*/
     getCommand (): String;
     /**Sets the command that this CommandMinecart will run when activated.*/
@@ -3531,7 +3566,7 @@ export class CommandPermissions extends Object {
     static registerPermissions (parent: Permission): Permission
 }
 
-export class CommandSender extends Permissible {
+export interface CommandSender extends Permissible {
     /**Gets the name of this command sender*/
     getName (): String;
     /**Returns the server instance that this command is running on*/
@@ -3555,12 +3590,12 @@ export class CommandSender$Spigot extends Object {
 }
 
 /**Represents a captured state of an on / off comparator.*/
-export class Comparator extends TileState {
+export interface Comparator extends TileState {
 
 }
 
 /**'mode' indicates what mode this comparator will operate in.*/
-export class Comparator extends Directional, Powerable {
+export interface Comparator extends Directional, Powerable {
     /**Gets the value of the 'mode' property.*/
     getMode (): Comparator$Mode;
     /**Sets the value of the 'mode' property.*/
@@ -3576,7 +3611,7 @@ export class Comparator$Mode extends Enum<Comparator$Mode> {
 }
 
 /**Represents a compass that can track a specific location.*/
-export class CompassMeta extends ItemMeta {
+export interface CompassMeta extends ItemMeta {
     clone (): CompassMeta;
     /**Gets the location that this compass will point to.*/
     getLodestone (): Location;
@@ -3591,29 +3626,29 @@ export class CompassMeta extends ItemMeta {
 }
 
 /**Represents a single part of a ComplexLivingEntity*/
-export class ComplexEntityPart extends Entity {
+export interface ComplexEntityPart extends Entity {
     /**Gets the parent ComplexLivingEntity of this part.*/
     getParent (): ComplexLivingEntity
 }
 
 /**Represents a complex living entity - one that is made up of various smaller  parts*/
-export class ComplexLivingEntity extends LivingEntity {
+export interface ComplexLivingEntity extends LivingEntity {
     /**Gets a list of parts that belong to this complex entity*/
     getParts (): Set<ComplexEntityPart>
 }
 
 /**Represents a complex recipe which has imperative server-defined behavior, eg  armor dyeing.   Note: Since a complex recipe has dynamic outputs, Recipe.getResult() will  sometimes return an AIR ItemStack.*/
-export class ComplexRecipe extends Recipe, Keyed {
+export interface ComplexRecipe extends Recipe, Keyed {
 
 }
 
 /**Represents a captured state of a conduit.*/
-export class Conduit extends TileState {
+export interface Conduit extends TileState {
 
 }
 
 /**Represents a source of configurable options and settings*/
-export class Configuration extends ConfigurationSection {
+export interface Configuration extends ConfigurationSection {
     /**Sets the default value of the given path as provided.*/
     addDefault (path: String, value: Object): void;
     /**Sets the default values of the given paths as provided.*/
@@ -3643,7 +3678,7 @@ export class ConfigurationOptions extends Object {
 }
 
 /**Represents a section of a Configuration*/
-export class ConfigurationSection {
+export interface ConfigurationSection {
     /**Sets the default value in the root at the given path as provided.*/
     addDefault (path: String, value: Object): void;
     /**Checks if this ConfigurationSection contains the given path.*/
@@ -3777,7 +3812,7 @@ export class ConfigurationSection {
 }
 
 /**Represents an object that may be serialized.    These objects MUST implement one of the following, in addition to the  methods as defined by this interface:    A static method "deserialize" that accepts a single Map<  String, Object> and returns the class.  A static method "valueOf" that accepts a single Map<String, Object> and returns the class.  A constructor that accepts a single Map<String,  Object>.    In addition to implementing this interface, you must register the class  with ConfigurationSerialization.registerClass(Class).*/
-export class ConfigurationSerializable {
+export interface ConfigurationSerializable {
     /**Creates a Map representation of this class.*/
     serialize (): Map<String,Object>
 }
@@ -3807,18 +3842,18 @@ export class ConfigurationSerialization extends Object {
     static unregisterClass (alias: String): void
 }
 
-export class ConsoleCommandSender extends CommandSender, Conversable {
+export interface ConsoleCommandSender extends CommandSender, Conversable {
 
 }
 
 /**Represents an operation that accepts a single input argument and returns no  result.*/
-export class Consumer<T> {
+export interface Consumer<T> {
     /**Performs this operation on the given argument.*/
     accept (t: T): void
 }
 
 /**Represents a captured state of a container block.*/
-export class Container extends TileState, BlockInventoryHolder, Lockable, Nameable {
+export interface Container extends TileState, BlockInventoryHolder, Lockable, Nameable {
     /**Gets the inventory of the block represented by this block state.*/
     getInventory (): Inventory;
     /**Gets the captured inventory snapshot of this container.*/
@@ -3826,7 +3861,7 @@ export class Container extends TileState, BlockInventoryHolder, Lockable, Nameab
 }
 
 /**The Conversable interface is used to indicate objects that can have  conversations.*/
-export class Conversable {
+export interface Conversable {
     /**Abandons an active conversation.*/
     abandonConversation (conversation: Conversation): void;
     /**Abandons an active conversation.*/
@@ -3891,13 +3926,13 @@ export class ConversationAbandonedEvent extends EventObject {
     gracefulExit (): boolean
 }
 
-export class ConversationAbandonedListener extends EventListener {
+export interface ConversationAbandonedListener extends EventListener {
     /**Called whenever a Conversation is abandoned.*/
     conversationAbandoned (abandonedEvent: ConversationAbandonedEvent): void
 }
 
 /**A ConversationCanceller is a class that cancels an active Conversation. A Conversation can have more than one ConversationCanceller.*/
-export class ConversationCanceller extends Cloneable {
+export interface ConversationCanceller extends Cloneable {
     /**Cancels a conversation based on user input.*/
     cancelBasedOnInput (context: ConversationContext, input: String): boolean;
     /**Allows the ConversationFactory to duplicate this  ConversationCanceller when creating a new Conversation.*/
@@ -3947,7 +3982,7 @@ export class ConversationFactory extends Object {
 }
 
 /**A ConversationPrefix implementation prepends all output from the  conversation to the player. The ConversationPrefix can be used to display  the plugin name or conversation status as the conversation evolves.*/
-export class ConversationPrefix {
+export interface ConversationPrefix {
     /**Gets the prefix to use before each message to the player.*/
     getPrefix (context: ConversationContext): String
 }
@@ -3980,7 +4015,7 @@ export class CookingRecipe<T extends CookingRecipe> extends Object implements Re
     setInputChoice (input: RecipeChoice): T
 }
 
-export class CoralWallFan extends Directional, Waterlogged {
+export interface CoralWallFan extends Directional, Waterlogged {
 
 }
 
@@ -3994,12 +4029,12 @@ export class Counter<T> extends ForwardingMap<T,Long> {
 }
 
 /**Represents a Cow.*/
-export class Cow extends Animals {
+export interface Cow extends Animals {
 
 }
 
 /**Interface to the crafting inventories*/
-export class CraftingInventory extends Inventory {
+export interface CraftingInventory extends Inventory {
     /**Get the contents of the crafting matrix.*/
     getMatrix (): ItemStack[];
     /**Get the current recipe formed on the crafting inventory, if any.*/
@@ -4020,12 +4055,12 @@ export class CraftItemEvent extends InventoryClickEvent {
 }
 
 /**Represents a Creature. Creatures are non-intelligent monsters or animals  which have very simple abilities.*/
-export class Creature extends Mob {
+export interface Creature extends Mob {
 
 }
 
 /**Represents a captured state of a creature spawner.*/
-export class CreatureSpawner extends TileState {
+export interface CreatureSpawner extends TileState {
     /**Get the spawner's delay.*/
     getDelay (): number;
     /**Set the new maximum amount of similar entities that are allowed to be  within spawning range of this spawner.*/
@@ -4143,7 +4178,7 @@ export class CreatureSpawnEvent$SpawnReason extends Enum<CreatureSpawnEvent$Spaw
 }
 
 /**Represents a Creeper*/
-export class Creeper extends Monster {
+export interface Creeper extends Monster {
     /**Makes this Creeper explode instantly.*/
     explode (): void;
     /**Get the explosion radius in which this Creeper's explosion will affect.*/
@@ -4233,7 +4268,7 @@ export class CropState extends Enum<CropState> {
     static VERY_TALL: CropState
 }
 
-export class CrossbowMeta extends ItemMeta {
+export interface CrossbowMeta extends ItemMeta {
     /**Adds a charged projectile to this item.*/
     addChargedProjectile (item: ItemStack): void;
     /**Returns an immutable list of the projectiles charged on this item.*/
@@ -4245,7 +4280,7 @@ export class CrossbowMeta extends ItemMeta {
 }
 
 /**Represents an Entity that has health and can take damage.*/
-export class Damageable extends Entity {
+export interface Damageable extends Entity {
     /**Deals the given amount of damage to this entity.*/
     damage (amount: number): void;
     /**Deals the given amount of damage to this entity, from a specified  entity.*/
@@ -4261,7 +4296,7 @@ export class Damageable extends Entity {
 }
 
 /**Represents an item that has durability and can take damage.*/
-export class Damageable {
+export interface Damageable {
     clone (): Damageable;
     /**Gets the damage*/
     getDamage (): number;
@@ -4272,7 +4307,7 @@ export class Damageable {
 }
 
 /**'inverted' denotes whether this daylight detector is in the inverted mode,  i.e. activates in the absence of light rather than presence."*/
-export class DaylightDetector extends AnaloguePowerable {
+export interface DaylightDetector extends AnaloguePowerable {
     /**Gets the value of the 'inverted' property.*/
     isInverted (): boolean;
     /**Sets the value of the 'inverted' property.*/
@@ -4280,7 +4315,7 @@ export class DaylightDetector extends AnaloguePowerable {
 }
 
 /**Represents a captured state of a (possibly inverted) daylight detector.*/
-export class DaylightDetector extends TileState {
+export interface DaylightDetector extends TileState {
 
 }
 
@@ -4310,7 +4345,7 @@ export class Difficulty extends Enum<Difficulty> {
 }
 
 /**'facing' represents the face towards which the block is pointing.    Some blocks may not be able to face in all directions, use  getFaces() to get all possible directions for this block.*/
-export class Directional extends BlockData {
+export interface Directional extends BlockData {
     /**Gets the faces which are applicable to this block.*/
     getFaces (): Set<BlockFace>;
     /**Gets the value of the 'facing' property.*/
@@ -4319,7 +4354,7 @@ export class Directional extends BlockData {
     setFacing (facing: BlockFace): void
 }
 
-export class Directional {
+export interface Directional {
     /**Gets the direction this block is facing*/
     getFacing (): BlockFace;
     /**Sets the direction that this block is facing in*/
@@ -4327,7 +4362,7 @@ export class Directional {
 }
 
 /**Similar to Powerable, 'triggered' indicates whether or not the  dispenser is currently activated.*/
-export class Dispenser extends Directional {
+export interface Dispenser extends Directional {
     /**Gets the value of the 'triggered' property.*/
     isTriggered (): boolean;
     /**Sets the value of the 'triggered' property.*/
@@ -4335,7 +4370,7 @@ export class Dispenser extends Directional {
 }
 
 /**Represents a captured state of a dispenser.*/
-export class Dispenser extends Container, Nameable, LootableBlockInventory {
+export interface Dispenser extends Container, Nameable, LootableBlockInventory {
     /**Attempts to dispense the contents of the dispenser.*/
     dispense (): boolean;
     /**Gets the BlockProjectileSource object for the dispenser.*/
@@ -4349,17 +4384,17 @@ export class DisplaySlot extends Enum<DisplaySlot> {
     static SIDEBAR: DisplaySlot
 }
 
-export class Dolphin extends WaterMob {
+export interface Dolphin extends WaterMob {
 
 }
 
 /**Represents a Donkey - variant of ChestedHorse.*/
-export class Donkey extends ChestedHorse {
+export interface Donkey extends ChestedHorse {
 
 }
 
 /**'hinge' indicates which hinge this door is attached to and will rotate around  when opened.*/
-export class Door extends Bisected, Directional, Openable, Powerable {
+export interface Door extends Bisected, Directional, Openable, Powerable {
     /**Gets the value of the 'hinge' property.*/
     getHinge (): Door$Hinge;
     /**Sets the value of the 'hinge' property.*/
@@ -4390,7 +4425,7 @@ export class DoubleChest extends Object implements InventoryHolder {
 }
 
 /**Interface to the inventory of a Double Chest.*/
-export class DoubleChestInventory extends Inventory {
+export interface DoubleChestInventory extends Inventory {
     /**Gets the block or entity belonging to the open inventory*/
     getHolder (): DoubleChest;
     /**Get the left half of this double chest.*/
@@ -4400,7 +4435,7 @@ export class DoubleChestInventory extends Inventory {
 }
 
 /**Represents a dragon battle state for a world with an end environment.*/
-export class DragonBattle {
+export interface DragonBattle {
     /**Generate the end portal.*/
     generateEndPortal (withPortals: boolean): boolean;
     /**Get the boss bar to be displayed for this dragon battle.*/
@@ -4437,7 +4472,7 @@ export class DragonBattle$RespawnPhase extends Enum<DragonBattle$RespawnPhase> {
     static SUMMONING_PILLARS: DragonBattle$RespawnPhase
 }
 
-export class DragonFireball extends Fireball {
+export interface DragonFireball extends Fireball {
 
 }
 
@@ -4450,13 +4485,13 @@ export class DragType extends Enum<DragType> {
 }
 
 /**Represents a captured state of a dropper.*/
-export class Dropper extends Container, LootableBlockInventory {
+export interface Dropper extends Container, LootableBlockInventory {
     /**Tries to drop a randomly selected item from the dropper's inventory,  following the normal behavior of a dropper.*/
     drop (): void
 }
 
 /**Drowned zombie.*/
-export class Drowned extends Zombie, RangedEntity {
+export interface Drowned extends Zombie, RangedEntity {
 
 }
 
@@ -4599,17 +4634,17 @@ export class Effect$Type extends Enum<Effect$Type> {
 }
 
 /**Represents a thrown egg.*/
-export class Egg extends ThrowableProjectile {
+export interface Egg extends ThrowableProjectile {
 
 }
 
 /**Represents an ElderGuardian - variant of Guardian.*/
-export class ElderGuardian extends Guardian {
+export interface ElderGuardian extends Guardian {
 
 }
 
 /**Interface to the inventory of an Enchantment Table.*/
-export class EnchantingInventory extends Inventory {
+export interface EnchantingInventory extends Inventory {
     /**Get the item being enchanted.*/
     getItem (): ItemStack;
     /**Get the secondary item being used for the enchant.*/
@@ -4621,7 +4656,7 @@ export class EnchantingInventory extends Inventory {
 }
 
 /**Represents a captured state of an enchanting table.*/
-export class EnchantingTable extends TileState, Nameable {
+export interface EnchantingTable extends TileState, Nameable {
 
 }
 
@@ -4697,7 +4732,7 @@ export class EnchantmentOffer extends Object {
 }
 
 /**EnchantmentMeta is specific to items that can store enchantments, as  opposed to being enchanted. Material.ENCHANTED_BOOK is an example  of an item with enchantment storage.*/
-export class EnchantmentStorageMeta extends ItemMeta {
+export interface EnchantmentStorageMeta extends ItemMeta {
     /**Stores the specified enchantment in this item meta.*/
     addStoredEnchant (ench: Enchantment, level: number, ignoreLevelRestriction: boolean): boolean;
     clone (): EnchantmentStorageMeta;
@@ -4771,17 +4806,17 @@ export class EnchantmentWrapper extends Enchantment {
     isTreasure (): boolean
 }
 
-export class EnderChest extends Directional, Waterlogged {
+export interface EnderChest extends Directional, Waterlogged {
 
 }
 
 /**Represents a captured state of an ender chest.*/
-export class EnderChest extends TileState {
+export interface EnderChest extends TileState {
 
 }
 
 /**A crystal that heals nearby EnderDragons*/
-export class EnderCrystal extends Entity {
+export interface EnderCrystal extends Entity {
     /**Gets the location that this end crystal is pointing its beam to.*/
     getBeamTarget (): Location;
     /**Return whether or not this end crystal is showing the  bedrock slate underneath it.*/
@@ -4793,7 +4828,7 @@ export class EnderCrystal extends Entity {
 }
 
 /**Represents an Ender Dragon*/
-export class EnderDragon extends ComplexLivingEntity, Boss, Mob {
+export interface EnderDragon extends ComplexLivingEntity, Boss, Mob {
     /**Get the current time in ticks relative to the start of this dragon's  death animation.*/
     getDeathAnimationTicks (): number;
     /**Get the DragonBattle associated with this EnderDragon.*/
@@ -4877,7 +4912,7 @@ export class EnderDragonFlameEvent extends EntityEvent implements Cancellable {
 }
 
 /**Represents an ender dragon part*/
-export class EnderDragonPart extends ComplexEntityPart, Damageable {
+export interface EnderDragonPart extends ComplexEntityPart, Damageable {
     /**Gets the parent ComplexLivingEntity of this part.*/
     getParent (): EnderDragon
 }
@@ -4896,7 +4931,7 @@ export class EnderDragonShootFireballEvent extends EntityEvent implements Cancel
 }
 
 /**Represents an Enderman.*/
-export class Enderman extends Monster {
+export interface Enderman extends Monster {
     /**Gets the data of the block that the Enderman is carrying.*/
     getCarriedBlock (): BlockData;
     /**Gets the id and data of the block that the Enderman is carrying.*/
@@ -4948,7 +4983,7 @@ export class EndermanEscapeEvent$Reason extends Enum<EndermanEscapeEvent$Reason>
     static STARE: EndermanEscapeEvent$Reason
 }
 
-export class Endermite extends Monster {
+export interface Endermite extends Monster {
     /**Gets whether this Endermite was spawned by a player.*/
     isPlayerSpawned (): boolean;
     /**Sets whether this Endermite was spawned by a player.*/
@@ -4956,28 +4991,32 @@ export class Endermite extends Monster {
 }
 
 /**Represents a thrown Ender Pearl entity*/
-export class EnderPearl extends ThrowableProjectile {
+export interface EnderPearl extends ThrowableProjectile {
 
 }
 
 /**Represents an EnderSignal, which is created upon throwing an ender eye.*/
-export class EnderSignal extends Entity {
+export interface EnderSignal extends Entity {
     /**Gets the amount of time this entity has been alive (in ticks).*/
     getDespawnTimer (): number;
     /**Gets if the EnderSignal should drop an item on death.  If true, it will drop an item.*/
     getDropItem (): boolean;
+    /**Get the ItemStack to be displayed while in the air and to be  dropped on death.*/
+    getItem (): ItemStack;
     /**Get the location this EnderSignal is moving towards.*/
     getTargetLocation (): Location;
     /**Set how long this entity has been alive (in ticks).*/
     setDespawnTimer (timer: number): void;
     /**Sets if the EnderSignal should drop an item on death; or if it should  shatter.*/
     setDropItem (drop: boolean): void;
+    /**Set the ItemStack to be displayed while in the air and to be  dropped on death.*/
+    setItem (item: ItemStack): void;
     /**Set the Location this EnderSignal is moving towards.*/
     setTargetLocation (location: Location): void
 }
 
 /**Represents a captured state of an end gateway.*/
-export class EndGateway extends TileState {
+export interface EndGateway extends TileState {
     /**Gets the age in ticks of the gateway.*/
     getAge (): number;
     /**Gets the location that entities are teleported to when  entering the gateway portal.*/
@@ -4993,7 +5032,7 @@ export class EndGateway extends TileState {
 }
 
 /**'eye' denotes whether this end portal frame has been activated by having an  eye of ender placed in it.*/
-export class EndPortalFrame extends Directional {
+export interface EndPortalFrame extends Directional {
     /**Gets the value of the 'eye' property.*/
     hasEye (): boolean;
     /**Sets the value of the 'eye' property.*/
@@ -5001,7 +5040,7 @@ export class EndPortalFrame extends Directional {
 }
 
 /**Represents a base entity in the world*/
-export class Entity extends Metadatable, CommandSender, Nameable, PersistentDataHolder {
+export interface Entity extends Metadatable, CommandSender, Nameable, PersistentDataHolder {
     /**Add a passenger to the vehicle.*/
     addPassenger (passenger: Entity): boolean;
     /**Add a tag to this entity.*/
@@ -5092,6 +5131,8 @@ export class Entity extends Metadatable, CommandSender, Nameable, PersistentData
     isInWaterOrRainOrBubbleColumn (): boolean;
     /**Returns true if the entity is supported by a block.*/
     isOnGround (): boolean;
+    /**Returns true if the entity gets persisted.*/
+    isPersistent (): boolean;
     /**Gets whether the entity is silent or not.*/
     isSilent (): boolean;
     /**Returns false if the entity has died or been despawned for some other  reason.*/
@@ -5120,6 +5161,8 @@ export class Entity extends Metadatable, CommandSender, Nameable, PersistentData
     setInvulnerable (flag: boolean): void;
     /**Record the last EntityDamageEvent inflicted on this entity*/
     setLastDamageCause (event: EntityDamageEvent): void;
+    /**Sets whether or not the entity gets persisted.*/
+    setPersistent (persistent: boolean): void;
     /**Sets the period of time (in ticks) before this entity can use a portal.*/
     setPortalCooldown (cooldown: number): void;
     /**Sets the entity's rotation.*/
@@ -5176,7 +5219,7 @@ export class EntityBlockFormEvent extends BlockFormEvent {
 }
 
 /**Represents a captured state of a block which stores entities.*/
-export class EntityBlockStorage<T extends Entity> extends TileState {
+export interface EntityBlockStorage<T extends Entity> extends TileState {
     /**Add an entity to the block.*/
     addEntity (entity: T): void;
     /**Get the amount of entities currently in this block.*/
@@ -5219,6 +5262,20 @@ export class EntityBreedEvent extends EntityEvent implements Cancellable {
     setCancelled (cancel: boolean): void;
     /**Set the amount of experience granted by breeding.*/
     setExperience (experience: number): void
+}
+
+/**A classification of entities which may behave differently than others or be  affected uniquely by enchantments and potion effects among other things.*/
+export class EntityCategory extends Enum<EntityCategory> {
+    /**Entities of the arthropod family.*/
+    static ARTHROPOD: EntityCategory;
+    /**Entities that participate in raids.*/
+    static ILLAGER: EntityCategory;
+    /**Any uncategorized entity.*/
+    static NONE: EntityCategory;
+    /**Undead creatures.*/
+    static UNDEAD: EntityCategory;
+    /**Entities that reside primarily underwater (excluding Drowned).*/
+    static WATER: EntityCategory
 }
 
 /**Called when any Entity changes a block and a more specific event is not available.*/
@@ -5545,7 +5602,7 @@ export class EntityEnterLoveModeEvent extends EntityEvent implements Cancellable
 }
 
 /**An interface to a creatures inventory*/
-export class EntityEquipment {
+export interface EntityEquipment {
     /**Clears the entity of all armor and held items*/
     clear (): void;
     /**Gets a copy of all worn armor*/
@@ -5900,14 +5957,16 @@ export class EntityResurrectEvent extends EntityEvent implements Cancellable {
 
 /**Called when a LivingEntity shoots a bow firing an arrow*/
 export class EntityShootBowEvent extends EntityEvent implements Cancellable {
-    getArrowItem (): ItemStack;
     /**Gets the bow ItemStack used to fire the arrow.*/
     getBow (): ItemStack;
-    getConsumeArrow (): boolean;
+    /**Get the ItemStack to be consumed in this event (if any).*/
+    getConsumable (): ItemStack;
     /**Returns the Entity involved in this event*/
     getEntity (): LivingEntity;
     /**Gets the force the arrow was launched with*/
     getForce (): number;
+    /**Get the hand from which the bow was shot.*/
+    getHand (): EquipmentSlot;
     static getHandlerList (): HandlerList;
     getHandlers (): HandlerList;
     /**Gets the projectile which will be launched by this event*/
@@ -5916,9 +5975,12 @@ export class EntityShootBowEvent extends EntityEvent implements Cancellable {
     isCancelled (): boolean;
     /**Sets the cancellation state of this event.*/
     setCancelled (cancel: boolean): void;
-    setConsumeArrow (consumeArrow: boolean): void;
+    /**Set whether or not the consumable item should be consumed in this event.*/
+    setConsumeItem (consumeItem: boolean): void;
     /**Replaces the projectile which will be launched*/
-    setProjectile (projectile: Entity): void
+    setProjectile (projectile: Entity): void;
+    /**Get whether or not the consumable item should be consumed in this event.*/
+    shouldConsumeItem (): boolean
 }
 
 /**Called when an entity is spawned into a world.    If an Entity Spawn event is cancelled, the entity will not spawn.*/
@@ -6346,7 +6408,7 @@ export class EventException extends Exception {
 }
 
 /**Interface which defines the class for event call backs to plugins*/
-export class EventExecutor {
+export interface EventExecutor {
     static create (m: Method, eventClass: Class<X>): EventExecutor;
     execute (listener: Listener, event: Event): void
 }
@@ -6368,12 +6430,14 @@ export class EventPriority extends Enum<EventPriority> {
 }
 
 /**Represents an Evoker "Illager".*/
-export class Evoker extends Spellcaster {
-
+export interface Evoker extends Spellcaster {
+    getWololoTarget (): Sheep;
+    /**Set the sheep to be the target of the wololo spell, or null to clear.*/
+    setWololoTarget (sheep: Sheep): void
 }
 
 /**Represents Evoker Fangs.*/
-export class EvokerFangs extends Entity {
+export interface EvokerFangs extends Entity {
     /**Gets the LivingEntity which summoned the fangs.*/
     getOwner (): LivingEntity;
     /**Sets the LivingEntity which summoned the fangs.*/
@@ -6407,7 +6471,7 @@ export class ExpBottleEvent extends ProjectileHitEvent {
 }
 
 /**Represents an Experience Orb.*/
-export class ExperienceOrb extends Entity {
+export interface ExperienceOrb extends Entity {
     /**Gets how much experience is contained within this orb*/
     getExperience (): number;
     /**If this experience orb was spawned in relation to another  entity, such as a player or other living entity death, or breeding,  return the source entity UUID.*/
@@ -6477,7 +6541,7 @@ export class ExplosionPrimeEvent extends EntityEvent implements Cancellable {
 }
 
 /**A representation of an explosive entity*/
-export class Explosive extends Entity {
+export interface Explosive extends Entity {
     /**Return the radius or yield of this explosive's explosion*/
     getYield (): number;
     /**Return whether or not this explosive creates a fire when exploding*/
@@ -6489,12 +6553,12 @@ export class Explosive extends Entity {
 }
 
 /**Represents a Minecart with TNT inside it that can explode when triggered.*/
-export class ExplosiveMinecart extends Minecart {
+export interface ExplosiveMinecart extends Minecart {
 
 }
 
 /**'face' represents the face to which a lever or button is stuck.    This is used in conjunction with Directional to compute the  orientation of these blocks.*/
-export class FaceAttachable extends BlockData {
+export interface FaceAttachable extends BlockData {
     /**Gets the value of the 'face' property.*/
     getAttachedFace (): FaceAttachable$AttachedFace;
     /**Sets the value of the 'face' property.*/
@@ -6512,7 +6576,7 @@ export class FaceAttachable$AttachedFace extends Enum<FaceAttachable$AttachedFac
 }
 
 /**Represents a falling block*/
-export class FallingBlock extends Entity {
+export interface FallingBlock extends Entity {
     /**Get the HurtEntities state of this block.*/
     canHurtEntities (): boolean;
     /**Get the data for the falling block*/
@@ -6526,7 +6590,7 @@ export class FallingBlock extends Entity {
 }
 
 /**The 'moisture' level of farmland indicates how close it is to a water source  (if any).    A higher moisture level leads, to faster growth of crops on this block, but  cannot be higher than getMaximumMoisture().*/
-export class Farmland extends BlockData {
+export interface Farmland extends BlockData {
     /**Gets the maximum allowed value of the 'moisture' property.*/
     getMaximumMoisture (): number;
     /**Gets the value of the 'moisture' property.*/
@@ -6535,7 +6599,7 @@ export class Farmland extends BlockData {
     setMoisture (moisture: number): void
 }
 
-export class Fence extends MultipleFacing, Waterlogged {
+export interface Fence extends MultipleFacing, Waterlogged {
 
 }
 
@@ -6595,19 +6659,19 @@ export class FillProfileEvent extends Event {
 }
 
 /**md_5's mixtape.*/
-export class Fire extends Ageable, MultipleFacing {
+export interface Fire extends Ageable, MultipleFacing {
 
 }
 
 /**Represents a Fireball.*/
-export class Fireball extends Projectile, Explosive {
+export interface Fireball extends Projectile, Explosive {
     /**Retrieve the direction this fireball is heading toward*/
     getDirection (): Vector;
     /**Fireballs fly straight and do not take setVelocity(...) well.*/
     setDirection (direction: Vector): void
 }
 
-export class Firework extends Projectile {
+export interface Firework extends Projectile {
     /**Cause this firework to explode at earliest opportunity, as if it has no  remaining fuse.*/
     detonate (): void;
     /**If this firework is boosting an entity, return it*/
@@ -6688,7 +6752,7 @@ export class FireworkEffect$Type extends Enum<FireworkEffect$Type> {
 }
 
 /**Represents a meta that can store a single FireworkEffect. An example  includes Material.FIREWORK_STAR.*/
-export class FireworkEffectMeta extends ItemMeta {
+export interface FireworkEffectMeta extends ItemMeta {
     clone (): FireworkEffectMeta;
     /**Gets the firework effect for this meta.*/
     getEffect (): FireworkEffect;
@@ -6711,7 +6775,7 @@ export class FireworkExplodeEvent extends EntityEvent implements Cancellable {
 }
 
 /**Represents a Material.FIREWORK_ROCKET and its effects.*/
-export class FireworkMeta extends ItemMeta {
+export interface FireworkMeta extends ItemMeta {
     /**Add another effect to this firework.*/
     addEffect (effect: FireworkEffect): void;
     /**Add several firework effects to this firework.*/
@@ -6736,12 +6800,12 @@ export class FireworkMeta extends ItemMeta {
 }
 
 /**Represents a fish entity.*/
-export class Fish extends WaterMob {
+export interface Fish extends WaterMob {
 
 }
 
 /**Represents a fishing hook.*/
-export class FishHook extends Projectile {
+export interface FishHook extends Projectile {
 
 }
 
@@ -6786,7 +6850,7 @@ export class FluidLevelChangeEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a Flying Entity.*/
-export class Flying extends Mob {
+export interface Flying extends Mob {
 
 }
 
@@ -6815,7 +6879,7 @@ export class FormattedCommandAlias extends Command {
 }
 
 /**What does the fox say?*/
-export class Fox extends Animals, Sittable {
+export interface Fox extends Animals, Sittable {
     /**Gets the first trusted player.*/
     getFirstTrustedPlayer (): AnimalTamer;
     /**Gets the current type of this fox.*/
@@ -6862,12 +6926,12 @@ export class FullServerTickHandler extends Object {
     stopTimingIfSync (): void
 }
 
-export class Furnace extends Directional, Lightable {
+export interface Furnace extends Directional, Lightable {
 
 }
 
 /**Represents a captured state of a furnace.*/
-export class Furnace extends Container {
+export interface Furnace extends Container {
     /**Get burn time.*/
     getBurnTime (): number;
     /**Gets the cook speed multiplier that this Furnace will cook  compared to vanilla.*/
@@ -6921,7 +6985,7 @@ export class FurnaceExtractEvent extends BlockExpEvent {
 }
 
 /**Interface to the inventory of a Furnace.*/
-export class FurnaceInventory extends Inventory {
+export interface FurnaceInventory extends Inventory {
     /**Get the current fuel.*/
     getFuel (): ItemStack;
     /**Gets the block or entity belonging to the open inventory*/
@@ -6980,7 +7044,7 @@ export class GameRule<T> extends Object {
 }
 
 /**'in_wall" indicates if the fence gate is attached to a wall, and if true the  texture is lowered by a small amount to blend in better.*/
-export class Gate extends Directional, Openable, Powerable {
+export interface Gate extends Directional, Openable, Powerable {
     /**Gets the value of the 'in_wall' property.*/
     isInWall (): boolean;
     /**Sets the value of the 'in_wall' property.*/
@@ -6994,21 +7058,21 @@ export class GenericCommandHelpTopic extends HelpTopic {
 }
 
 /**Represents a Ghast.*/
-export class Ghast extends Flying {
+export interface Ghast extends Flying {
 
 }
 
 /**Represents a Giant.*/
-export class Giant extends Monster {
+export interface Giant extends Monster {
 
 }
 
-export class GlassPane extends MultipleFacing, Waterlogged {
+export interface GlassPane extends MultipleFacing, Waterlogged {
 
 }
 
 /**Represents an AI goal of an entity*/
-export class Goal<T extends Mob> {
+export interface Goal<T extends Mob> {
     /**A unique key that identifies this type of goal.*/
     getKey (): GoalKey<T>;
     /**Returns a list of all applicable flags for this goal.   This method is only called on construction.*/
@@ -7046,7 +7110,7 @@ export class GoalType extends Enum<GoalType> {
 }
 
 /**A mechanical creature that may harm enemies.*/
-export class Golem extends Creature {
+export interface Golem extends Creature {
 
 }
 
@@ -7060,12 +7124,12 @@ export class GrassSpecies extends Enum<GrassSpecies> {
     static NORMAL: GrassSpecies
 }
 
-export class Grindstone extends Directional, FaceAttachable {
+export interface Grindstone extends Directional, FaceAttachable {
 
 }
 
 /**Interface to the inventory of a Grindstone.*/
-export class GrindstoneInventory extends Inventory {
+export interface GrindstoneInventory extends Inventory {
     /**Gets the lower input item.*/
     getLowerItem (): ItemStack;
     /**Gets the result.*/
@@ -7159,7 +7223,7 @@ export class GS4QueryEvent$QueryType extends Enum<GS4QueryEvent$QueryType> {
     static FULL: GS4QueryEvent$QueryType
 }
 
-export class Guardian extends Monster {
+export interface Guardian extends Monster {
 
 }
 
@@ -7194,7 +7258,7 @@ export class HandlerList extends Object {
 }
 
 /**Represents a Hanging entity*/
-export class Hanging extends Entity, Attachable {
+export interface Hanging extends Entity, Attachable {
     /**Sets the direction of the hanging entity, potentially overriding rules  of placement.*/
     setFacingDirection (face: BlockFace, force: boolean): boolean
 }
@@ -7280,7 +7344,7 @@ export class HelpCommand extends BukkitCommand {
 }
 
 /**The HelpMap tracks all help topics registered in a Bukkit server. When the  server starts up or is reloaded, help is processed and topics are added in  the following order:     General topics are loaded from the help.yml  Plugins load and optionally call addTopic()  Registered plugin commands are processed by HelpTopicFactory      objects to create topics  Topic contents are amended as directed in help.yml  */
-export class HelpMap {
+export interface HelpMap {
     /**Adds a topic to the server's help index.*/
     addTopic (topic: HelpTopic): void;
     /**Clears out the contents of the help index.*/
@@ -7325,13 +7389,13 @@ export class HelpTopicComparator$TopicNameComparator extends Object implements C
 }
 
 /**A HelpTopicFactory is used to create custom HelpTopic objects from  commands that inherit from a common base class or have executors that  inherit from a common base class. You can use a custom HelpTopic to change  the way all the commands in your plugin display in the help. If your plugin  implements a complex permissions system, a custom help topic may also be  appropriate.    To automatically bind your plugin's commands to your custom HelpTopic  implementation, first make sure all your commands or executors derive from  a custom base class (it doesn't have to do anything). Next implement a  custom HelpTopicFactory that accepts your custom command base class and  instantiates an instance of your custom HelpTopic from it. Finally,  register your HelpTopicFactory against your command base class using the  HelpMap.registerHelpTopicFactory(Class, HelpTopicFactory) method.    As the help system iterates over all registered commands to make help  topics, it first checks to see if there is a HelpTopicFactory registered  for the command's base class. If so, the factory is used to make a help  topic rather than a generic help topic. If no factory is found for the  command's base class and the command derives from PluginCommand, then the type of the command's executor  is inspected looking for a registered HelpTopicFactory. Finally, if no  factory is found, a generic help topic is created for the command.*/
-export class HelpTopicFactory<TCommand extends Command> {
+export interface HelpTopicFactory<TCommand extends Command> {
     /**This method accepts a command deriving from a custom command base class  and constructs a custom HelpTopic for it.*/
     createTopic (command: TCommand): HelpTopic
 }
 
 /**Represents a Hoglin.*/
-export class Hoglin extends Animals {
+export interface Hoglin extends Animals {
     /**Gets the amount of ticks until this entity will be converted to a Zoglin.*/
     getConversionTime (): number;
     /**Get whether the hoglin is able to be hunted by piglins.*/
@@ -7349,7 +7413,7 @@ export class Hoglin extends Animals {
 }
 
 /**Similar to Powerable, 'enabled' indicates whether or not the hopper  is currently activated.    Unlike most other blocks, a hopper is only enabled when it is not  receiving any power.*/
-export class Hopper extends Directional {
+export interface Hopper extends Directional {
     /**Gets the value of the 'enabled' property.*/
     isEnabled (): boolean;
     /**Sets the value of the 'enabled' property.*/
@@ -7357,12 +7421,12 @@ export class Hopper extends Directional {
 }
 
 /**Represents a captured state of a hopper.*/
-export class Hopper extends Container, LootableBlockInventory {
+export interface Hopper extends Container, LootableBlockInventory {
 
 }
 
 /**Represents a Minecart with a Hopper inside it*/
-export class HopperMinecart extends Minecart, InventoryHolder, LootableEntityInventory {
+export interface HopperMinecart extends Minecart, InventoryHolder, LootableEntityInventory {
     /**Checks whether or not this Minecart will pick up  items into its inventory.*/
     isEnabled (): boolean;
     /**Sets whether this Minecart will pick up items.*/
@@ -7370,7 +7434,7 @@ export class HopperMinecart extends Minecart, InventoryHolder, LootableEntityInv
 }
 
 /**Represents a Horse.*/
-export class Horse extends AbstractHorse {
+export interface Horse extends AbstractHorse {
     /**Gets the horse's color.*/
     getColor (): Horse$Color;
     /**Get the object's inventory.*/
@@ -7416,7 +7480,7 @@ export class Horse$Style extends Enum<Horse$Style> {
 }
 
 /**An interface to the inventory of a Horse.*/
-export class HorseInventory extends AbstractHorseInventory, ArmoredHorseInventory {
+export interface HorseInventory extends AbstractHorseInventory, ArmoredHorseInventory {
 
 }
 
@@ -7433,7 +7497,7 @@ export class HorseJumpEvent extends EntityEvent implements Cancellable {
 }
 
 /**Represents a human entity, such as an NPC or a player*/
-export class HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
+export interface HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
     /**Force-closes the currently open inventory view for this player, if any.*/
     closeInventory (): void;
     /**Force-closes the currently open inventory view for this player, if any.*/
@@ -7517,7 +7581,7 @@ export class HumanEntity extends LivingEntity, AnimalTamer, InventoryHolder {
 }
 
 /**Represents a Husk - variant of Zombie.*/
-export class Husk extends Zombie {
+export interface Husk extends Zombie {
     /**Gets the amount of ticks until this entity will be converted to a Zombie  as a result of being underwater.*/
     getConversionTime (): number;
     /**Get if this entity is in the process of converting to a Zombie as a  result of being underwater.*/
@@ -7527,7 +7591,7 @@ export class Husk extends Zombie {
 }
 
 /**Represents a type of "Illager".*/
-export class Illager extends Raider {
+export interface Illager extends Raider {
 
 }
 
@@ -7549,7 +7613,7 @@ export class IllegalPluginAccessException extends RuntimeException {
 }
 
 /**Represents an Illusioner "Illager".*/
-export class Illusioner extends Spellcaster, RangedEntity {
+export interface Illusioner extends Spellcaster, RangedEntity {
 
 }
 
@@ -7632,7 +7696,7 @@ export class InvalidPluginException extends Exception {
 }
 
 /**Interface to the various inventories. Behavior relating to Material.AIR is unspecified.     Note that whilst iterator() deals with the entire inventory, add  / contains / remove methods deal only with the storage contents.    Consider using getContents() and getStorageContents() for  specific iteration.*/
-export class Inventory extends Iterable<ItemStack> {
+export interface Inventory extends Iterable<ItemStack> {
     /**Stores the given ItemStacks in the inventory.*/
     addItem (...items: ItemStack[]): HashMap<Integer,ItemStack>;
     /**Finds all slots in the inventory containing any ItemStacks with the  given ItemStack.*/
@@ -7846,7 +7910,7 @@ export class InventoryEvent extends Event {
     getViewers (): List<HumanEntity>
 }
 
-export class InventoryHolder {
+export interface InventoryHolder {
     /**Get the object's inventory.*/
     getInventory (): Inventory
 }
@@ -8063,7 +8127,7 @@ export class InventoryView$Property extends Enum<InventoryView$Property> {
 }
 
 /**An iron Golem that protects Villages.*/
-export class IronGolem extends Golem {
+export interface IronGolem extends Golem {
     /**Gets whether this iron golem was built by a player.*/
     isPlayerCreated (): boolean;
     /**Sets whether this iron golem was built by a player or not.*/
@@ -8071,7 +8135,7 @@ export class IronGolem extends Golem {
 }
 
 /**Represents a dropped item.*/
-export class Item extends Entity {
+export interface Item extends Entity {
     /**Gets if non-player entities can pick this Item up*/
     canMobPickup (): boolean;
     /**Gets the item stack associated with this item drop.*/
@@ -8109,7 +8173,7 @@ export class ItemDespawnEvent extends EntityEvent implements Cancellable {
 }
 
 /**An instance of the ItemFactory can be obtained with Server.getItemFactory().    The ItemFactory is solely responsible for creating item meta containers to  apply on item stacks.*/
-export class ItemFactory {
+export interface ItemFactory {
     /**Returns an appropriate item meta for the specified stack.*/
     asMetaFor (meta: ItemMeta, stack: ItemStack): ItemMeta;
     /**Returns an appropriate item meta for the specified material.*/
@@ -8124,6 +8188,16 @@ export class ItemFactory {
     getI18NDisplayName (item: ItemStack): String;
     /**This creates a new item meta for the material.*/
     getItemMeta (material: Material): ItemMeta;
+    /**Creates a Content of that Entity for displaying.*/
+    hoverContentOf (entity: Entity): Content;
+    /**Creates a Content of that Entity for displaying.*/
+    hoverContentOf (entity: Entity, customName: String): Content;
+    /**Creates a Content of that Entity for displaying.*/
+    hoverContentOf (entity: Entity, customName: BaseComponent): Content;
+    /**Creates a Content of that Entity for displaying.*/
+    hoverContentOf (entity: Entity, customName: BaseComponent[]): Content;
+    /**Creates a Content of that ItemStack for displaying.*/
+    hoverContentOf (itemStack: ItemStack): Content;
     /**This method checks the item meta to confirm that it is applicable (no  data lost if applied) to the specified ItemStack.*/
     isApplicable (meta: ItemMeta, stack: ItemStack): boolean;
     /**This method checks the item meta to confirm that it is applicable (no  data lost if applied) to the specified Material.*/
@@ -8149,7 +8223,7 @@ export class ItemFlag extends Enum<ItemFlag> {
 }
 
 /**Represents an Item Frame*/
-export class ItemFrame extends Hanging {
+export interface ItemFrame extends Hanging {
     /**Get the item in this frame*/
     getItem (): ItemStack;
     /**Get the rotation of the frame's item*/
@@ -8184,7 +8258,7 @@ export class ItemMergeEvent extends EntityEvent implements Cancellable {
 }
 
 /**This type represents the storage mechanism for auxiliary item data.    An implementation will handle the creation and application for ItemMeta.  This class should not be implemented by a plugin in a live environment.*/
-export class ItemMeta extends Cloneable, ConfigurationSerializable, PersistentDataHolder {
+export interface ItemMeta extends Cloneable, ConfigurationSerializable, PersistentDataHolder {
     /**Add an Attribute and it's Modifier.*/
     addAttributeModifier (attribute: Attribute, modifier: AttributeModifier): boolean;
     /**Adds the specified enchantment to this item meta.*/
@@ -8455,7 +8529,7 @@ export class JavaPluginLoader extends Object implements PluginLoader {
 }
 
 /**'orientation' is the direction the block is facing.*/
-export class Jigsaw extends BlockData {
+export interface Jigsaw extends BlockData {
     /**Gets the value of the 'orientation' property.*/
     getOrientation (): Jigsaw$Orientation;
     /**Sets the value of the 'orientation' property.*/
@@ -8463,7 +8537,7 @@ export class Jigsaw extends BlockData {
 }
 
 /**Represents a captured state of a jigsaw.*/
-export class Jigsaw extends TileState {
+export interface Jigsaw extends TileState {
 
 }
 
@@ -8508,13 +8582,13 @@ export class JSONUtil$JSONPair extends Object {
 }
 
 /**'has_record' is a quick flag to check whether this jukebox has a record  inside it.*/
-export class Jukebox extends BlockData {
+export interface Jukebox extends BlockData {
     /**Gets the value of the 'has_record' property.*/
     hasRecord (): boolean
 }
 
 /**Represents a captured state of a jukebox.*/
-export class Jukebox extends TileState {
+export interface Jukebox extends TileState {
     /**Stops the jukebox playing and ejects the current record.*/
     eject (): boolean;
     /**Gets the record inserted into the jukebox.*/
@@ -8532,17 +8606,17 @@ export class Jukebox extends TileState {
 }
 
 /**Represents an object which has a NamespacedKey attached to it.*/
-export class Keyed {
+export interface Keyed {
     /**Return the namespaced identifier for this object.*/
     getKey (): NamespacedKey
 }
 
 /**Represents a custom BossBar that has a  NamespacedKey*/
-export class KeyedBossBar extends BossBar, Keyed {
+export interface KeyedBossBar extends BossBar, Keyed {
 
 }
 
-export class KnowledgeBookMeta extends ItemMeta {
+export interface KnowledgeBookMeta extends ItemMeta {
     /**Adds new recipe to the end of the book.*/
     addRecipe (...recipes: NamespacedKey[]): void;
     clone (): KnowledgeBookMeta;
@@ -8554,12 +8628,12 @@ export class KnowledgeBookMeta extends ItemMeta {
     setRecipes (recipes: List<NamespacedKey>): void
 }
 
-export class Ladder extends Directional, Waterlogged {
+export interface Ladder extends Directional, Waterlogged {
 
 }
 
 /**'hanging' denotes whether the lantern is hanging from a block.*/
-export class Lantern extends Waterlogged {
+export interface Lantern extends Waterlogged {
     /**Gets the value of the 'hanging' property.*/
     isHanging (): boolean;
     /**Sets the value of the 'hanging' property.*/
@@ -8567,7 +8641,7 @@ export class Lantern extends Waterlogged {
 }
 
 /**Represents a large Fireball*/
-export class LargeFireball extends SizedFireball {
+export interface LargeFireball extends SizedFireball {
 
 }
 
@@ -8590,12 +8664,12 @@ export class LazyMetadataValue$CacheStrategy extends Enum<LazyMetadataValue$Cach
 }
 
 /**Represents a Leash Hitch on a fence*/
-export class LeashHitch extends Hanging {
+export interface LeashHitch extends Hanging {
 
 }
 
 /**Represents leather armor (Material.LEATHER_BOOTS, Material.LEATHER_CHESTPLATE, Material.LEATHER_HELMET, or Material.LEATHER_LEGGINGS) that can be colored.*/
-export class LeatherArmorMeta extends ItemMeta {
+export interface LeatherArmorMeta extends ItemMeta {
     clone (): LeatherArmorMeta;
     /**Gets the color of the armor.*/
     getColor (): Color;
@@ -8604,7 +8678,7 @@ export class LeatherArmorMeta extends ItemMeta {
 }
 
 /**'persistent' indicates whether or not leaves will be checked by the server to  see if they are subject to decay or not.    'distance' denotes how far the block is from a tree and is used in  conjunction with 'persistent' flag to determine if the leaves will decay or  not.*/
-export class Leaves extends BlockData {
+export interface Leaves extends BlockData {
     /**Gets the value of the 'distance' property.*/
     getDistance (): number;
     /**Gets the value of the 'persistent' property.*/
@@ -8626,13 +8700,13 @@ export class LeavesDecayEvent extends BlockEvent implements Cancellable {
 }
 
 /**'has_book' is a quick flag to check whether this lectern has a book inside  it.*/
-export class Lectern extends Directional, Powerable {
+export interface Lectern extends Directional, Powerable {
     /**Gets the value of the 'has_book' property.*/
     hasBook (): boolean
 }
 
 /**Represents a captured state of a lectern.*/
-export class Lectern extends TileState, BlockInventoryHolder {
+export interface Lectern extends TileState, BlockInventoryHolder {
     /**Get the object's inventory.*/
     getInventory (): Inventory;
     /**Get the current lectern page.*/
@@ -8643,7 +8717,7 @@ export class Lectern extends TileState, BlockInventoryHolder {
 }
 
 /**Interface to the inventory of a Lectern.*/
-export class LecternInventory extends Inventory {
+export interface LecternInventory extends Inventory {
     /**Gets the lectern's held book.*/
     getBook (): ItemStack;
     /**Gets the block or entity belonging to the open inventory*/
@@ -8653,7 +8727,7 @@ export class LecternInventory extends Inventory {
 }
 
 /**'level' represents the amount of fluid contained within this block, either by  itself or inside a cauldron.    In the case of water and lava blocks the levels have special meanings: a  level of 0 corresponds to a source block, 1-7 regular fluid heights, and 8-15  to "falling" fluids. All falling fluids have the same behaviour, but the  level corresponds to that of the block above them, equal to  this.level - 8  Note that counterintuitively, an adjusted level of 1 is the highest level,  whilst 7 is the lowest.    May not be higher than getMaximumLevel().*/
-export class Levelled extends BlockData {
+export interface Levelled extends BlockData {
     /**Gets the value of the 'level' property.*/
     getLevel (): number;
     /**Gets the maximum allowed value of the 'level' property.*/
@@ -8662,7 +8736,7 @@ export class Levelled extends BlockData {
     setLevel (level: number): void
 }
 
-export class Lidded {
+export interface Lidded {
     /**Sets the block's animated state to closed even if a player is currently  viewing this block.*/
     close (): void;
     /**Sets the block's animated state to open and prevents it from being closed  until close() is called.*/
@@ -8670,7 +8744,7 @@ export class Lidded {
 }
 
 /**'lit' denotes whether this block (either a redstone torch or furnace) is  currently lit - that is not burned out.*/
-export class Lightable extends BlockData {
+export interface Lightable extends BlockData {
     /**Gets the value of the 'lit' property.*/
     isLit (): boolean;
     /**Sets the value of the 'lit' property.*/
@@ -8678,7 +8752,7 @@ export class Lightable extends BlockData {
 }
 
 /**Represents an instance of a lightning strike. May or may not do damage.*/
-export class LightningStrike extends Entity {
+export interface LightningStrike extends Entity {
     /**Returns whether the strike is an effect that does no damage.*/
     isEffect (): boolean;
     spigot (): LightningStrike$Spigot
@@ -8730,12 +8804,12 @@ export class LingeringPotionSplashEvent extends ProjectileHitEvent implements Ca
 }
 
 /**Simple interface for tagging all EventListeners*/
-export class Listener {
+export interface Listener {
 
 }
 
 /**Represents a living entity, such as a monster or player*/
-export class LivingEntity extends Attributable, Damageable, ProjectileSource {
+export interface LivingEntity extends Attributable, Damageable, ProjectileSource {
     /**Adds the given PotionEffect to the living entity.*/
     addPotionEffect (effect: PotionEffect): boolean;
     /**Attempts to add all of the given PotionEffect to the living  entity.*/
@@ -8746,10 +8820,16 @@ export class LivingEntity extends Attributable, Damageable, ProjectileSource {
     getActiveItem (): ItemStack;
     /**Returns all currently active PotionEffects on the living  entity.*/
     getActivePotionEffects (): Collection<PotionEffect>;
+    /**Gets the time in ticks until the next arrow leaves the entity's body.*/
+    getArrowCooldown (): number;
+    /**Gets the amount of arrows in an entity's body.*/
+    getArrowsInBody (): number;
     /**Get the number of arrows stuck in this entity*/
     getArrowsStuck (): number;
     /**Gets if the living entity can pick up items.*/
     getCanPickupItems (): boolean;
+    /**Get the category to which this entity belongs.*/
+    getCategory (): EntityCategory;
     /**Gets a mutable set of UUIDs of the entities which are exempt from the  entity's collidable rule and which's collision with this entity will  behave the opposite of it.*/
     getCollidableExemptions (): Set<UUID>;
     /**Gets the inventory with the equipment worn by the living entity.*/
@@ -8838,6 +8918,10 @@ export class LivingEntity extends Attributable, Damageable, ProjectileSource {
     isSleeping (): boolean;
     /**Checks to see if an entity is swimming.*/
     isSwimming (): boolean;
+    /**Plays pickup item animation towards this entity.*/
+    playPickupItemAnimation (item: Item): void;
+    /**Plays pickup item animation towards this entity.*/
+    playPickupItemAnimation (item: Item, quantity: number): void;
     /**Performs a ray trace that provides information on the targeted block.*/
     rayTraceBlocks (maxDistance: number): RayTraceResult;
     /**Performs a ray trace that provides information on the targeted block.*/
@@ -8846,6 +8930,10 @@ export class LivingEntity extends Attributable, Damageable, ProjectileSource {
     removePotionEffect (type: PotionEffectType): void;
     /**Sets whether an entity will have AI.*/
     setAI (ai: boolean): void;
+    /**Sets the time in ticks until the next arrow leaves the entity's body.*/
+    setArrowCooldown (ticks: number): void;
+    /**Set the amount of arrows in the entity's body.*/
+    setArrowsInBody (count: number): void;
     /**Set the number of arrows stuck in this entity*/
     setArrowsStuck (arrows: number): void;
     /**Sets whether or not the living entity can pick up items.*/
@@ -8885,7 +8973,7 @@ export class LivingEntity extends Attributable, Damageable, ProjectileSource {
 }
 
 /**Represents a Llama.*/
-export class Llama extends ChestedHorse, RangedEntity {
+export interface Llama extends ChestedHorse, RangedEntity {
     /**Gets the llama's color.*/
     getColor (): Llama$Color;
     /**Get the object's inventory.*/
@@ -8911,7 +8999,7 @@ export class Llama$Color extends Enum<Llama$Color> {
 }
 
 /**An interface to the inventory of a Llama.*/
-export class LlamaInventory extends SaddledHorseInventory {
+export interface LlamaInventory extends SaddledHorseInventory {
     /**Gets the item in the llama's decor slot.*/
     getDecor (): ItemStack;
     /**Sets the item in the llama's decor slot.*/
@@ -8919,7 +9007,7 @@ export class LlamaInventory extends SaddledHorseInventory {
 }
 
 /**Represents Llama spit.*/
-export class LlamaSpit extends Projectile {
+export interface LlamaSpit extends Projectile {
 
 }
 
@@ -9132,7 +9220,7 @@ export class Location extends Object implements Cloneable, ConfigurationSerializ
 }
 
 /**Represents a block (usually a container) that may be locked. When a lock is  active an item with a name corresponding to the key will be required to open  this block.*/
-export class Lockable {
+export interface Lockable {
     /**Gets the key needed to access the container.*/
     getLock (): String;
     /**Checks if the container has a valid (non empty) key.*/
@@ -9149,12 +9237,12 @@ export class LookupProfileEvent extends Event {
 }
 
 /**Interface to the inventory of a Loom.*/
-export class LoomInventory extends Inventory {
+export interface LoomInventory extends Inventory {
 
 }
 
 /**Represents a Container or a  Mob that can have a loot table.    Container loot will only generate upon opening, and only when the container  is first opened.    Entities will only generate loot upon death.*/
-export class Lootable {
+export interface Lootable {
     /**Clears the associated Loot Table to this object*/
     clearLootTable (): void;
     /**Gets the Loot Table attached to this block or entity.*/
@@ -9172,19 +9260,19 @@ export class Lootable {
 }
 
 /**Represents an Inventory that can generate loot, such as Chests inside of Fortresses and Mineshafts*/
-export class LootableBlockInventory extends LootableInventory {
+export interface LootableBlockInventory extends LootableInventory {
     /**Gets the block that is lootable*/
     getBlock (): Block
 }
 
 /**Represents an Inventory that can generate loot, such as Minecarts inside of Mineshafts*/
-export class LootableEntityInventory extends LootableInventory {
+export interface LootableEntityInventory extends LootableInventory {
     /**Gets the entity that is lootable*/
     getEntity (): Entity
 }
 
 /**Represents an Inventory that contains a Loot Table associated to it that will  automatically fill on first open.   A new feature and API is provided to support automatically refreshing the contents  of the inventory based on that Loot Table after a configurable amount of time has passed.   The behavior of how the Inventory is filled based on the loot table may vary based  on Minecraft versions and the Loot Table feature.*/
-export class LootableInventory extends Lootable {
+export interface LootableInventory extends Lootable {
     /**Gets the timestamp in milliseconds that the Lootable object was last refilled*/
     getLastFilled (): number;
     /**Gets the timestamp, in milliseconds, of when the player last looted this object*/
@@ -9274,7 +9362,7 @@ export class LootGenerateEvent extends WorldEvent implements Cancellable {
 }
 
 /**LootTables are technical files that represent what items should be in  naturally generated containers, what items should be dropped when killing a  mob, or what items can be fished.   See the   Minecraft Wiki for more information.*/
-export class LootTable extends Keyed {
+export interface LootTable extends Keyed {
     /**Attempt to fill an inventory with this LootTable's loot.*/
     fillInventory (inventory: Inventory, random: Random, context: LootContext): void;
     /**Returns a mutable list of loot generated by this LootTable.*/
@@ -9428,7 +9516,7 @@ export class LootTables extends Enum<LootTables> implements Keyed {
 }
 
 /**Represents a MagmaCube.*/
-export class MagmaCube extends Slime {
+export interface MagmaCube extends Slime {
 
 }
 
@@ -9449,7 +9537,7 @@ export class ManuallyAbandonedConversationCanceller extends Object implements Co
 }
 
 /**Represents a canvas for drawing to a map. Each canvas is associated with a  specific MapRenderer and represents that renderer's layer on the  map.*/
-export class MapCanvas {
+export interface MapCanvas {
     /**Draw an image to the map.*/
     drawImage (x: number, y: number, image: Image): void;
     /**Render text to the map using fancy formatting.*/
@@ -9574,7 +9662,7 @@ export class MapInitializeEvent extends ServerEvent {
 }
 
 /**Represents a map that can be scalable.*/
-export class MapMeta extends ItemMeta {
+export interface MapMeta extends ItemMeta {
     clone (): MapMeta;
     /**Gets the map color that is set.*/
     getColor (): Color;
@@ -9617,7 +9705,7 @@ export class MapRenderer extends Object {
 }
 
 /**Represents a map item.*/
-export class MapView {
+export interface MapView {
     /**Add a renderer to this map.*/
     addRenderer (renderer: MapRenderer): void;
     /**Get the center X position of this map.*/
@@ -12362,7 +12450,7 @@ export class MemorySection extends Object implements ConfigurationSection {
 }
 
 /**Represents a merchant. A merchant is a special type of inventory which can  facilitate custom trades between items.*/
-export class Merchant {
+export interface Merchant {
     /**Get the recipe at a certain index of this merchant's trade list.*/
     getRecipe (i: number): MerchantRecipe;
     /**Get the number of trades this merchant currently has available.*/
@@ -12380,7 +12468,7 @@ export class Merchant {
 }
 
 /**Represents a trading inventory between a player and a merchant.    The holder of this Inventory is the owning Villager, or null if the player is  trading with a merchant created by a plugin.*/
-export class MerchantInventory extends Inventory {
+export interface MerchantInventory extends Inventory {
     /**Gets the Merchant associated with this inventory.*/
     getMerchant (): Merchant;
     /**Get the currently active recipe.*/
@@ -12420,7 +12508,7 @@ export class MerchantRecipe extends Object implements Recipe {
 }
 
 /**For when all you care about is just messaging*/
-export class MessageCommandSender extends CommandSender {
+export interface MessageCommandSender extends CommandSender {
     /**Adds a new empty PermissionAttachment to this object*/
     addAttachment (plugin: Plugin): PermissionAttachment;
     /**Temporarily adds a new empty PermissionAttachment to this  object*/
@@ -12472,7 +12560,7 @@ export class MessageTooLargeException extends RuntimeException {
 }
 
 /**A class responsible for managing the registrations of plugin channels and  their listeners.   Channel names must contain a colon separator and consist of only [a-z0-9/._-]  - i.e. they MUST be valid NamespacedKey. The "BungeeCord" channel is  an exception and may only take this form.*/
-export class Messenger {
+export interface Messenger {
     /**Dispatches the specified incoming message to any registered listeners.*/
     dispatchIncomingMessage (source: Player, channel: String, message: number[]): void;
     /**Gets a set containing all the incoming plugin channel registrations  that are on the requested channel.*/
@@ -12514,7 +12602,7 @@ export class Messenger {
 }
 
 /**This interface is implemented by all objects that can provide metadata  about themselves.*/
-export class Metadatable {
+export interface Metadatable {
     /**Returns a list of previously set metadata values from the implementing  object's metadata store.*/
     getMetadata (metadataKey: String): List<MetadataValue>;
     /**Tests to see whether the implementing object contains the given  metadata value in its metadata store.*/
@@ -12535,7 +12623,7 @@ export class MetadataEvaluationException extends RuntimeException {
 
 }
 
-export class MetadataStore<T> {
+export interface MetadataStore<T> {
     /**Returns all metadata values attached to an object.*/
     getMetadata (subject: T, metadataKey: String): List<MetadataValue>;
     /**Tests to see if a metadata attribute has been set on an object.*/
@@ -12565,7 +12653,7 @@ export class MetadataStoreBase<T> extends Object {
     setMetadata (subject: T, metadataKey: String, newMetadataValue: MetadataValue): void
 }
 
-export class MetadataValue {
+export interface MetadataValue {
     /**Attempts to convert the value of this metadata item into a boolean.*/
     asBoolean (): boolean;
     /**Attempts to convert the value of this metadata item into a byte.*/
@@ -12617,7 +12705,7 @@ export class MethodHandleEventExecutor extends Object implements EventExecutor {
 }
 
 /**Represents a minecart entity.*/
-export class Minecart extends Vehicle {
+export interface Minecart extends Vehicle {
     /**Gets a minecart's damage.*/
     getDamage (): number;
     /**Gets the derailed velocity modifier.*/
@@ -12668,7 +12756,7 @@ export class Mirror extends Enum<Mirror> {
 }
 
 /**Represents a Mob. Mobs are living entities with simple AI.*/
-export class Mob extends LivingEntity, Lootable {
+export interface Mob extends LivingEntity, Lootable {
     /**Enables access to control the pathing of an Entity*/
     getPathfinder (): Pathfinder;
     /**Gets the current target of this Mob*/
@@ -12684,7 +12772,7 @@ export class Mob extends LivingEntity, Lootable {
 }
 
 /**Represents a part of the "brain" of a mob. It tracks all tasks (running or not), allows adding and removing goals*/
-export class MobGoals {
+export interface MobGoals {
     addGoal <T extends Mob>(mob: T, priority: number, goal: Goal<T>): void;
     getAllGoals <T extends Mob>(mob: T): Collection<Goal<T>>;
     getAllGoals <T extends Mob>(mob: T, type: GoalType): Collection<Goal<T>>;
@@ -12714,7 +12802,7 @@ export class MoistureChangeEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a Monster.*/
-export class Monster extends Creature {
+export interface Monster extends Creature {
 
 }
 
@@ -12748,7 +12836,7 @@ export class MRUMapCache<K,V> extends AbstractMap<K,V> {
 }
 
 /**Represents a Mule - variant of ChestedHorse.*/
-export class Mule extends ChestedHorse {
+export interface Mule extends ChestedHorse {
 
 }
 
@@ -12761,7 +12849,7 @@ export class MultipleCommandAlias extends Command {
 }
 
 /**This class encompasses the 'north', 'east', 'south', 'west', 'up', 'down'  boolean flags which are used to set which faces of the block textures are  displayed on.    Some blocks may not be able to have faces on all directions, use  getAllowedFaces() to get all possible faces for this block. It is  not valid to call any methods on non-allowed faces.*/
-export class MultipleFacing extends BlockData {
+export interface MultipleFacing extends BlockData {
     /**Gets all of this faces which may be set on this block.*/
     getAllowedFaces (): Set<BlockFace>;
     /**Get all of the faces which are enabled on this block.*/
@@ -12803,7 +12891,7 @@ export class MushroomBlockTexture extends Enum<MushroomBlockTexture> {
 }
 
 /**Represents a mushroom Cow*/
-export class MushroomCow extends Cow {
+export interface MushroomCow extends Cow {
     /**Get the variant of this cow.*/
     getVariant (): MushroomCow$Variant;
     /**Set the variant of this cow.*/
@@ -12818,7 +12906,7 @@ export class MushroomCow$Variant extends Enum<MushroomCow$Variant> {
     static RED: MushroomCow$Variant
 }
 
-export class Nameable {
+export interface Nameable {
     /**Gets the custom name on a mob or block.*/
     getCustomName (): String;
     /**Sets a custom name on a mob or block.*/
@@ -12826,7 +12914,7 @@ export class Nameable {
 }
 
 /**Represents a namespaced resource, see NamespacedKey for single elements  or NamespacedTag for a collection of elements   Namespaces may only contain lowercase alphanumeric characters, periods,  underscores, and hyphens.    Keys may only contain lowercase alphanumeric characters, periods,  underscores, hyphens, and forward slashes.    You should not be implementing this interface yourself, use NamespacedKey  or NamespacedTag as needed instead.*/
-export class Namespaced {
+export interface Namespaced {
     /**Gets the key corresponding to this resource*/
     getKey (): String;
     /**Gets the namespace this resource is a part of*/
@@ -12871,7 +12959,7 @@ export class NetherWartsState extends Enum<NetherWartsState> {
 }
 
 /**Represents a client connected to the server.*/
-export class NetworkClient {
+export interface NetworkClient {
     /**Returns the socket address of the client.*/
     getAddress (): InetSocketAddress;
     /**Returns the protocol version of the client.*/
@@ -12940,7 +13028,7 @@ export class Note$Tone extends Enum<Note$Tone> {
 }
 
 /**'instrument' is the type of sound made when this note block is activated.    'note' is the specified tuned pitch that the instrument will be played in.*/
-export class NoteBlock extends Powerable {
+export interface NoteBlock extends Powerable {
     /**Gets the value of the 'instrument' property.*/
     getInstrument (): Instrument;
     /**Gets the value of the 'note' property.*/
@@ -12966,7 +13054,7 @@ export class NotePlayEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a non-player character*/
-export class NPC extends Creature {
+export interface NPC extends Creature {
 
 }
 
@@ -13028,7 +13116,7 @@ export class NumericPrompt extends ValidatingPrompt {
 }
 
 /**An objective on a scoreboard that can show scores specific to entries. This  objective is only relevant to the display of the associated scoreboard.*/
-export class Objective {
+export interface Objective {
     /**Gets the criteria this objective tracks.*/
     getCriteria (): String;
     /**Gets the name displayed to players for this objective*/
@@ -13055,12 +13143,12 @@ export class Objective {
     unregister (): void
 }
 
-export class Observer extends Directional, Powerable {
+export interface Observer extends Directional, Powerable {
 
 }
 
 /**A wild tameable cat*/
-export class Ocelot extends Animals {
+export interface Ocelot extends Animals {
     /**Gets the current type of this cat.*/
     getCatType (): Ocelot$Type;
     /**Sets the current type of this cat.*/
@@ -13099,7 +13187,7 @@ export class OctaveGenerator extends Object {
     setZScale (scale: number): void
 }
 
-export class OfflinePlayer extends ServerOperator, AnimalTamer, ConfigurationSerializable {
+export interface OfflinePlayer extends ServerOperator, AnimalTamer, ConfigurationSerializable {
     /**Permanently Bans this player from the server*/
     banPlayer (reason: String): BanEntry;
     /**Permanently Bans this player from the server*/
@@ -13172,14 +13260,14 @@ export class OfflinePlayer extends ServerOperator, AnimalTamer, ConfigurationSer
 }
 
 /**'open' denotes whether this door-like block is currently opened.*/
-export class Openable extends BlockData {
+export interface Openable extends BlockData {
     /**Gets the value of the 'open' property.*/
     isOpen (): boolean;
     /**Sets the value of the 'open' property.*/
     setOpen (open: boolean): void
 }
 
-export class Openable {
+export interface Openable {
     /**Check to see if the door is open.*/
     isOpen (): boolean;
     /**Configure this door to be either open or closed;*/
@@ -13187,7 +13275,7 @@ export class Openable {
 }
 
 /**'axis' represents the axis along whilst this block is oriented.    Some blocks such as the portal block may not be able to be placed in all  orientations, use getAxes() to retrieve all possible such  orientations.*/
-export class Orientable extends BlockData {
+export interface Orientable extends BlockData {
     /**Gets the axes which are applicable to this block.*/
     getAxes (): Set<Axis>;
     /**Gets the value of the 'axis' property.*/
@@ -13197,7 +13285,7 @@ export class Orientable extends BlockData {
 }
 
 /**Represents a Painting.*/
-export class Painting extends Hanging {
+export interface Painting extends Hanging {
     /**Get the art on this painting*/
     getArt (): Art;
     /**Set the art on this painting*/
@@ -13207,7 +13295,7 @@ export class Painting extends Hanging {
 }
 
 /**Panda entity.*/
-export class Panda extends Animals {
+export interface Panda extends Animals {
     /**Gets this Panda's hidden gene.*/
     getHiddenGene (): Panda$Gene;
     /**Gets this Panda's main gene.*/
@@ -13272,7 +13360,7 @@ export class PaperServerListPingEvent extends ServerListPingEvent implements Can
 }
 
 /**Represents a Parrot.*/
-export class Parrot extends Tameable, Sittable {
+export interface Parrot extends Tameable, Sittable {
     /**Get the variant of this parrot.*/
     getVariant (): Parrot$Variant;
     /**Set the variant of this parrot.*/
@@ -13445,7 +13533,7 @@ export class ParticleBuilder extends Object {
 }
 
 /**Handles pathfinding operations for an Entity*/
-export class Pathfinder {
+export interface Pathfinder {
     /**Checks if this pathfinder assumes that the mob can float*/
     canFloat (): boolean;
     /**Checks if this pathfinder allows passing through closed doors.*/
@@ -13483,7 +13571,7 @@ export class Pathfinder {
 }
 
 /**Represents the result of a pathfinding calculation*/
-export class Pathfinder$PathResult {
+export interface Pathfinder$PathResult {
     getFinalPoint (): Location;
     getNextPoint (): Location;
     getNextPointIndex (): number;
@@ -13572,7 +13660,7 @@ export class PerlinOctaveGenerator extends OctaveGenerator {
 }
 
 /**Represents an object that may be assigned permissions*/
-export class Permissible extends ServerOperator {
+export interface Permissible extends ServerOperator {
     /**Adds a new empty PermissionAttachment to this object*/
     addAttachment (plugin: Plugin): PermissionAttachment;
     /**Temporarily adds a new empty PermissionAttachment to this  object*/
@@ -13703,19 +13791,19 @@ export class PermissionDefault extends Enum<PermissionDefault> {
 }
 
 /**Represents a class which is to be notified when a PermissionAttachment is removed from a Permissible*/
-export class PermissionRemovedExecutor {
+export interface PermissionRemovedExecutor {
     /**Called when a PermissionAttachment is removed from a Permissible*/
     attachmentRemoved (attachment: PermissionAttachment): void
 }
 
 /**This interface represents the context in which the PersistentDataType can  serialize and deserialize the passed values.*/
-export class PersistentDataAdapterContext {
+export interface PersistentDataAdapterContext {
     /**Creates a new and empty meta container instance.*/
     newPersistentDataContainer (): PersistentDataContainer
 }
 
 /**This interface represents a map like object, capable of storing custom tags  in it.*/
-export class PersistentDataContainer {
+export interface PersistentDataContainer {
     /**Returns the metadata value that is stored on the  PersistentDataHolder instance.*/
     get <T,Z>(key: NamespacedKey, type: PersistentDataType<T,Z>): Z;
     /**Returns the adapter context this tag container uses.*/
@@ -13735,13 +13823,13 @@ export class PersistentDataContainer {
 }
 
 /**The PersistentDataHolder interface defines an object that can store  custom persistent meta data on it.*/
-export class PersistentDataHolder {
+export interface PersistentDataHolder {
     /**Returns a custom tag container capable of storing tags on the object.*/
     getPersistentDataContainer (): PersistentDataContainer
 }
 
 /**This class represents an enum with a generic content type. It defines the  types a custom tag can have.    This interface can be used to create your own custom  PersistentDataType with different complex types. This may be useful  for the likes of a UUIDTagType:     public class UUIDTagType implements PersistentDataType<byte[], UUID> {           {@literal @Override}          public Class<byte[]> getPrimitiveType() {              return byte[].class;          }           {@literal @Override}          public Class<UUID> getComplexType() {              return UUID.class;          }           {@literal @Override}          public byte[] toPrimitive(UUID complex, PersistentDataAdapterContext context) {              ByteBuffer bb = ByteBuffer.wrap(new byte[16]);              bb.putLong(complex.getMostSignificantBits());              bb.putLong(complex.getLeastSignificantBits());              return bb.array();          }           {@literal @Override}          public UUID fromPrimitive(byte[] primitive, PersistentDataAdapterContext context) {              ByteBuffer bb = ByteBuffer.wrap(primitive);              long firstLong = bb.getLong();              long secondLong = bb.getLong();              return new UUID(firstLong, secondLong);          }      }*/
-export class PersistentDataType<T,Z> {
+export interface PersistentDataType<T,Z> {
     /**Creates a complex object based of the passed primitive value*/
     fromPrimitive (primitive: T, context: PersistentDataAdapterContext): Z;
     /**Returns the complex object type the primitive value resembles.*/
@@ -13765,7 +13853,7 @@ export class PersistentDataType$PrimitivePersistentDataType<T> extends Object im
 }
 
 /**Represents a phantom.*/
-export class Phantom extends Flying {
+export interface Phantom extends Flying {
     getSize (): number;
     /**Get the UUID of the entity that caused this phantom to spawn*/
     getSpawningEntity (): UUID;
@@ -13779,12 +13867,12 @@ export class PhantomPreSpawnEvent extends PreCreatureSpawnEvent {
 }
 
 /**Represents a Pig.*/
-export class Pig extends Steerable, Vehicle {
+export interface Pig extends Steerable, Vehicle {
 
 }
 
 /**Represents a Piglin.*/
-export class Piglin extends PiglinAbstract {
+export interface Piglin extends PiglinAbstract {
     /**Get whether the piglin is able to hunt hoglins.*/
     isAbleToHunt (): boolean;
     /**Sets whether the piglin is able to hunt hoglins.*/
@@ -13792,7 +13880,7 @@ export class Piglin extends PiglinAbstract {
 }
 
 /**Piglin / Piglin Brute.*/
-export class PiglinAbstract extends Monster, Ageable {
+export interface PiglinAbstract extends Monster, Ageable {
     /**Gets the amount of ticks until this entity will be converted to a  Zombified Piglin.*/
     getConversionTime (): number;
     /**Get if this entity is in the process of converting to a Zombified Piglin.*/
@@ -13806,7 +13894,7 @@ export class PiglinAbstract extends Monster, Ageable {
 }
 
 /**Represents a Piglin Brute.*/
-export class PiglinBrute extends PiglinAbstract {
+export interface PiglinBrute extends PiglinAbstract {
 
 }
 
@@ -13823,7 +13911,7 @@ export class PigZapEvent extends EntityZapEvent implements Cancellable {
 }
 
 /**Represents a Pig Zombie.*/
-export class PigZombie extends Zombie {
+export interface PigZombie extends Zombie {
     /**Get the pig zombie's current anger level.*/
     getAnger (): number;
     /**Not applicable to this entity*/
@@ -13859,12 +13947,12 @@ export class PigZombieAngerEvent extends EntityEvent implements Cancellable {
 }
 
 /**Illager entity.*/
-export class Pillager extends Illager, InventoryHolder {
+export interface Pillager extends Illager, InventoryHolder {
 
 }
 
 /**'extended' denotes whether the piston head is currently extended or not.*/
-export class Piston extends Directional {
+export interface Piston extends Directional {
     /**Gets the value of the 'extended' property.*/
     isExtended (): boolean;
     /**Sets the value of the 'extended' property.*/
@@ -13872,7 +13960,7 @@ export class Piston extends Directional {
 }
 
 /**'short' denotes this piston head is shorter than the usual amount because it  is currently retracting.*/
-export class PistonHead extends TechnicalPiston {
+export interface PistonHead extends TechnicalPiston {
     /**Gets the value of the 'short' property.*/
     isShort (): boolean;
     /**Sets the value of the 'short' property.*/
@@ -13894,7 +13982,7 @@ export class PistonMoveReaction extends Enum<PistonMoveReaction> {
 }
 
 /**Represents a player, connected or not*/
-export class Player extends HumanEntity, Conversable, OfflinePlayer, PluginMessageRecipient, NetworkClient {
+export interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginMessageRecipient, NetworkClient {
     /**Applies the mending effect to any items just as picking up an orb would.*/
     applyMending (amount: number): number;
     /**Permanently Bans the Profile and IP address currently used by the player.*/
@@ -14733,7 +14821,7 @@ export class PlayerInteractEvent extends PlayerEvent implements Cancellable {
 }
 
 /**Interface to the inventory of a Player, including the four armor slots and any extra slots.*/
-export class PlayerInventory extends Inventory {
+export interface PlayerInventory extends Inventory {
     /**Get all ItemStacks from the armor slots*/
     getArmorContents (): ItemStack[];
     /**Return the ItemStack from the boots slot*/
@@ -15086,7 +15174,7 @@ export class PlayerPreLoginEvent$Result extends Enum<PlayerPreLoginEvent$Result>
 }
 
 /**Represents a players profile for the game, such as UUID, Name, and textures.*/
-export class PlayerProfile {
+export interface PlayerProfile {
     /**Clears all properties on this profile*/
     clearProperties (): void;
     /**If this profile is not complete, then make the API call to complete it.*/
@@ -15437,7 +15525,7 @@ export class PlayerVelocityEvent extends PlayerEvent implements Cancellable {
 }
 
 /**Represents a Plugin    The use of PluginBase is recommended for actual Implementation*/
-export class Plugin extends TabExecutor {
+export interface Plugin extends TabExecutor {
     /**Gets a FileConfiguration for this plugin, read through  "config.yml"*/
     getConfig (): FileConfiguration;
     /**Returns the folder that the plugin data's files are located in.*/
@@ -15480,7 +15568,7 @@ export class Plugin extends TabExecutor {
 }
 
 /**Represents a concept that a plugin is aware of.    The internal representation may be singleton, or be a parameterized  instance, but must be immutable.*/
-export class PluginAwareness {
+export interface PluginAwareness {
 
 }
 
@@ -15602,13 +15690,13 @@ export class PluginEvent extends ServerEvent {
 }
 
 /**This interface is used by the help system to group commands into  sub-indexes based on the Plugin they are a part of. Custom command  implementations will need to implement this interface to have a sub-index  automatically generated on the plugin's behalf.*/
-export class PluginIdentifiableCommand {
+export interface PluginIdentifiableCommand {
     /**Gets the owner of this PluginIdentifiableCommand.*/
     getPlugin (): Plugin
 }
 
 /**Represents a plugin loader, which handles direct access to specific types  of plugins*/
-export class PluginLoader {
+export interface PluginLoader {
     /**Creates and returns registered listeners for the event classes used in  this listener*/
     createRegisteredListeners (listener: Listener, plugin: Plugin): Map<Class<Event>,Set<RegisteredListener>>;
     /**Disables the specified plugin*/
@@ -15639,7 +15727,7 @@ export class PluginLogger extends Logger {
 }
 
 /**Handles all plugin management from the Server*/
-export class PluginManager {
+export interface PluginManager {
     /**Adds a Permission to this plugin manager.*/
     addPermission (perm: Permission): void;
     /**Calls an event with the given details*/
@@ -15703,7 +15791,7 @@ export class PluginManager {
 }
 
 /**A listener for a specific Plugin Channel, which will receive notifications  of messages sent from a client.*/
-export class PluginMessageListener {
+export interface PluginMessageListener {
     /**A method that will be thrown when a PluginMessageSource sends a plugin  message on a registered channel.*/
     onPluginMessageReceived (channel: String, player: Player, message: number[]): void
 }
@@ -15723,7 +15811,7 @@ export class PluginMessageListenerRegistration extends Object {
 }
 
 /**Represents a possible recipient for a Plugin Message.*/
-export class PluginMessageRecipient {
+export interface PluginMessageRecipient {
     /**Gets a set containing all the Plugin Channels that this client is  listening on.*/
     getListeningPluginChannels (): Set<String>;
     /**Sends this recipient a Plugin Message on the specified outgoing  channel.*/
@@ -15744,7 +15832,7 @@ export class PluginsCommand extends BukkitCommand {
 }
 
 /**Represents a polar bear.*/
-export class PolarBear extends Animals {
+export interface PolarBear extends Animals {
 
 }
 
@@ -15803,7 +15891,7 @@ export class Pose extends Enum<Pose> {
 }
 
 /**Represents a brewer that can create PotionEffects.*/
-export class PotionBrewer {
+export interface PotionBrewer {
     /**Creates a PotionEffect from the given PotionEffectType,  applying duration modifiers and checks.*/
     createEffect (potion: PotionEffectType, duration: number, amplifier: number): PotionEffect;
     /**Returns a collection of PotionEffect that would be applied from  a potion with the given type.*/
@@ -15885,7 +15973,7 @@ export class PotionEffectTypeWrapper extends PotionEffectType {
 }
 
 /**Represents a potion or item that can have custom effects.*/
-export class PotionMeta extends ItemMeta {
+export interface PotionMeta extends ItemMeta {
     /**Adds a custom potion effect to this potion.*/
     addCustomEffect (effect: PotionEffect, overwrite: boolean): boolean;
     /**Removes all custom potion effects from this potion.*/
@@ -15957,7 +16045,7 @@ export class PotionType extends Enum<PotionType> {
 }
 
 /**'powered' indicates whether this block is in the powered state or not, i.e.  receiving a redstone current of power > 0.*/
-export class Powerable extends BlockData {
+export interface Powerable extends BlockData {
     /**Gets the value of the 'powered' property.*/
     isPowered (): boolean;
     /**Sets the value of the 'powered' property.*/
@@ -15965,7 +16053,7 @@ export class Powerable extends BlockData {
 }
 
 /**Represents a powered minecart. A powered minecart moves on its own when a  player deposits fuel.*/
-export class PoweredMinecart extends Minecart {
+export interface PoweredMinecart extends Minecart {
 
 }
 
@@ -16073,7 +16161,7 @@ export class PreSpawnerSpawnEvent extends PreCreatureSpawnEvent {
     getSpawnerLocation (): Location
 }
 
-export class PressureSensor {
+export interface PressureSensor {
     isPressed (): boolean
 }
 
@@ -16102,7 +16190,7 @@ export class ProfileWhitelistVerifyEvent extends Event {
 }
 
 /**Represents a shootable entity.*/
-export class Projectile extends Entity {
+export interface Projectile extends Entity {
     /**Determine if this projectile should bounce or not when it hits.*/
     doesBounce (): boolean;
     /**Retrieve the shooter of this projectile.*/
@@ -16152,7 +16240,7 @@ export class ProjectileLaunchEvent extends EntitySpawnEvent implements Cancellab
 }
 
 /**Represents a valid source of a projectile.*/
-export class ProjectileSource {
+export interface ProjectileSource {
     /**Launches a Projectile from the ProjectileSource.*/
     launchProjectile <T extends Projectile>(projectile: Class<X>): T;
     /**Launches a Projectile from the ProjectileSource with an  initial velocity.*/
@@ -16160,7 +16248,7 @@ export class ProjectileSource {
 }
 
 /**A Prompt is the main constituent of a Conversation. Each prompt  displays text to the user and optionally waits for a user's response.  Prompts are chained together into a directed graph that represents the  conversation flow. To halt a conversation, END_OF_CONVERSATION is returned  in liu of another Prompt object.*/
-export class Prompt extends Cloneable {
+export interface Prompt extends Cloneable {
     /**Accepts and processes input from the user.*/
     acceptInput (context: ConversationContext, input: String): Prompt;
     /**Checks to see if this prompt implementation should wait for user input  or immediately display the next prompt.*/
@@ -16169,7 +16257,7 @@ export class Prompt extends Cloneable {
     getPromptText (context: ConversationContext): String
 }
 
-export class ProxiedCommandSender extends CommandSender {
+export interface ProxiedCommandSender extends CommandSender {
     /**Returns the CommandSender which is being used to call the command*/
     getCallee (): CommandSender;
     /**Returns the CommandSender which triggered this proxied command*/
@@ -16177,14 +16265,14 @@ export class ProxiedCommandSender extends CommandSender {
 }
 
 /**Represents a puffer fish.*/
-export class PufferFish extends Fish {
+export interface PufferFish extends Fish {
     /**Returns the current puff state of this fish (i.e.*/
     getPuffState (): number;
     /**Sets the current puff state of this fish (i.e.*/
     setPuffState (state: number): void
 }
 
-export class Rabbit extends Animals {
+export interface Rabbit extends Animals {
     getRabbitType (): Rabbit$Type;
     setRabbitType (type: Rabbit$Type): void
 }
@@ -16208,7 +16296,7 @@ export class Rabbit$Type extends Enum<Rabbit$Type> {
 }
 
 /**Represents a raid event.*/
-export class Raid {
+export interface Raid {
     /**Gets the amount of ticks this raid has existed.*/
     getActiveTicks (): number;
     /**Gets the Bad Omen level of this raid.*/
@@ -16247,7 +16335,7 @@ export class Raid$RaidStatus extends Enum<Raid$RaidStatus> {
     static VICTORY: Raid$RaidStatus
 }
 
-export class Raider extends Monster {
+export interface Raider extends Monster {
     /**Gets the block the raider is targeting to patrol.*/
     getPatrolTarget (): Block;
     /**Gets whether this mob can join an active raid.*/
@@ -16320,7 +16408,7 @@ export class RaidTriggerEvent extends RaidEvent implements Cancellable {
 }
 
 /**'shape' represents the current layout of a minecart rail.    Some types of rail may not be able to be laid out in all shapes, use  getShapes() to get those applicable to this block.*/
-export class Rail extends BlockData {
+export interface Rail extends BlockData {
     /**Gets the value of the 'shape' property.*/
     getShape (): Rail$Shape;
     /**Gets the shapes which are applicable to this block.*/
@@ -16353,7 +16441,7 @@ export class Rail$Shape extends Enum<Rail$Shape> {
     static SOUTH_WEST: Rail$Shape
 }
 
-export class RangedEntity extends Mob {
+export interface RangedEntity extends Mob {
     /**Alias to LivingEntity.isHandRaised(), if the entity is charging an attack*/
     isChargingAttack (): boolean;
     /**Attack the specified entity using a ranged attack.*/
@@ -16363,7 +16451,7 @@ export class RangedEntity extends Mob {
 }
 
 /**Illager beast.*/
-export class Ravager extends Raider {
+export interface Ravager extends Raider {
 
 }
 
@@ -16383,13 +16471,13 @@ export class RayTraceResult extends Object {
 }
 
 /**Represents some type of crafting recipe.*/
-export class Recipe {
+export interface Recipe {
     /**Get the result of this recipe.*/
     getResult (): ItemStack
 }
 
 /**Represents a potential item match within a recipe. All choices within a  recipe must be satisfied for it to be craftable.   This class is not legal for implementation by plugins!*/
-export class RecipeChoice extends Predicate<ItemStack>, Cloneable {
+export interface RecipeChoice extends Predicate<ItemStack>, Cloneable {
     clone (): RecipeChoice;
     test (itemStack: ItemStack): boolean
 }
@@ -16407,22 +16495,22 @@ export class RecipeChoice$MaterialChoice extends Object implements RecipeChoice 
 }
 
 /**Indicated a Material that may carry or create a Redstone current*/
-export class Redstone {
+export interface Redstone {
     /**Gets the current state of this Material, indicating if it's powered or  unpowered*/
     isPowered (): boolean
 }
 
 /**A type of minecart rail which interacts with redstone in one way or another.*/
-export class RedstoneRail extends Powerable, Rail {
+export interface RedstoneRail extends Powerable, Rail {
 
 }
 
-export class RedstoneWallTorch extends Directional, Lightable {
+export interface RedstoneWallTorch extends Directional, Lightable {
 
 }
 
 /**'north', 'east', 'south', 'west' represent the types of connections this  redstone wire has to adjacent blocks.*/
-export class RedstoneWire extends AnaloguePowerable {
+export interface RedstoneWire extends AnaloguePowerable {
     /**Gets all of this faces which may be set on this block.*/
     getAllowedFaces (): Set<BlockFace>;
     /**Checks the type of connection on the specified face.*/
@@ -16471,7 +16559,7 @@ export class RegisteredServiceProvider<T> extends Object implements Comparable<R
 }
 
 /**Represents a registry of Bukkit objects that may be retrieved by  NamespacedKey.*/
-export class Registry<T extends Keyed> extends Iterable<T> {
+export interface Registry<T extends Keyed> extends Iterable<T> {
     /**Get the object by its key.*/
     get (key: NamespacedKey): T
 }
@@ -16489,7 +16577,7 @@ export class ReloadCommand extends BukkitCommand {
     tabComplete (sender: CommandSender, alias: String, args: String[]): List<String>
 }
 
-export class RemoteConsoleCommandSender extends CommandSender {
+export interface RemoteConsoleCommandSender extends CommandSender {
 
 }
 
@@ -16508,7 +16596,7 @@ export class RenderType extends Enum<RenderType> {
 }
 
 /**Represents an item that can be repaired at an anvil.*/
-export class Repairable {
+export interface Repairable {
     clone (): Repairable;
     /**Gets the repair penalty*/
     getRepairCost (): number;
@@ -16519,7 +16607,7 @@ export class Repairable {
 }
 
 /**'delay' is the propagation delay of a repeater, i.e. how many ticks before it  will be activated from a current change and propagate it to the next block.    Delay may not be lower than getMinimumDelay() or higher than  getMaximumDelay().    'locked' denotes whether the repeater is in the locked state or not.    A locked repeater will not change its output until it is unlocked. In game, a  locked repeater is created by having a constant current perpendicularly  entering the block.*/
-export class Repeater extends Directional, Powerable {
+export interface Repeater extends Directional, Powerable {
     /**Gets the value of the 'delay' property.*/
     getDelay (): number;
     /**Gets the maximum allowed value of the 'delay' property.*/
@@ -16562,7 +16650,7 @@ export class ReservedChannelException extends RuntimeException {
 }
 
 /**'charges' represents the amount of times the anchor may still be used.*/
-export class RespawnAnchor extends BlockData {
+export interface RespawnAnchor extends BlockData {
     /**Gets the value of the 'charges' property.*/
     getCharges (): number;
     /**Gets the maximum allowed value of the 'charges' property.*/
@@ -16572,12 +16660,12 @@ export class RespawnAnchor extends BlockData {
 }
 
 /**Represents a minecart that can have certain entities as passengers. Normal passengers  include all living entities with  the exception of iron golems.  Non-player entities that meet normal passenger criteria automatically  mount these minecarts when close enough.*/
-export class RideableMinecart extends Minecart {
+export interface RideableMinecart extends Minecart {
 
 }
 
 /**'rotation' represents the current rotation of this block.*/
-export class Rotatable extends BlockData {
+export interface Rotatable extends BlockData {
     /**Gets the value of the 'rotation' property.*/
     getRotation (): BlockFace;
     /**Sets the value of the 'rotation' property.*/
@@ -16604,7 +16692,7 @@ export class Rotation extends Enum<Rotation> {
     static NONE: Rotation
 }
 
-export class SaddledHorseInventory extends AbstractHorseInventory {
+export interface SaddledHorseInventory extends AbstractHorseInventory {
 
 }
 
@@ -16614,7 +16702,7 @@ export class SafeClassDefiner extends Object implements ClassDefiner {
 }
 
 /**Represents a salmon fish.*/
-export class Salmon extends Fish {
+export interface Salmon extends Fish {
 
 }
 
@@ -16626,7 +16714,7 @@ export class SandstoneType extends Enum<SandstoneType> {
 }
 
 /**'stage' represents the growth stage of a sapling.    When the sapling reaches getMaximumStage() it will attempt to grow  into a tree as the next stage.*/
-export class Sapling extends BlockData {
+export interface Sapling extends BlockData {
     /**Gets the maximum allowed value of the 'stage' property.*/
     getMaximumStage (): number;
     /**Gets the value of the 'stage' property.*/
@@ -16636,7 +16724,7 @@ export class Sapling extends BlockData {
 }
 
 /**'bottom' indicates whether the scaffolding is floating or not.    'distance' indicates the distance from a scaffolding block placed above a  'bottom' scaffold.    When 'distance' reaches getMaximumDistance() the block will drop.*/
-export class Scaffolding extends Waterlogged {
+export interface Scaffolding extends Waterlogged {
     /**Gets the value of the 'distance' property.*/
     getDistance (): number;
     /**Gets the maximum allowed value of the 'distance' property.*/
@@ -16650,7 +16738,7 @@ export class Scaffolding extends Waterlogged {
 }
 
 /**A score entry for an entry on an objective. Changing this will not affect any other  objective or scoreboard.*/
-export class Score {
+export interface Score {
     /**Gets the entry being tracked by this Score*/
     getEntry (): String;
     /**Gets the Objective being tracked by this Score*/
@@ -16666,7 +16754,7 @@ export class Score {
 }
 
 /**A scoreboard*/
-export class Scoreboard {
+export interface Scoreboard {
     /**Clears any objective in the specified slot.*/
     clearSlot (slot: DisplaySlot): void;
     /**Gets all entries tracked by this Scoreboard*/
@@ -16698,7 +16786,7 @@ export class Scoreboard {
 }
 
 /**Manager of Scoreboards*/
-export class ScoreboardManager {
+export interface ScoreboardManager {
     /**Gets the primary Scoreboard controlled by the server.*/
     getMainScoreboard (): Scoreboard;
     /**Gets a new Scoreboard to be tracked by the server.*/
@@ -16706,7 +16794,7 @@ export class ScoreboardManager {
 }
 
 /**'pickles' indicates the number of pickles in this block.*/
-export class SeaPickle extends Waterlogged {
+export interface SeaPickle extends Waterlogged {
     /**Gets the maximum allowed value of the 'pickles' property.*/
     getMaximumPickles (): number;
     /**Gets the minimum allowed value of the 'pickles' property.*/
@@ -16718,7 +16806,7 @@ export class SeaPickle extends Waterlogged {
 }
 
 /**Represents a server implementation.*/
-export class Server extends PluginMessageRecipient {
+export interface Server extends PluginMessageRecipient {
     /**Adds a recipe to the crafting manager.*/
     addRecipe (recipe: Recipe): boolean;
     /**Get an iterator through all advancements.*/
@@ -17093,7 +17181,7 @@ export class ServerLoadEvent$LoadType extends Enum<ServerLoadEvent$LoadType> {
 }
 
 /**Represents an object that may become a server operator, such as a Player*/
-export class ServerOperator {
+export interface ServerOperator {
     /**Checks if this object is a server operator*/
     isOp (): boolean;
     /**Sets the operator status of this object*/
@@ -17169,7 +17257,7 @@ export class ServiceRegisterEvent extends ServiceEvent {
 }
 
 /**Manages services and service providers. Services are an interface  specifying a list of methods that a provider must implement. Providers are  implementations of these services. A provider can be queried from the  services manager in order to use a service (if one is available). If  multiple plugins register a service, then the service with the highest  priority takes precedence.*/
-export class ServicesManager {
+export interface ServicesManager {
     /**Get a list of known services.*/
     getKnownServices (): Collection<Class<X>>;
     /**Queries for a provider registration.*/
@@ -17262,7 +17350,7 @@ export class ShapelessRecipe extends Object implements Recipe, Keyed {
 }
 
 /**Represents a Sheep.*/
-export class Sheep extends Animals, Colorable {
+export interface Sheep extends Animals, Colorable {
     isSheared (): boolean;
     setSheared (flag: boolean): void
 }
@@ -17295,29 +17383,29 @@ export class SheepRegrowWoolEvent extends EntityEvent implements Cancellable {
     setCancelled (cancel: boolean): void
 }
 
-export class Shulker extends Golem, Colorable {
+export interface Shulker extends Golem, Colorable {
 
 }
 
 /**Represents a captured state of a ShulkerBox.*/
-export class ShulkerBox extends Container, LootableBlockInventory, Lidded {
+export interface ShulkerBox extends Container, LootableBlockInventory, Lidded {
     /**Get the DyeColor corresponding to this ShulkerBox*/
     getColor (): DyeColor
 }
 
-export class ShulkerBullet extends Projectile {
+export interface ShulkerBullet extends Projectile {
     /**Retrieve the target of this bullet.*/
     getTarget (): Entity;
     /**Sets the target of this bullet*/
     setTarget (target: Entity): void
 }
 
-export class Sign extends Rotatable, Waterlogged {
+export interface Sign extends Rotatable, Waterlogged {
 
 }
 
 /**Represents a captured state of either a SignPost or a WallSign.*/
-export class Sign extends TileState, Colorable {
+export interface Sign extends TileState, Colorable {
     /**Gets the line of text at the specified index.*/
     getLine (index: number): String;
     /**Gets all the lines of text currently on this sign.*/
@@ -17349,7 +17437,7 @@ export class SignChangeEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a Silverfish.*/
-export class Silverfish extends Monster {
+export interface Silverfish extends Monster {
 
 }
 
@@ -17508,7 +17596,7 @@ export class SimplexOctaveGenerator extends OctaveGenerator {
 }
 
 /**An animal that can sit still.*/
-export class Sittable {
+export interface Sittable {
     /**Checks if this animal is sitting*/
     isSitting (): boolean;
     /**Sets if this animal is sitting.*/
@@ -17516,7 +17604,7 @@ export class Sittable {
 }
 
 /**Represents a sized fireball.*/
-export class SizedFireball extends Fireball {
+export interface SizedFireball extends Fireball {
     /**Gets the display ItemStack.*/
     getDisplayItem (): ItemStack;
     /**Sets the display ItemStack for the fireball.*/
@@ -17524,12 +17612,12 @@ export class SizedFireball extends Fireball {
 }
 
 /**Represents a Skeleton.*/
-export class Skeleton extends Monster, RangedEntity {
+export interface Skeleton extends Monster, RangedEntity {
 
 }
 
 /**Represents a SkeletonHorse - variant of AbstractHorse.*/
-export class SkeletonHorse extends AbstractHorse {
+export interface SkeletonHorse extends AbstractHorse {
     getTrapTime (): number;
     isTrap (): boolean;
     setTrap (trap: boolean): void
@@ -17547,7 +17635,7 @@ export class SkeletonHorseTrapEvent extends EntityEvent implements Cancellable {
     setCancelled (cancel: boolean): void
 }
 
-export class SkinParts {
+export interface SkinParts {
     getRaw (): number;
     hasCapeEnabled (): boolean;
     hasHatsEnabled (): boolean;
@@ -17559,7 +17647,7 @@ export class SkinParts {
 }
 
 /**Represents a captured state of a skull block.*/
-export class Skull extends TileState {
+export interface Skull extends TileState {
     /**Get the player which owns the skull.*/
     getOwningPlayer (): OfflinePlayer;
     /**If the skull has an owner, per hasOwner(), return the owners PlayerProfile*/
@@ -17573,7 +17661,7 @@ export class Skull extends TileState {
 }
 
 /**Represents a skull that can have an owner.*/
-export class SkullMeta extends ItemMeta {
+export interface SkullMeta extends ItemMeta {
     clone (): SkullMeta;
     /**Gets the owner of the skull.*/
     getOwningPlayer (): OfflinePlayer;
@@ -17588,7 +17676,7 @@ export class SkullMeta extends ItemMeta {
 }
 
 /**'type' represents what state the slab is in - either top, bottom, or a double  slab occupying the full block.*/
-export class Slab extends Waterlogged {
+export interface Slab extends Waterlogged {
     /**Gets the value of the 'type' property.*/
     getType (): Slab$Type;
     /**Sets the value of the 'type' property.*/
@@ -17606,7 +17694,7 @@ export class Slab$Type extends Enum<Slab$Type> {
 }
 
 /**Represents a Slime.*/
-export class Slime extends Mob {
+export interface Slime extends Mob {
     /**Get whether this slime can randomly wander/jump around on its own*/
     canWander (): boolean;
     getSize (): number;
@@ -17668,12 +17756,12 @@ export class SlimeWanderEvent extends SlimePathfindEvent implements Cancellable 
 }
 
 /**Represents a small Fireball*/
-export class SmallFireball extends SizedFireball {
+export interface SmallFireball extends SizedFireball {
 
 }
 
 /**Interface to the inventory of a Smithing table.*/
-export class SmithingInventory extends Inventory {
+export interface SmithingInventory extends Inventory {
     /**Gets the input equipment (first slot).*/
     getInputEquipment (): ItemStack;
     /**Gets the input mineral (second slot).*/
@@ -17701,7 +17789,7 @@ export class SmithingRecipe extends Object implements Recipe, Keyed {
 }
 
 /**Represents a captured state of a smoker.*/
-export class Smoker extends Furnace {
+export interface Smoker extends Furnace {
 
 }
 
@@ -17715,7 +17803,7 @@ export class SneakyThrow extends Object {
 }
 
 /**'layers' represents the amount of layers of snow which are present in this  block.    May not be lower than getMinimumLayers() or higher than  getMaximumLayers().*/
-export class Snow extends BlockData {
+export interface Snow extends BlockData {
     /**Gets the value of the 'layers' property.*/
     getLayers (): number;
     /**Gets the maximum allowed value of the 'layers' property.*/
@@ -17727,7 +17815,7 @@ export class Snow extends BlockData {
 }
 
 /**'snowy' denotes whether this block has a snow covered side and top texture  (normally because the block above is snow).*/
-export class Snowable extends BlockData {
+export interface Snowable extends BlockData {
     /**Gets the value of the 'snowy' property.*/
     isSnowy (): boolean;
     /**Sets the value of the 'snowy' property.*/
@@ -17735,12 +17823,12 @@ export class Snowable extends BlockData {
 }
 
 /**Represents a snowball.*/
-export class Snowball extends ThrowableProjectile {
+export interface Snowball extends ThrowableProjectile {
 
 }
 
 /**Represents a snowman entity*/
-export class Snowman extends Golem, RangedEntity {
+export interface Snowman extends Golem, RangedEntity {
     /**Gets whether this snowman is in "derp mode", meaning it is not wearing a  pumpkin.*/
     isDerp (): boolean;
     /**Sets whether this snowman is in "derp mode", meaning it is not wearing a  pumpkin.*/
@@ -18766,12 +18854,12 @@ export class SpawnChangeEvent extends WorldEvent {
 }
 
 /**Represents a spawn egg and it's spawned type.*/
-export class SpawnEggMeta extends ItemMeta {
+export interface SpawnEggMeta extends ItemMeta {
     clone (): SpawnEggMeta
 }
 
 /**Represents a Minecart with an entity spawner inside it.*/
-export class SpawnerMinecart extends Minecart {
+export interface SpawnerMinecart extends Minecart {
 
 }
 
@@ -18781,7 +18869,7 @@ export class SpawnerSpawnEvent extends EntitySpawnEvent {
 }
 
 /**Represents a spectral arrow.*/
-export class SpectralArrow extends AbstractArrow {
+export interface SpectralArrow extends AbstractArrow {
     /**Returns the amount of time that this arrow will apply  the glowing effect for.*/
     getGlowingTicks (): number;
     /**Sets the amount of time to apply the glowing effect for.*/
@@ -18789,7 +18877,7 @@ export class SpectralArrow extends AbstractArrow {
 }
 
 /**Represents a spell casting "Illager".*/
-export class Spellcaster extends Illager {
+export interface Spellcaster extends Illager {
     /**Gets the Spellcaster.Spell the entity is currently using.*/
     getSpell (): Spellcaster$Spell;
     /**Sets the Spellcaster.Spell the entity is currently using.*/
@@ -18813,7 +18901,7 @@ export class Spellcaster$Spell extends Enum<Spellcaster$Spell> {
 }
 
 /**Represents a Spider.*/
-export class Spider extends Monster {
+export interface Spider extends Monster {
 
 }
 
@@ -18830,12 +18918,12 @@ export class SpongeAbsorbEvent extends BlockEvent implements Cancellable {
 }
 
 /**Represents a Squid.*/
-export class Squid extends WaterMob {
+export interface Squid extends WaterMob {
 
 }
 
 /**'shape' represents the texture and bounding box shape of these stairs.*/
-export class Stairs extends Bisected, Directional, Waterlogged {
+export interface Stairs extends Bisected, Directional, Waterlogged {
     /**Gets the value of the 'shape' property.*/
     getShape (): Stairs$Shape;
     /**Sets the value of the 'shape' property.*/
@@ -19004,13 +19092,13 @@ export class Statistic$Type extends Enum<Statistic$Type> {
 }
 
 /**Represents a client requesting the current status from the server (e.g. from  the server list).*/
-export class StatusClient extends NetworkClient {
+export interface StatusClient extends NetworkClient {
     /**Returns whether the client is using an older version that doesn't  support all of the features in PaperServerListPingEvent.*/
     isLegacy (): boolean
 }
 
 /**Represents an entity which may be saddled, ridden and steered using an item.*/
-export class Steerable extends Animals {
+export interface Steerable extends Animals {
     /**Get the time in ticks this entity's movement is being increased.*/
     getBoostTicks (): number;
     /**Get the time in ticks this entity's movement has been increased as of the  most recent boost.*/
@@ -19028,7 +19116,7 @@ export class Steerable extends Animals {
 }
 
 /**Interface to the inventory of a Stonecutter.*/
-export class StonecutterInventory extends Inventory {
+export interface StonecutterInventory extends Inventory {
     /**Gets the input item.*/
     getInputItem (): ItemStack;
     /**Gets the result item.*/
@@ -19060,17 +19148,17 @@ export class StonecuttingRecipe extends Object implements Recipe, Keyed {
 }
 
 /**Represents a minecart with a chest. These types of minecarts have their own inventory that can be accessed using methods  from the InventoryHolder interface.*/
-export class StorageMinecart extends Minecart, InventoryHolder, LootableEntityInventory {
+export interface StorageMinecart extends Minecart, InventoryHolder, LootableEntityInventory {
 
 }
 
 /**Represents a Stray - variant of Skeleton.*/
-export class Stray extends Skeleton {
+export interface Stray extends Skeleton {
 
 }
 
 /**Represents a Strider.*/
-export class Strider extends Steerable, Vehicle {
+export interface Strider extends Steerable, Vehicle {
     /**Check whether or not this strider is out of warm blocks and shivering.*/
     isShivering (): boolean;
     /**Set whether or not this strider is shivering.*/
@@ -19101,7 +19189,7 @@ export class StringUtil extends Object {
 }
 
 /**Represents a structure block that can save and load blocks from a file. They  can only be used by OPs, and are not obtainable in survival.*/
-export class Structure extends TileState {
+export interface Structure extends TileState {
     /**Get the name of who created this structure.*/
     getAuthor (): String;
     /**Get the integrity of this structure.*/
@@ -19159,7 +19247,7 @@ export class Structure extends TileState {
 }
 
 /**'mode' represents the different modes in which this structure block may  operate.*/
-export class StructureBlock extends BlockData {
+export interface StructureBlock extends BlockData {
     /**Gets the value of the 'mode' property.*/
     getMode (): StructureBlock$Mode;
     /**Sets the value of the 'mode' property.*/
@@ -19224,7 +19312,7 @@ export class StructureType extends Object {
 }
 
 /**Represents a suspicious stew that can have custom effects.*/
-export class SuspiciousStewMeta extends ItemMeta {
+export interface SuspiciousStewMeta extends ItemMeta {
     /**Adds a custom potion effect to this suspicious stew.*/
     addCustomEffect (effect: PotionEffect, overwrite: boolean): boolean;
     /**Removes all custom potion effects from this suspicious stew.*/
@@ -19240,7 +19328,7 @@ export class SuspiciousStewMeta extends ItemMeta {
     removeCustomEffect (type: PotionEffectType): boolean
 }
 
-export class Switch extends Directional, FaceAttachable, Powerable {
+export interface Switch extends Directional, FaceAttachable, Powerable {
 
 }
 
@@ -19265,25 +19353,25 @@ export class TabCompleteEvent extends Event implements Cancellable {
 }
 
 /**Represents a class which can suggest tab completions for commands.*/
-export class TabCompleter {
+export interface TabCompleter {
     /**Requests a list of possible completions for a command argument.*/
     onTabComplete (sender: CommandSender, command: Command, alias: String, args: String[]): List<String>
 }
 
 /**This class is provided as a convenience to implement both TabCompleter and  CommandExecutor.*/
-export class TabExecutor extends TabCompleter, CommandExecutor {
+export interface TabExecutor extends TabCompleter, CommandExecutor {
 
 }
 
 /**Represents a tag that may be defined by the server or a resource pack to  group like things together.   Note that whilst all tags defined within this interface must be present in  implementations, their existence is not guaranteed across future versions.*/
-export class Tag<T extends Keyed> extends Keyed {
+export interface Tag<T extends Keyed> extends Keyed {
     /**Gets an immutable set of all tagged items.*/
     getValues (): Set<T>;
     /**Returns whether or not this tag has an entry for the specified item.*/
     isTagged (item: T): boolean
 }
 
-export class Tameable extends Animals {
+export interface Tameable extends Animals {
     /**Gets the current owning AnimalTamer*/
     getOwner (): AnimalTamer;
     /**Gets the owners UUID*/
@@ -19321,7 +19409,7 @@ export class TargetEntityInfo extends Object {
 }
 
 /**A team on a scoreboard that has a common display theme and other  properties. This team is only relevant to the display of the associated  scoreboard.*/
-export class Team {
+export interface Team {
     /**This puts the specified entry onto this team for the scoreboard.*/
     addEntry (entry: String): void;
     /**Gets the team friendly fire state*/
@@ -19391,7 +19479,7 @@ export class Team$OptionStatus extends Enum<Team$OptionStatus> {
 }
 
 /**'type' represents the type of piston which this (technical) block corresponds  to.*/
-export class TechnicalPiston extends Directional {
+export interface TechnicalPiston extends Directional {
     /**Gets the value of the 'type' property.*/
     getType (): TechnicalPiston$Type;
     /**Sets the value of the 'type' property.*/
@@ -19406,7 +19494,7 @@ export class TechnicalPiston$Type extends Enum<TechnicalPiston$Type> {
     static STICKY: TechnicalPiston$Type
 }
 
-export class ThrowableProjectile extends Projectile {
+export interface ThrowableProjectile extends Projectile {
     /**Gets the ItemStack the thrown projectile will display.*/
     getItem (): ItemStack;
     /**Sets the display ItemStack for the thrown projectile.*/
@@ -19434,12 +19522,12 @@ export class ThrownEggHatchEvent extends Event {
 }
 
 /**Represents a thrown Experience bottle.*/
-export class ThrownExpBottle extends ThrowableProjectile {
+export interface ThrownExpBottle extends ThrowableProjectile {
 
 }
 
 /**Represents a thrown potion bottle*/
-export class ThrownPotion extends Projectile {
+export interface ThrownPotion extends Projectile {
     /**Returns the effects that are applied by this potion.*/
     getEffects (): Collection<PotionEffect>;
     /**Returns a copy of the ItemStack for this thrown potion.*/
@@ -19461,7 +19549,7 @@ export class ThunderChangeEvent extends WeatherEvent implements Cancellable {
 }
 
 /**Represents a block state that also hosts a tile entity at the given location.   This interface alone is merely a marker that does not provide any data.   Data about the tile entities is provided by the respective interface for each  tile entity type.   After modifying the data provided by a TileState, BlockState.update() needs to  be called to store the data.*/
-export class TileState extends BlockState, PersistentDataHolder {
+export interface TileState extends BlockState, PersistentDataHolder {
     /**Returns a custom tag container capable of storing tags on the object.*/
     getPersistentDataContainer (): PersistentDataContainer
 }
@@ -19513,7 +19601,7 @@ export class TimeSkipEvent$SkipReason extends Enum<TimeSkipEvent$SkipReason> {
 }
 
 /**Provides an ability to time sections of code within the Minecraft Server*/
-export class Timing extends AutoCloseable {
+export interface Timing extends AutoCloseable {
     close (): void;
     /**Used internally to get the actual backing Handler in the case of delegated Handlers*/
     getTimingHandler (): co$aikar$timings$TimingHandler;
@@ -19627,7 +19715,7 @@ export class Title$Builder extends Object {
 }
 
 /**'unstable' indicates whether this TNT will explode on punching.*/
-export class TNT extends BlockData {
+export interface TNT extends BlockData {
     /**Gets the value of the 'unstable' property.*/
     isUnstable (): boolean;
     /**Sets the value of the 'unstable' property.*/
@@ -19635,7 +19723,7 @@ export class TNT extends BlockData {
 }
 
 /**Represents a Primed TNT.*/
-export class TNTPrimed extends Explosive {
+export interface TNTPrimed extends Explosive {
     /**Retrieve the number of ticks until the explosion of this TNTPrimed  entity*/
     getFuseTicks (): number;
     /**Gets the source of this primed TNT.*/
@@ -19672,7 +19760,7 @@ export class TNTPrimeEvent$PrimeReason extends Enum<TNTPrimeEvent$PrimeReason> {
 }
 
 /**Represents a trader Llama.*/
-export class TraderLlama extends Llama {
+export interface TraderLlama extends Llama {
 
 }
 
@@ -19688,7 +19776,7 @@ export class TradeSelectEvent extends InventoryInteractEvent {
     getMerchant (): Merchant
 }
 
-export class TrapDoor extends Bisected, Directional, Openable, Powerable, Waterlogged {
+export interface TrapDoor extends Bisected, Directional, Openable, Powerable, Waterlogged {
 
 }
 
@@ -19751,24 +19839,24 @@ export class TreeType extends Enum<TreeType> {
 }
 
 /**Represents a thrown trident.*/
-export class Trident extends AbstractArrow {
+export interface Trident extends AbstractArrow {
 
 }
 
 /**'disarmed' denotes that the tripwire was broken with shears and will not  subsequently produce a current when destroyed.*/
-export class Tripwire extends Attachable, MultipleFacing, Powerable {
+export interface Tripwire extends Attachable, MultipleFacing, Powerable {
     /**Gets the value of the 'disarmed' property.*/
     isDisarmed (): boolean;
     /**Sets the value of the 'disarmed' property.*/
     setDisarmed (disarmed: boolean): void
 }
 
-export class TripwireHook extends Attachable, Directional, Powerable {
+export interface TripwireHook extends Attachable, Directional, Powerable {
 
 }
 
 /**Tropical fish.*/
-export class TropicalFish extends Fish {
+export interface TropicalFish extends Fish {
     /**Gets the color of the fish's body.*/
     getBodyColor (): DyeColor;
     /**Gets the fish's pattern.*/
@@ -19800,7 +19888,7 @@ export class TropicalFish$Pattern extends Enum<TropicalFish$Pattern> {
 }
 
 /**Represents a bucket of tropical fish.*/
-export class TropicalFishBucketMeta extends ItemMeta {
+export interface TropicalFishBucketMeta extends ItemMeta {
     clone (): TropicalFishBucketMeta;
     /**Gets the color of the fish's body.*/
     getBodyColor (): DyeColor;
@@ -19819,7 +19907,7 @@ export class TropicalFishBucketMeta extends ItemMeta {
 }
 
 /**Represents a turtle.*/
-export class Turtle extends Animals {
+export interface Turtle extends Animals {
     /**Get the turtle's home location*/
     getHome (): Location;
     /**Get if turtle is carrying egg*/
@@ -19835,7 +19923,7 @@ export class Turtle extends Animals {
 }
 
 /**'hatch' is the number of turtles which may hatch from these eggs.    'eggs' is the number of eggs which appear in this block.*/
-export class TurtleEgg extends BlockData {
+export interface TurtleEgg extends BlockData {
     /**Gets the value of the 'eggs' property.*/
     getEggs (): number;
     /**Gets the value of the 'hatch' property.*/
@@ -19947,7 +20035,7 @@ export class ValidatingPrompt extends Object implements Prompt {
 }
 
 /**Represents a vanilla goal. Plugins should never implement this.  Generated by VanillaPathfinderTest in paper-server*/
-export class VanillaGoal<T extends Mob> extends Goal<T> {
+export interface VanillaGoal<T extends Mob> extends Goal<T> {
 
 }
 
@@ -20069,7 +20157,7 @@ export class Vector extends Object implements Cloneable, ConfigurationSerializab
 }
 
 /**Represents a vehicle entity.*/
-export class Vehicle extends Entity {
+export interface Vehicle extends Entity {
     /**Gets the vehicle's velocity.*/
     getVelocity (): Vector;
     /**Sets the vehicle's velocity.*/
@@ -20196,7 +20284,7 @@ export class VersionCommand extends BukkitCommand {
     tabComplete (sender: CommandSender, alias: String, args: String[]): List<String>
 }
 
-export class VersionFetcher {
+export interface VersionFetcher {
     /**Amount of time to cache results for in milliseconds*/
     getCacheTime (): number;
     /**Gets the version message to cache and show to command senders.*/
@@ -20211,7 +20299,7 @@ export class VersionFetcher$DummyVersionFetcher extends Object implements Versio
 }
 
 /**Represents a Vex.*/
-export class Vex extends Monster {
+export interface Vex extends Monster {
     /**Get the Mob that summoned this vex*/
     getSummoner (): Mob;
     /**Gets the charging state of this entity.*/
@@ -20223,7 +20311,7 @@ export class Vex extends Monster {
 }
 
 /**Represents a villager NPC*/
-export class Villager extends AbstractVillager {
+export interface Villager extends AbstractVillager {
     /**Clear all reputations from this villager.*/
     clearReputations (): void;
     /**Gets the current profession of this villager.*/
@@ -20366,7 +20454,7 @@ export class VillagerReplenishTradeEvent extends EntityEvent implements Cancella
 }
 
 /**Represents a Vindicator.*/
-export class Vindicator extends Illager {
+export interface Vindicator extends Illager {
     /**Check if this Vindicator is set to Johnny mode.*/
     isJohnny (): boolean;
     /**Set this Vindicator's Johnny mode.*/
@@ -20374,7 +20462,7 @@ export class Vindicator extends Illager {
 }
 
 /**This class encompasses the 'north', 'east', 'south', 'west', height flags  which are used to set the height of a wall.   'up' denotes whether the well has a center post.*/
-export class Wall extends Waterlogged {
+export interface Wall extends Waterlogged {
     /**Gets the height of the specified face.*/
     getHeight (face: BlockFace): Wall$Height;
     /**Gets the value of the 'up' property.*/
@@ -20395,12 +20483,12 @@ export class Wall$Height extends Enum<Wall$Height> {
     static TALL: Wall$Height
 }
 
-export class WallSign extends Directional, Waterlogged {
+export interface WallSign extends Directional, Waterlogged {
 
 }
 
 /**Represents a wandering trader NPC*/
-export class WanderingTrader extends AbstractVillager {
+export interface WanderingTrader extends AbstractVillager {
 
 }
 
@@ -20415,7 +20503,7 @@ export class Warning$WarningState extends Enum<Warning$WarningState> {
 }
 
 /**'waterlogged' denotes whether this block has fluid in it.*/
-export class Waterlogged extends BlockData {
+export interface Waterlogged extends BlockData {
     /**Gets the value of the 'waterlogged' property.*/
     isWaterlogged (): boolean;
     /**Sets the value of the 'waterlogged' property.*/
@@ -20423,7 +20511,7 @@ export class Waterlogged extends BlockData {
 }
 
 /**Represents a Water Mob*/
-export class WaterMob extends Creature {
+export interface WaterMob extends Creature {
 
 }
 
@@ -20462,7 +20550,7 @@ export class WhitelistToggleEvent extends Event {
 }
 
 /**Represents a Witch*/
-export class Witch extends Raider, RangedEntity {
+export interface Witch extends Raider, RangedEntity {
     /**Get the potion the Witch is drinking*/
     getDrinkingPotion (): ItemStack;
     /**Get time remaining (in ticks) the Witch is drinking a potion*/
@@ -20521,17 +20609,17 @@ export class WitchThrowPotionEvent extends EntityEvent implements Cancellable {
 }
 
 /**Represents a Wither boss*/
-export class Wither extends Monster, Boss, RangedEntity {
+export interface Wither extends Monster, Boss, RangedEntity {
 
 }
 
 /**Represents a WitherSkeleton - variant of Skeleton.*/
-export class WitherSkeleton extends Skeleton {
+export interface WitherSkeleton extends Skeleton {
 
 }
 
 /**Represents a wither skull Fireball.*/
-export class WitherSkull extends Fireball {
+export interface WitherSkull extends Fireball {
     /**Gets whether or not the wither skull is charged.*/
     isCharged (): boolean;
     /**Sets the charged status of the wither skull.*/
@@ -20539,7 +20627,7 @@ export class WitherSkull extends Fireball {
 }
 
 /**Represents a Wolf*/
-export class Wolf extends Tameable, Sittable {
+export interface Wolf extends Tameable, Sittable {
     /**Get the collar color of this wolf*/
     getCollarColor (): DyeColor;
     /**Checks if this wolf is angry*/
@@ -20551,7 +20639,7 @@ export class Wolf extends Tameable, Sittable {
 }
 
 /**Represents a world, which may contain entities, chunks and blocks*/
-export class World extends PluginMessageRecipient, Metadatable {
+export interface World extends PluginMessageRecipient, Metadatable {
     /**Adds a plugin ticket for the specified chunk, loading the chunk if it is  not already loaded.*/
     addPluginChunkTicket (x: number, z: number, plugin: Plugin): boolean;
     /**Gets whether or not structures are being generated.*/
@@ -21024,7 +21112,7 @@ export class World$Spigot extends Object {
     strikeLightningEffect (loc: Location, isSilent: boolean): LightningStrike
 }
 
-export class WorldBorder {
+export interface WorldBorder {
     /**Gets the current border center.*/
     getCenter (): Location;
     /**Gets the current border damage amount.*/
@@ -21197,12 +21285,12 @@ export class YamlRepresenter extends Representer {
 }
 
 /**Represents a Zoglin.*/
-export class Zoglin extends Monster, Ageable {
+export interface Zoglin extends Monster, Ageable {
 
 }
 
 /**Represents a Zombie.*/
-export class Zombie extends Monster, Ageable {
+export interface Zombie extends Monster, Ageable {
     /**Gets the amount of ticks until this entity will be converted to a Drowned  as a result of being underwater.*/
     getConversionTime (): number;
     /**Check if zombie has arms raised*/
@@ -21224,12 +21312,12 @@ export class Zombie extends Monster, Ageable {
 }
 
 /**Represents a ZombieHorse - variant of AbstractHorse.*/
-export class ZombieHorse extends AbstractHorse {
+export interface ZombieHorse extends AbstractHorse {
 
 }
 
 /**Represents a Zombie which was once a Villager.*/
-export class ZombieVillager extends Zombie {
+export interface ZombieVillager extends Zombie {
     /**Gets the player who initiated the conversion.*/
     getConversionPlayer (): OfflinePlayer;
     /**Gets the amount of ticks until this entity will be converted to a  Villager as a result of being cured.*/
