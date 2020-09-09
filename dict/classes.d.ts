@@ -15,6 +15,41 @@ export interface bridge$iterable<X> {
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
+export class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAccess, Cloneable, Serializable {
+   constructor ();
+   constructor (initialCapacity: number);
+   constructor (c: Collection<E>);
+   add (index: number, element: E): void;
+   add (e: E): boolean;
+   addAll (index: number, c: Collection<E>): boolean;
+   addAll (c: Collection<E>): boolean;
+   clear (): void;
+   clone (): JavaObject;
+   contains (o: JavaObject): boolean;
+   ensureCapacity (min_capacity: number): void;
+   forEach (action: Consumer<E>): void;
+   get (index: number): E;
+   indexOf (o: JavaObject): number;
+   isEmpty (): boolean;
+   iterator (): Iterator<E>;
+   lastIndexOf (o: JavaObject): number;
+   listIterator (): ListIterator<E>;
+   listIterator (index: number): ListIterator<E>;
+   remove (index: number): E;
+   remove (o: JavaObject): boolean;
+   removeAll (c: Collection): boolean;
+   removeIf (filter: Predicate<E>): boolean;
+   removeRange (from_index: number, to_index: number): void;
+   retainAll (c: Collection): boolean;
+   set (index: number, element: E): E;
+   size (): number;
+   spliterator (): Spliterator<E>;
+   subList (from_index: number, to_index: number): List<E>;
+   toArray (): JavaObject[];
+   toArray<T> (a: T[]): T[];
+   trimToSize (): void;
+}
+
 export class Class<T> extends Object implements Serializable, GenericDeclaration, Type, AnnotatedElement {
    asSubclass<U> (clazz: Class<U>): Class<U>;
    cast (obj: Object): T;
