@@ -5,6 +5,8 @@ import { imports } from './imports';
 import { CommandMap, File, Player, Plugin, PluginManager } from './classes';
 
 export interface core {
+   /** A stand-in for circular references. */
+   circular: () => void;
    /** A utility function used for recursive operations. */
    chain: (base: any, modifier: (object: any, chain: () => {}) => void) => void;
    /** Registers a custom command to the server with the given options. */
@@ -79,6 +81,8 @@ export interface core {
       list: any;
       /** Deletes and unregisters a module from the server. */
       remove: (key: string) => void;
+      /** Used by modules to communicate objects between their scripts. */
+      storage: any;
       /** Updates a module if the latest release is not already installed. */
       update: (key: string) => void;
    };

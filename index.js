@@ -1,53 +1,7 @@
 (function () {
-   const Bukkit = Java.type('org.bukkit.Bukkit');
-   const Command = Java.extend(Java.type('org.bukkit.command.Command'));
-   const FileInputStream = Java.type('java.io.FileInputStream');
-   const FileOutputStream = Java.type('java.io.FileOutputStream');
-   const Files = Java.type('java.nio.file.Files');
-   const HandlerList = Java.type('org.bukkit.event.HandlerList');
-   const Listener = Java.extend(Java.type('org.bukkit.event.Listener'), {});
-   const Paths = Java.type('java.nio.file.Paths');
-   const Scanner = Java.type('java.util.Scanner');
-   const Source = Java.type('org.graalvm.polyglot.Source');
-   const StandardCopyOption = Java.type('java.nio.file.StandardCopyOption');
-   const URL = Java.type('java.net.URL');
-   const ZipInputStream = Java.type('java.util.zip.ZipInputStream');
-
-   let version = 'modern';
-   let ChatMessageType, EventPriority, EventType, TextComponent;
-
-   try {
-      ChatMessageType = Java.type('net.md_5.bungee.api.ChatMessageType');
-      TextComponent = Java.type('net.md_5.bungee.api.chat.TextComponent');
-   } catch (error) {
-      version = 'legacy';
-   }
-
-   try {
-      EventPriority = Java.type('org.bukkit.event.EventPriority');
-   } catch (error) {
-      EventType = Java.type('org.bukkit.event.Event$Type');
-      EventPriority = Java.type('org.bukkit.event.Event$Priority');
-      version = 'ancient';
-   }
-
-   const global = globalThis;
-   const server = Bukkit.getServer();
-   const master = 'https://raw.githubusercontent.com/grakkit/core/master';
-
-   const manager = server.getPluginManager();
-   const plugin = manager.getPlugin('grakkit');
-   const context = plugin.getClass().static.context;
-
-   const commandMap = server.getClass().getDeclaredField('commandMap');
-   commandMap.setAccessible(true);
-   const registry = commandMap.get(server);
-
-   const circular = function () {};
-   let trusted = [];
-
    /** @type {import('./dict/core').core} */
    const core = {
+      circular: function () {},
       chain: (base, modifier) => {
          const chain = (object) => modifier(object, chain);
          chain(base);
@@ -55,7 +9,7 @@
       command: (options) => {
          core.session.command[options.name] = { execute: options.execute, tabComplete: options.tabComplete };
          const command =
-            registry.getCommand(options.name) ||
+            core.registry.getCommand(options.name) ||
             new Command(options.name, {
                execute: (player, name, args) => {
                   if (options.permission && !player.hasPermission(options.permission)) {
@@ -94,7 +48,7 @@
          command.setAliases([ ...(options.aliases || []) ]);
          command.setPermission(options.permission || null);
          command.setPermissionMessage(options.error || null);
-         registry.register(options.fallback || 'grakkit', command);
+         core.registry.register(options.fallback || 'grakkit', command);
          core.session.command[options.name].instance = command;
       },
       get context () {
@@ -156,21 +110,38 @@
          const store = core.session.event[name] || (core.session.event[name] = []);
          listeners.forEach((listener) => {
             if (store.push(listener) === 1) {
-               if (version === 'ancient') {
-                  manager.registerEvent(
-                     EventType[name],
+               if (core.version === 'ancient') {
+                  core.manager.registerEvent(
+                     EventType[
+                        {
+                           'org.bukkit.event.player.PlayerPreLoginEvent': 'PLAYER_PRELOGIN',
+                           'org.bukkit.event.block.BlockCanBuildEvent': 'BLOCK_CANBUILD',
+                           'org.bukkit.event.block.BlockFromToEvent': 'BLOCK_FROMTO',
+                           'org.bukkit.event.block.BlockRedstoneEvent': 'REDSTONE_CHANGE',
+                           'org.bukkit.event.world.ChunkPopulateEvent': 'CHUNK_POPULATED',
+                           'org.bukkit.event.vehicle.VehicleCollisionEvent': 'VEHICLE_COLLISION_ENTITY',
+                           'org.bukkit.event.vehicle.VehicleBlockCollisionEvent': 'VEHICLE_COLLISION_BLOCK'
+                        }[name] ||
+                           name
+                              .split('.')
+                              .slice(-1)[0]
+                              .split(/(?=[A-Z])/)
+                              .slice(0, -1)
+                              .map((word) => word.toUpperCase())
+                              .join('_')
+                     ],
                      new Listener(),
                      (info, event) => store.forEach((listener) => listener(event)),
                      EventPriority.Highest,
-                     plugin
+                     core.plugin
                   );
                } else {
-                  manager.registerEvent(
-                     Java.type(name).class,
+                  core.manager.registerEvent(
+                     core.type(name).class,
                      new Listener(),
                      EventPriority.HIGHEST,
                      (info, event) => store.forEach((listener) => listener(event)),
-                     plugin
+                     core.plugin
                   );
                }
             }
@@ -274,7 +245,7 @@
             },
             parse: () => {
                io.exists() &&
-                  context.eval(
+                  core.context.eval(
                      Source.newBuilder('js', io).mimeType('application/javascript+module').cached(false).build()
                   );
                return thing;
@@ -333,13 +304,16 @@
             let result = null;
             core.session.origin = file.file('..');
             core.session.export.module.push((output) => (result = output));
+            storage = {};
             try {
                core.import(`./${file.name}`);
+               storage = null;
                core.session.export.module.pop();
                core.session.origin = state;
                return result;
             } catch (error) {
                console.error(`An error occured while attempting to evaluate the "${key}" module!`);
+               storage = null;
                core.session.export.module.pop();
                core.session.origin = state;
                throw error;
@@ -413,23 +387,23 @@
                }
                index = 0;
                nodes = nodes.replace(/(\[)|(\]\.)/g, '.').split('.');
-               let context = global;
+               let scope = global;
                while (index < nodes.length - 1) {
                   let node = nodes[index++];
                   [ "'", '"', '`' ].includes(node[0]) && (node = node.slice(1, -1));
                   node.length && node[0].match(/[0-9]/g) && (node = Number(node));
-                  if (context[node]) context = context[node];
-                  else if (context === global && node === 'self') context = player;
+                  if (scope[node]) scope = scope[node];
+                  else if (scope === global && node === 'self') scope = player;
                   else index = Infinity;
                }
                if (index === nodes.length - 1) {
                   const base = (input.match(filter) || [ '' ])[0] + input.replace(filter, '');
                   let segment = nodes.slice(-1)[0];
                   [ "'", '"', '`' ].includes(segment[0]) && (segment = segment.slice(1, -1));
-                  const properties = Object.getOwnPropertyNames(context);
-                  if (context === global && !properties.includes('self')) properties.push('self');
-                  if (typeof context.length === 'number' && [ 'object', 'function' ].includes(typeof context[0])) {
-                     properties.push(...Array(context.length).join(' ').split(' ').map((value, index) => `${index}`));
+                  const properties = Object.getOwnPropertyNames(scope);
+                  if (scope === global && !properties.includes('self')) properties.push('self');
+                  if (typeof scope.length === 'number' && [ 'object', 'function' ].includes(typeof scope[0])) {
+                     properties.push(...Array(scope.length).join(' ').split(' ').map((value, index) => `${index}`));
                   }
                   return properties
                      .filter((key) => key.toLowerCase().includes(segment.toLowerCase()))
@@ -441,7 +415,7 @@
                         const path = base.split(property[0]);
                         const name = property.slice(1);
                         if (!base || !base.match(/[\.\[]/g)) return base.split(single).slice(0, -1).join('') + name;
-                        else if (context === global) return base + name;
+                        else if (scope === global) return base + name;
                         else if (name.includes(path.slice(-1)[0]))
                            return path.slice(0, -1).join(property[0]) + property;
                      })
@@ -507,7 +481,7 @@
                      case 'update':
                         core.send(player, '§7Updating...');
                         try {
-                           core.root.file('index.js').write(core.fetch(`${master}/index.min.js`).read());
+                           core.root.file('index.js').write(core.fetch(`${core.master}/index.min.js`).read());
                            core.root.file('dict').remove();
                            core.refresh();
                            core.send(player, '§7Update Complete.');
@@ -530,12 +504,12 @@
                }
             }
          });
-         core.event(version === 'modern' ? 'org.bukkit.event.server.PluginDisableEvent' : 'PLUGIN_DISABLE', (event) => {
-            plugin === event.getPlugin() && core.refresh(true);
+         core.event('org.bukkit.event.server.PluginDisableEvent', (event) => {
+            event.getPlugin() === core.plugin && core.refresh(true);
          });
          try {
             console.log('Downloading official module list...');
-            trusted = core.fetch(`${master}/modules.json`).json();
+            trusted = core.fetch(`${core.master}/modules.json`).json();
          } catch (error) {
             console.error('An error occured while attempting to download the official module list!');
             console.error(error.stack || error.message || error);
@@ -545,7 +519,7 @@
             if (!target.exists) {
                try {
                   console.log(`Downloading dictionary file... ${target.path}`);
-                  target.add().write(core.fetch(`${master}/dict/${name}`).read());
+                  target.add().write(core.fetch(`${core.master}/dict/${name}`).read());
                } catch (error) {
                   console.error(`An error occured while attempting to download the "${target.path}" dictionary file!`);
                   console.error(error.stack || error.message || error);
@@ -570,6 +544,7 @@
       get manager () {
          return manager;
       },
+      master: 'https://raw.githubusercontent.com/grakkit/core/master',
       module: {
          action: (player, option, key) => {
             key = key.toLowerCase();
@@ -663,7 +638,9 @@
                throw 'module-not-installed';
             }
          },
-         state: null,
+         get storage () {
+            return storage || {};
+         },
          update: (key) => {
             if (core.module.list[key]) {
                core.module.list[key] = core.module.download(key);
@@ -675,7 +652,7 @@
       },
       output: (object, nested) => {
          if (nested) {
-            if (object && object.constructor === circular) {
+            if (object && object.constructor === core.circular) {
                return 'Circular';
             } else {
                const type = toString.apply(object);
@@ -728,9 +705,9 @@
          return plugin;
       },
       refresh: (disable) => {
-         HandlerList.unregisterAll(plugin);
-         server.getScheduler().cancelTasks(plugin);
-         Object.values(core.session.command).forEach((command) => command.instance.unregister(registry));
+         HandlerList.unregisterAll(core.plugin);
+         server.getScheduler().cancelTasks(core.plugin);
+         Object.values(core.session.command).forEach((command) => command.instance.unregister(core.registry));
          Object.keys(core.session.data).forEach((path) => {
             const data = JSON.stringify(core.serialize(core.session.data[path], true));
             core.root.file('data', `${path}.json`).add().write(data);
@@ -753,7 +730,7 @@
             let output = typeof object[Symbol.iterator] === 'function' ? [] : {};
             Object.keys(object).map((key) => {
                const value = object[key];
-               if (nodes.includes(value)) output[key] = nullify ? null : new circular();
+               if (nodes.includes(value)) output[key] = nullify ? null : new core.circular();
                else output[key] = core.serialize(value, nullify, [ ...nodes, object ]);
             });
             return output;
@@ -769,7 +746,8 @@
       send: (player, message, action) => {
          const limit = action ? 128 : 2048;
          message.length > limit && (message = `${message.slice(0, limit - 3)}...`);
-         if (action) version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+         if (action)
+            core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
          else player.sendMessage(message);
       },
       type: (name) => {
@@ -804,9 +782,53 @@
             throw error;
          }
       },
-      get version () {
-         return version;
-      }
+      version: 'modern'
    };
+
+   const Bukkit = core.type('org.bukkit.Bukkit');
+   const Command = Java.extend(core.type('org.bukkit.command.Command'));
+   const FileInputStream = core.type('java.io.FileInputStream');
+   const FileOutputStream = core.type('java.io.FileOutputStream');
+   const Files = core.type('java.nio.file.Files');
+   const HandlerList = core.type('org.bukkit.event.HandlerList');
+   const Listener = Java.extend(core.type('org.bukkit.event.Listener'), {});
+   const Paths = core.type('java.nio.file.Paths');
+   const Scanner = core.type('java.util.Scanner');
+   const Source = core.type('org.graalvm.polyglot.Source');
+   const StandardCopyOption = core.type('java.nio.file.StandardCopyOption');
+   const URL = core.type('java.net.URL');
+   const ZipInputStream = core.type('java.util.zip.ZipInputStream');
+
+   let ChatMessageType, EventPriority, EventType, TextComponent;
+
+   try {
+      ChatMessageType = core.type('net.md_5.bungee.api.ChatMessageType');
+      TextComponent = core.type('net.md_5.bungee.api.chat.TextComponent');
+   } catch (error) {
+      core.version = 'legacy';
+   }
+
+   try {
+      EventPriority = core.type('org.bukkit.event.EventPriority');
+   } catch (error) {
+      EventType = core.type('org.bukkit.event.Event$Type');
+      EventPriority = core.type('org.bukkit.event.Event$Priority');
+      core.version = 'ancient';
+   }
+
+   const global = globalThis;
+   const server = Bukkit.getServer();
+
+   const manager = server.getPluginManager();
+   const plugin = manager.getPlugin('grakkit');
+   const context = plugin.getClass().static.context;
+
+   const commandMap = server.getClass().getDeclaredField('commandMap');
+   commandMap.setAccessible(true);
+   const registry = commandMap.get(server);
+
+   let storage = null;
+   let trusted = [];
+
    core.init();
 })();
