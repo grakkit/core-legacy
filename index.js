@@ -300,22 +300,22 @@
                info = {};
             }
             const file = folder.file(info.main || 'index.js');
-            const state = core.session.origin;
+            const state = [ core.session.origin, storage ];
             let result = null;
             core.session.origin = file.file('..');
             core.session.export.module.push((output) => (result = output));
             storage = {};
             try {
                core.import(`./${file.name}`);
-               storage = null;
+               storage = state[1];
                core.session.export.module.pop();
-               core.session.origin = state;
+               core.session.origin = state[0];
                return result;
             } catch (error) {
                console.error(`An error occured while attempting to evaluate the "${key}" module!`);
-               storage = null;
+               storage = state[1];
                core.session.export.module.pop();
-               core.session.origin = state;
+               core.session.origin = state[0];
                throw error;
             }
          } else {
@@ -347,7 +347,14 @@
          }
       },
       init: () => {
-         core.session.origin = core.root;
+         core.session = {
+            command: {},
+            data: {},
+            event: {},
+            export: { file: [], module: [] },
+            origin: core.root,
+            types: {}
+         };
          Object.assign(global, { core: core, global: global, server: server });
          core.command({
             name: 'js',
@@ -638,9 +645,6 @@
                throw 'module-not-installed';
             }
          },
-         get storage () {
-            return storage || {};
-         },
          update: (key) => {
             if (core.module.list[key]) {
                core.module.list[key] = core.module.download(key);
@@ -712,7 +716,6 @@
             const data = JSON.stringify(core.serialize(core.session.data[path], true));
             core.root.file('data', `${path}.json`).add().write(data);
          });
-         core.session = { command: {}, data: {}, event: {}, export: { file: [], module: [] }, types: {} };
          for (let key in global) delete global[key];
          disable || core.init();
       },
@@ -736,19 +739,15 @@
             return output;
          }
       },
-      session: {
-         command: {},
-         data: {},
-         event: {},
-         export: { file: [], module: [] },
-         types: {}
-      },
       send: (player, message, action) => {
          const limit = action ? 128 : 2048;
          message.length > limit && (message = `${message.slice(0, limit - 3)}...`);
          if (action)
             core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
          else player.sendMessage(message);
+      },
+      get storage () {
+         return storage;
       },
       type: (name) => {
          return core.session.types[name] || (core.session.types[name] = Java.type(name));
@@ -827,7 +826,7 @@
    commandMap.setAccessible(true);
    const registry = commandMap.get(server);
 
-   let storage = null;
+   let storage = {};
    let trusted = [];
 
    core.init();
