@@ -108,7 +108,7 @@
       },
       event: (name, ...listeners) => {
          const store = core.session.event[name] || (core.session.event[name] = []);
-         listeners.forEach((listener) => {
+         for (const listener of listeners) {
             if (store.push(listener) === 1) {
                if (core.version === 'ancient') {
                   core.manager.registerEvent(
@@ -145,7 +145,7 @@
                   );
                }
             }
-         });
+         }
       },
       export: (object, file) => {
          if (file) {
@@ -205,7 +205,7 @@
             execute: () => {
                const origin = core.session.origin;
                core.session.origin = thing;
-               thing.children.forEach((file) => {
+               for (const file of thing.children) {
                   if (file.name.endsWith('.js')) {
                      try {
                         core.import(file.name);
@@ -213,7 +213,7 @@
                         console.error(error.stack || error.message || error);
                      }
                   }
-               });
+               }
                core.session.origin = origin;
                return thing;
             },
@@ -270,9 +270,8 @@
                core.chain([ io, to ], (io, loop) => {
                   if (io[0].isDirectory()) {
                      core.file(io[1].getPath()).dir();
-                     [ ...io[0].listFiles() ].forEach((from) => {
+                     for (const from of [ ...io[0].listFiles() ])
                         loop([ from, core.file(io[1].getPath(), from.getName()).io ]);
-                     });
                   } else if (io[0].exists() && !io[1].exists()) {
                      Files[action](io[0].toPath(), io[1].toPath(), StandardCopyOption.REPLACE_EXISTING);
                   }
@@ -437,22 +436,31 @@
             execute: (player, option, key) => {
                if (option) {
                   option = option.toLowerCase();
-                  if (option === 'list') {
-                     core.send(player, `§7Installed modules: ${core.output(Object.keys(core.module.list))}`);
-                  } else if ([ 'add', 'remove', 'update' ].includes(option)) {
-                     if (key === '*') {
-                        if (option === 'add') {
-                           core.send(player, '§7One sec, just need to download the entire GitHub database...');
-                        } else {
-                           Object.keys(core.module.list).map((key) => core.module.action(player, option, key));
+                  switch (option) {
+                     case 'list':
+                        core.send(player, `§7Installed modules: ${core.output(Object.keys(core.module.list))}`);
+                        break;
+                     case 'add':
+                     case 'remove':
+                     case 'update':
+                        switch (key) {
+                           case '':
+                           case undefined:
+                              core.send(player, '§cYou must specify a repository!');
+                              break;
+                           case '*':
+                              if (option === 'add') {
+                                 core.send(player, '§7One sec, just gotta download the entire GitHub database...');
+                              } else {
+                                 for (const key of core.module.list) core.module.action(player, option, key);
+                              }
+                              break;
+                           default:
+                              core.module.action(player, option, key.toLowerCase());
                         }
-                     } else if (key) {
-                        core.module.action(player, option, key.toLowerCase());
-                     } else {
-                        core.send(player, '§cYou must specify a repository!');
-                     }
-                  } else {
-                     core.send(player, '§cThat option is invalid!');
+                        break;
+                     default:
+                        core.send(player, '§cThat option is invalid!');
                   }
                } else {
                   core.send(player, '§cYou must specify an option!');
@@ -477,20 +485,42 @@
             name: 'grakkit',
             permission: 'grakkit.command.grakkit',
             error: '§cYou lack the permission §4(grakkit.command.grakkit) §cto use that command!',
-            execute: (player, action) => {
+            execute: (player, action, target) => {
                if (action) {
+                  action = action.toLowerCase();
                   switch (action) {
                      case 'refresh':
                         core.send(player, '§7Refreshing...');
                         core.refresh();
                         core.send(player, '§7Refresh Complete.');
                         break;
+                     case 'toggle':
+                        if (target) {
+                           target = target.toLowerCase();
+                           switch (target) {
+                              case 'dict':
+                              case 'scripts':
+                              case 'trusted':
+                              case 'user':
+                                 core.toggles[target] = core.toggles[target] === false ? true : false;
+                                 const status = core.toggles[target] ? 'en' : 'dis';
+                                 core.send(player, `§7Toggle "${target}" has now been ${status}abled.`);
+                                 break;
+                              default:
+                                 core.send(player, '§cThat toggle is invalid!');
+                                 break;
+                           }
+                        } else {
+                           core.send(player, '§cYou must specify a toggle!');
+                        }
+                        break;
                      case 'update':
                         core.send(player, '§7Updating...');
                         try {
-                           core.root.file('index.js').write(core.fetch(`${core.master}/index.min.js`).read());
                            core.root.file('dict').remove();
-                           core.refresh();
+                           core.root.file('index.js').write(core.fetch(`${core.master}/index.js`).read());
+                           core.refresh(true);
+                           core.import('index.js');
                            core.send(player, '§7Update Complete.');
                         } catch (error) {
                            core.send(player, '§cUpdate Failed!');
@@ -499,54 +529,67 @@
                         break;
                      default:
                         core.send(player, '§cThat action is invalid!');
-                        break;
                   }
                } else {
                   core.send(player, '§cYou must specify an action!');
                }
             },
             tabComplete: (player, ...args) => {
-               if (args.length === 1) {
-                  return [ 'refresh', 'update' ].filter((value) => value.includes(args[0]));
+               switch (args.length) {
+                  case 1:
+                     return [ 'refresh', 'toggle', 'update' ].filter((value) => value.includes(args[0]));
+                  case 2:
+                     switch (args[0]) {
+                        case 'toggle':
+                           return [ 'dict', 'scripts', 'trusted', 'user' ].filter((value) => value.includes(args[1]));
+                     }
                }
             }
          });
          core.event('org.bukkit.event.server.PluginDisableEvent', (event) => {
             event.getPlugin() === core.plugin && core.refresh(true);
          });
-         try {
-            console.log('Downloading official module list...');
-            trusted = core.fetch(`${core.master}/modules.json`).json();
-         } catch (error) {
-            console.error('An error occured while attempting to download the official module list!');
-            console.error(error.stack || error.message || error);
+         if (core.toggles.trusted !== false) {
+            try {
+               console.log('Downloading trusted module list...');
+               trusted = core.fetch(`${core.master}/modules.json`).json();
+            } catch (error) {
+               console.error('An error occured while attempting to download the trusted module list!');
+               console.error(error.stack || error.message || error);
+            }
          }
-         [ 'classes.d.ts', 'core.d.ts', 'events.d.ts', 'types.d.ts' ].forEach((name) => {
-            const target = core.root.file('dict', name);
-            if (!target.exists) {
-               try {
-                  console.log(`Downloading dictionary file... ${target.path}`);
-                  target.add().write(core.fetch(`${core.master}/dict/${name}`).read());
-               } catch (error) {
-                  console.error(`An error occured while attempting to download the "${target.path}" dictionary file!`);
-                  console.error(error.stack || error.message || error);
+         if (core.toggles.dict !== false) {
+            for (const name of [ 'classes', 'core', 'events', 'types' ]) {
+               const target = core.root.file('dict', `${name}.d.ts`);
+               if (!target.exists) {
+                  try {
+                     console.log(`Downloading dictionary... ${target.path}`);
+                     target.add().write(core.fetch(`${core.master}/dict/${name}.d.ts`).read());
+                  } catch (error) {
+                     console.error(`An error occured while attempting to download the "${target.path}" dictionary!`);
+                     console.error(error.stack || error.message || error);
+                  }
                }
             }
-         });
-         core.module.dict();
-         const user = core.root.file('user.js');
-         user.exists ||
-            user
-               .add()
-               .write(
-                  "/** @type {import('./dict/core').core} */ const core = global.core;\n/** @type {import('./dict/classes').Server} */ const server = global.server;\n"
-               );
-         try {
-            core.import(user.name);
-         } catch (error) {
-            console.error(error.stack || error.message || error);
+            core.module.dict();
          }
-         core.root.file('scripts').dir().execute();
+         if (core.toggles.user !== false) {
+            const user = core.root.file('user.js');
+            user.exists ||
+               user
+                  .add()
+                  .write(
+                     "/** @type {import('./dict/core').core} */ const core = global.core;\n/** @type {import('./dict/classes').Server} */ const server = global.server;\n"
+                  );
+            try {
+               core.import(user.name);
+            } catch (error) {
+               console.error(error.stack || error.message || error);
+            }
+         }
+         if (core.toggles.scripts !== false) {
+            core.root.file('scripts').dir().execute();
+         }
       },
       get manager () {
          return manager;
@@ -601,6 +644,7 @@
             core.root.file('dict/imports.d.ts').add().write(
                [
                   'export class imports {',
+                  '    static import (name: string): any;',
                   ...keys.map((key) => {
                      return `    static import (name: '@${key}'): import('./../modules/${key}/module').Main;`;
                   }),
@@ -711,12 +755,14 @@
       refresh: (disable) => {
          HandlerList.unregisterAll(core.plugin);
          server.getScheduler().cancelTasks(core.plugin);
-         Object.values(core.session.command).forEach((command) => command.instance.unregister(core.registry));
-         Object.keys(core.session.data).forEach((path) => {
+         for (const command of Object.values(core.session.command)) command.instance.unregister(core.registry);
+         for (const path in core.session.data) {
             const data = JSON.stringify(core.serialize(core.session.data[path], true));
             core.root.file('data', `${path}.json`).add().write(data);
-         });
-         for (let key in global) delete global[key];
+         }
+         for (const key in global) delete global[key];
+         storage = {};
+         trusted = [];
          disable || core.init();
       },
       get registry () {
@@ -731,11 +777,11 @@
          } else {
             nodes || (nodes = [ object ]);
             let output = typeof object[Symbol.iterator] === 'function' ? [] : {};
-            Object.keys(object).map((key) => {
+            for (const key in object) {
                const value = object[key];
                if (nodes.includes(value)) output[key] = nullify ? null : new core.circular();
                else output[key] = core.serialize(value, nullify, [ ...nodes, object ]);
-            });
+            }
             return output;
          }
       },
@@ -746,8 +792,12 @@
             core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
          else player.sendMessage(message);
       },
+      session: { types: {} },
       get storage () {
          return storage;
+      },
+      get toggles () {
+         return core.data('../toggles');
       },
       type: (name) => {
          return core.session.types[name] || (core.session.types[name] = Java.type(name));
