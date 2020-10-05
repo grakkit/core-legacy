@@ -1,11 +1,6 @@
 (function () {
    /** @type {import('./dict/core').core} */
    const core = {
-      circular: function () {},
-      chain: (base, modifier) => {
-         const chain = (object) => modifier(object, chain);
-         chain(base);
-      },
       command: (options) => {
          core.session.command[options.name] = { execute: options.execute, tabComplete: options.tabComplete };
          const command =
@@ -60,57 +55,11 @@
          store[name] || (store[name] = core.root.file('data', `${path}.json`).json() || {});
          return store[name];
       },
-      error: (error) => {
-         let type = 'Error';
-         let message = `${error}`;
-         if (error.stack) {
-            type = error.stack.split('\n')[0].split(' ')[0].slice(0, -1);
-            message = error.message;
-            switch (type) {
-               case 'TypeError':
-                  try {
-                     if (message.startsWith('invokeMember') || message.startsWith('execute on foreign object')) {
-                        const reason = message.split('failed due to: ')[1];
-                        if (reason.startsWith('no applicable overload found')) {
-                           const sets = reason.split('overloads:')[1].split(']],')[0].split(')]').map((set) => {
-                              return `(${set.split('(').slice(1).join('(')})`;
-                           });
-                           message = [ 'Invalid arguments! Expected:\u00a74', ...sets ].join('\n -> ').slice(0, -1);
-                        } else if (reason.startsWith('Arity error')) {
-                           message = `Insufficient arguments! Expected: ${reason.split('-')[1].split(' ')[2]}`;
-                        } else if (reason.startsWith('UnsupportedTypeException')) {
-                           message = 'Invalid arguments!';
-                        } else if (reason.startsWith('Unknown identifier')) {
-                           message = `That method (${reason.split(': ')[1]}) is not a member of its parent!`;
-                        } else if (reason.startsWith('Message not supported')) {
-                           message = `That method (${message.slice(14).split(')')[0]}) is not a member of its parent!`;
-                        } else {
-                           message = message.split('\n')[0];
-                        }
-                     }
-                  } catch (error) {
-                     message = message.split('\n')[0];
-                  }
-                  break;
-               case 'SyntaxError':
-                  message = message.split(' ').slice(1).join(' ').split('\n')[0];
-                  break;
-            }
-         } else {
-            error = `${error}`;
-            type = error.split(' ')[0].slice(0, -1);
-            message = error.split(' ').slice(1).join(' ');
-         }
-         return `${type}: ${message}`;
-      },
-      eval: (code) => {
-         return Polyglot.eval('js', code);
-      },
       event: (name, ...listeners) => {
          const store = core.session.event[name] || (core.session.event[name] = []);
          for (const listener of listeners) {
             if (store.push(listener) === 1) {
-               if (core.version === 'ancient') {
+               if (core.session.legacy) {
                   core.manager.registerEvent(
                      EventType[
                         {
@@ -179,7 +128,7 @@
                   return link.getInputStream();
                },
                unzip: (to) => {
-                  return core.unzip(link.getInputStream(), to);
+                  core.util.unzip(link.getInputStream(), to);
                }
             };
          } else {
@@ -197,8 +146,12 @@
             get children () {
                return [ ...(io.listFiles() || []) ].map((sub) => core.file(sub.getPath()));
             },
+            copy: (to) => {
+               core.util.transfer(thing, to, 'copy');
+               return thing;
+            },
             dir: () => {
-               core.chain(io, (io, loop) => {
+               core.util.chain(io, (io, loop) => {
                   const up = io.getParentFile();
                   up && !up.exists() && loop(up);
                   io.mkdir();
@@ -206,18 +159,22 @@
                return thing;
             },
             execute: () => {
-               const origin = core.session.origin;
-               core.session.origin = thing;
-               for (const file of thing.children) {
-                  if (file.name.endsWith('.js')) {
-                     try {
-                        core.import(file.name);
-                     } catch (error) {
-                        console.error(error.stack || error.message || error);
+               if (io.exists()) {
+                  if (io.isDirectory()) {
+                     const origin = core.session.origin;
+                     core.session.origin = thing;
+                     for (const file of thing.children) file.io.isDirectory() || file.execute();
+                     core.session.origin = origin;
+                  } else {
+                     if (thing.name.endsWith('.js')) {
+                        try {
+                           core.import(thing.name);
+                        } catch (error) {
+                           console.error(error.stack || error.message || error);
+                        }
                      }
                   }
                }
-               core.session.origin = origin;
                return thing;
             },
             get exists () {
@@ -227,7 +184,7 @@
                return core.file(...path, ...sub);
             },
             flush: () => {
-               core.chain(io, (io, loop) => {
+               core.util.chain(io, (io, loop) => {
                   const up = io.getParentFile();
                   up && up.listFiles() && !up.listFiles()[0] && up.delete() && loop(up);
                });
@@ -260,7 +217,7 @@
                return io.exists() && !io.isDirectory() ? Files.readString(io.toPath()) : null;
             },
             remove: () => {
-               core.chain(io, (io, loop) => {
+               core.util.chain(io, (io, loop) => {
                   io.isDirectory() && [ ...io.listFiles() ].forEach(loop);
                   io.exists() && io.delete();
                });
@@ -269,16 +226,8 @@
             stream: () => {
                return new FileOutputStream(io);
             },
-            transfer: (to, action) => {
-               core.chain([ io, to ], (io, loop) => {
-                  if (io[0].isDirectory()) {
-                     core.file(io[1].getPath()).dir();
-                     for (const from of [ ...io[0].listFiles() ])
-                        loop([ from, core.file(io[1].getPath(), from.getName()).io ]);
-                  } else if (io[0].exists() && !io[1].exists()) {
-                     Files[action](io[0].toPath(), io[1].toPath(), StandardCopyOption.REPLACE_EXISTING);
-                  }
-               });
+            move: (to) => {
+               core.util.transfer(thing, to, 'move');
                return thing.flush();
             },
             write: (content) => {
@@ -286,10 +235,126 @@
                return thing;
             },
             unzip: (to) => {
-               return core.unzip(new FileInputStream(io), to);
+               core.util.unzip(new FileInputStream(io), to);
+               return thing;
             }
          };
          return thing;
+      },
+      format: {
+         circular: class {},
+         error: (error) => {
+            let type = 'Error';
+            let message = `${error}`;
+            if (error.stack) {
+               type = error.stack.split('\n')[0].split(' ')[0].slice(0, -1);
+               message = error.message;
+               switch (type) {
+                  case 'TypeError':
+                     try {
+                        if (message.startsWith('invokeMember') || message.startsWith('execute on foreign object')) {
+                           const reason = message.split('failed due to: ')[1];
+                           if (reason.startsWith('no applicable overload found')) {
+                              const sets = reason.split('overloads:')[1].split(']],')[0].split(')]').map((set) => {
+                                 return `(${set.split('(').slice(1).join('(')})`;
+                              });
+                              message = [ 'Invalid arguments! Expected:\u00a74', ...sets ].join('\n -> ').slice(0, -1);
+                           } else if (reason.startsWith('Arity error')) {
+                              message = `Insufficient arguments! Expected: ${reason.split('-')[1].split(' ')[2]}`;
+                           } else if (reason.startsWith('UnsupportedTypeException')) {
+                              message = 'Invalid arguments!';
+                           } else if (reason.startsWith('Unknown identifier')) {
+                              message = `That method (${reason.split(': ')[1]}) is not a member of its parent!`;
+                           } else if (reason.startsWith('Message not supported')) {
+                              message = `That method (${message
+                                 .slice(14)
+                                 .split(')')[0]}) is not a member of its parent!`;
+                           } else {
+                              message = message.split('\n')[0];
+                           }
+                        }
+                     } catch (error) {
+                        message = message.split('\n')[0];
+                     }
+                     break;
+                  case 'SyntaxError':
+                     message = message.split(' ').slice(1).join(' ').split('\n')[0];
+                     break;
+               }
+            } else {
+               error = `${error}`;
+               type = error.split(' ')[0].slice(0, -1);
+               message = error.split(' ').slice(1).join(' ');
+            }
+            return `${type}: ${message}`;
+         },
+         output: (object, nested) => {
+            if (nested) {
+               if (object instanceof core.format.circular) {
+                  return 'Circular';
+               } else {
+                  const type = toString.apply(object);
+                  switch (type) {
+                     case '[object Object]':
+                     case '[object Function]':
+                     case '[foreign HostFunction]':
+                        return type.split(' ')[1].slice(0, -1);
+                     case '[object Array]':
+                        return `[ ${core.format.serialize(object).map(core.format.output, true).join(', ')} ]`;
+                     case '[foreign HostObject]':
+                        const output = `${object}`;
+                        if (!output || output.startsWith('class ')) {
+                           return object.getCanonicalName
+                              ? object.getCanonicalName()
+                              : object.class ? object.class.getCanonicalName() : object;
+                        } else {
+                           return output;
+                        }
+                     default:
+                        switch (typeof object) {
+                           case 'function':
+                              return 'Function';
+                           case 'string':
+                              return `"${object}"`;
+                           case 'symbol':
+                              return `@@${`${object}`.slice(7, -1)}`;
+                           default:
+                              return `${object}`;
+                        }
+                  }
+               }
+            } else {
+               if (![ null, undefined ].includes(object) && typeof object[''] === 'string') {
+                  return object[''];
+               } else {
+                  switch (toString.apply(object)) {
+                     case '[object Object]':
+                        const names = Object.getOwnPropertyNames(object);
+                        return `{ ${names
+                           .map((name) => `${name}: ${core.format.output(object[name], true)}`)
+                           .join(', ')} }`;
+                     case '[object Function]':
+                        return `${object}`.replace(/\r/g, '');
+                     default:
+                        return core.format.output(object, true);
+                  }
+               }
+            }
+         },
+         serialize: (object, nullify, nodes) => {
+            if (object === null || object !== 'object') {
+               return object;
+            } else {
+               nodes || (nodes = [ object ]);
+               let output = typeof object[Symbol.iterator] === 'function' ? [] : {};
+               for (const key in object) {
+                  const value = object[key];
+                  if (nodes.includes(value)) output[key] = nullify ? null : new core.format.circular();
+                  else output[key] = core.format.serialize(value, nullify, [ ...nodes, object ]);
+               }
+               return output;
+            }
+         }
       },
       import: (source) => {
          if (source[0] === '@') {
@@ -325,7 +390,7 @@
             const uuid = java.util.UUID.randomUUID().toString();
             const importer = core.root.file(`import.js-${uuid}`);
             const exporter = file.file(`../${file.name}-${uuid}`);
-            file.transfer(exporter.io, 'copy');
+            file.copy(exporter);
             importer.add().write(`import * as output from '../../${exporter.path}'; core.export(output, true);`);
             const state = core.session.origin;
             let result = null;
@@ -354,10 +419,95 @@
             data: {},
             event: {},
             export: { file: [], module: [] },
+            legacy: !!EventType,
             origin: core.root,
-            types: {}
+            tasks: [],
+            tick: 0,
+            types: core.session.types
          };
-         Object.assign(global, { core: core, global: global, server: server });
+         server.getScheduler().runTaskTimer(
+            core.plugin,
+            new Runnable({
+               run: () => {
+                  let index = 0;
+                  while (index < core.session.tasks.length) {
+                     const task = core.session.tasks[index++];
+                     if (task && task.tick === core.session.tick) {
+                        try {
+                           task.script.call(this, ...task.args);
+                        } catch (error) {
+                           console.error(`An error occured while attempting to run task ${index + 1}!`);
+                           console.error(error);
+                        }
+                     }
+                  }
+                  core.session.tasks = core.session.tasks.filter((task) => {
+                     return task && task.tick > core.session.tick;
+                  });
+                  ++core.session.tick;
+               }
+            }),
+            0,
+            1
+         );
+         Object.assign(global, {
+            atob: (data) => {
+               let index = 0;
+               let result = '';
+               while (index < data.length) {
+                  let a = base64.indexOf(data.charAt(index++));
+                  let b = base64.indexOf(data.charAt(index++));
+                  let c = base64.indexOf(data.charAt(index++));
+                  let d = base64.indexOf(data.charAt(index++));
+                  let e = ((b & 0xf) << 4) | ((c >> 2) & 0xf);
+                  let f = ((c & 0x3) << 6) | (d & 0x3f);
+                  result += String.fromCharCode(((a & 0x3f) << 2) | ((b >> 4) & 0x3));
+                  result += e ? String.fromCharCode(e) : '';
+                  result += f ? String.fromCharCode(f) : '';
+               }
+               return result;
+            },
+            btoa: (data) => {
+               let index = 0;
+               let result = '';
+               while (index < data.length) {
+                  let a = data.charCodeAt(index++) || 0;
+                  let b = data.charCodeAt(index++) || 0;
+                  let c = data.charCodeAt(index++) || 0;
+                  let d = ((b & 0xf) << 2) | ((c >> 6) & 0x3);
+                  let e = c & 0x3f;
+                  b ? c || (e = 64) : (d = e = 64);
+                  result += base64.charAt((a >> 2) & 0x3f);
+                  result += base64.charAt(((a & 0x3) << 4) | ((b >> 4) & 0xf));
+                  result += base64.charAt(d);
+                  result += base64.charAt(e);
+               }
+               return result;
+            },
+            clearInterval: (handle) => {
+               core.task.cancel(handle);
+            },
+            clearTimeout: (handle) => {
+               core.task.cancel(handle);
+            },
+            core,
+            global,
+            server,
+            setInterval: (handler, timeout = 50, ...argumentz) => {
+               return core.task.interval(
+                  typeof handler === 'string' ? () => core.util.eval(handler) : handler,
+                  Math.ceil(timeout / 50),
+                  ...argumentz
+               );
+            },
+            setTimeout: (handler, timeout = 0, ...argumentz) => {
+               return core.task.timeout(
+                  typeof handler === 'string' ? () => core.util.eval(handler) : handler,
+                  Math.ceil(timeout / 50),
+                  ...argumentz
+               );
+            }
+         });
          core.command({
             name: 'js',
             permission: 'grakkit.command.js',
@@ -366,18 +516,18 @@
                const self = global.hasOwnProperty('self');
                try {
                   self || (global.self = player);
-                  const result = core.eval(args.join(' '));
+                  const result = core.util.eval(args.join(' '));
                   self || delete global.self;
                   if (toString.apply(result) === '[foreign HostFunction]') {
                      let input = args.slice(-1)[0].split('.').slice(-1)[0];
                      input.endsWith(']') && (input = eval(input.replace(/.*\[/, '').slice(0, -1)));
-                     core.send(player, `§7hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
+                     player.sendMessage(`§7hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
                   } else {
-                     core.send(player, `§7${core.output(result)}`);
+                     player.sendMessage(`§7${core.format.output(result)}`);
                   }
                } catch (error) {
                   self || delete global.self;
-                  core.send(player, `§c${core.error(error)}`);
+                  player.sendMessage(`§c${core.format.error(error)}`);
                }
             },
             tabComplete: (player, ...args) => {
@@ -441,7 +591,7 @@
                   option = option.toLowerCase();
                   switch (option) {
                      case 'list':
-                        core.send(player, `§7Installed modules: ${core.output(Object.keys(core.module.list))}`);
+                        player.sendMessage(`§7Installed modules: ${core.format.output(Object.keys(core.module.list))}`);
                         break;
                      case 'add':
                      case 'remove':
@@ -449,11 +599,11 @@
                         switch (key) {
                            case '':
                            case undefined:
-                              core.send(player, '§cYou must specify a repository!');
+                              player.sendMessage('§cYou must specify a repository!');
                               break;
                            case '*':
                               if (option === 'add') {
-                                 core.send(player, '§7One sec, just gotta download the entire GitHub database...');
+                                 player.sendMessage('§7One sec, just gotta download the entire GitHub database...');
                               } else {
                                  for (const key of core.module.list) core.module.action(player, option, key);
                               }
@@ -463,10 +613,10 @@
                         }
                         break;
                      default:
-                        core.send(player, '§cThat option is invalid!');
+                        player.sendMessage('§cThat option is invalid!');
                   }
                } else {
-                  core.send(player, '§cYou must specify an option!');
+                  player.sendMessage('§cYou must specify an option!');
                }
             },
             tabComplete: (player, ...args) => {
@@ -493,9 +643,9 @@
                   action = action.toLowerCase();
                   switch (action) {
                      case 'refresh':
-                        core.send(player, '§7Refreshing...');
+                        player.sendMessage('§7Refreshing...');
                         core.refresh();
-                        core.send(player, '§7Refresh Complete.');
+                        player.sendMessage('§7Refresh Complete.');
                         break;
                      case 'toggle':
                         if (target) {
@@ -507,34 +657,33 @@
                               case 'user':
                                  core.toggles[target] = core.toggles[target] === false ? true : false;
                                  const status = core.toggles[target] ? 'en' : 'dis';
-                                 core.send(player, `§7Toggle "${target}" has now been ${status}abled.`);
+                                 player.sendMessage(`§7Toggle "${target}" has now been ${status}abled.`);
                                  break;
                               default:
-                                 core.send(player, '§cThat toggle is invalid!');
+                                 player.sendMessage('§cThat toggle is invalid!');
                                  break;
                            }
                         } else {
-                           core.send(player, '§cYou must specify a toggle!');
+                           player.sendMessage('§cYou must specify a toggle!');
                         }
                         break;
                      case 'update':
-                        core.send(player, '§7Updating...');
+                        player.sendMessage('§7Updating...');
                         try {
                            core.toggles.dict && core.root.file('dict').remove();
-                           core.root.file('index.js').write(core.fetch(`${core.master}/index.js`).read());
                            core.refresh(true);
-                           core.import('index.js');
-                           core.send(player, '§7Update Complete.');
+                           core.root.file('index.js').write(core.fetch(`${remote}/index.js`).read()).execute();
+                           player.sendMessage('§7Update Complete.');
                         } catch (error) {
-                           core.send(player, '§cUpdate Failed!');
+                           player.sendMessage('§cUpdate Failed!');
                            throw error;
                         }
                         break;
                      default:
-                        core.send(player, '§cThat action is invalid!');
+                        player.sendMessage('§cThat action is invalid!');
                   }
                } else {
-                  core.send(player, '§cYou must specify an action!');
+                  player.sendMessage('§cYou must specify an action!');
                }
             },
             tabComplete: (player, ...args) => {
@@ -555,7 +704,7 @@
          if (core.toggles.trusted !== false) {
             try {
                console.log('Downloading trusted module list...');
-               trusted = core.fetch(`${core.master}/modules.json`).json();
+               trusted = core.fetch(`${remote}/modules.json`).json();
             } catch (error) {
                console.error('An error occured while attempting to download the trusted module list!');
                console.error(error.stack || error.message || error);
@@ -567,7 +716,7 @@
                if (!target.exists) {
                   try {
                      console.log(`Downloading dictionary... ${target.path}`);
-                     target.add().write(core.fetch(`${core.master}/dict/${name}.d.ts`).read());
+                     target.add().write(core.fetch(`${remote}/dict/${name}.d.ts`).read());
                   } catch (error) {
                      console.error(`An error occured while attempting to download the "${target.path}" dictionary!`);
                      console.error(error.stack || error.message || error);
@@ -584,11 +733,7 @@
                   .write(
                      "/** @type {import('./dict/core').core} */ const core = global.core;\n/** @type {import('./dict/classes').Server} */ const server = global.server;\n"
                   );
-            try {
-               core.import(user.name);
-            } catch (error) {
-               console.error(error.stack || error.message || error);
-            }
+            user.execute();
          }
          if (core.toggles.scripts !== false) {
             core.root.file('scripts').dir().execute();
@@ -597,34 +742,33 @@
       get manager () {
          return manager;
       },
-      master: 'https://raw.githubusercontent.com/grakkit/core/master',
       module: {
          action: (player, option, key) => {
             key = key.toLowerCase();
             const action = { add: 'Install', remove: 'Delet', update: 'Updat' }[option];
             try {
-               core.send(player, `§7${action}ing... (${key})`);
+               player.sendMessage(`§7${action}ing... (${key})`);
                core.module[option](key);
-               core.send(player, `§7Module ${action}ed. (${key})`);
+               player.sendMessage(`§7Module ${action}ed. (${key})`);
             } catch (error) {
                switch (error) {
                   case 'module-already-installed':
-                     core.send(player, '§cThat module has already been installed!');
+                     player.sendMessage('§cThat module has already been installed!');
                      break;
                   case 'module-already-updated':
-                     core.send(player, '§cThat module is already up to date!');
+                     player.sendMessage('§cThat module is already up to date!');
                      break;
                   case 'module-download-failed':
-                     core.send(player, '§cAn error occured while downloading that module!');
+                     player.sendMessage('§cAn error occured while downloading that module!');
                      break;
                   case 'module-not-available':
-                     core.send(player, '§cThat module has no releases available!');
+                     player.sendMessage('§cThat module has no releases available!');
                      break;
                   case 'module-not-installed':
-                     core.send(player, '§cThat module has not already been installed!');
+                     player.sendMessage('§cThat module has not already been installed!');
                      break;
                   default:
-                     core.send(player, '§cAn unexpected error occured!');
+                     player.sendMessage('§cAn unexpected error occured!');
                      console.error(error.stack || error.message || error);
                      break;
                }
@@ -662,9 +806,9 @@
                   throw 'module-already-updated';
                } else {
                   try {
-                     const from = core.fetch(latest.zipball_url).unzip(core.root.file('downloads', key).io);
+                     const from = core.fetch(latest.zipball_url).unzip(core.root.file('downloads', key));
                      core.module.delete(key);
-                     from.children[0].transfer(core.root.file('modules', key).io, 'move').remove();
+                     from.children[0].move(core.root.file('modules', key)).remove();
                      return latest.name;
                   } catch (error) {
                      core.root.file('downloads', key).remove();
@@ -701,57 +845,6 @@
             }
          }
       },
-      output: (object, nested) => {
-         if (nested) {
-            if (object && object.constructor === core.circular) {
-               return 'Circular';
-            } else {
-               const type = toString.apply(object);
-               switch (type) {
-                  case '[object Object]':
-                  case '[object Function]':
-                  case '[foreign HostFunction]':
-                     return type.split(' ')[1].slice(0, -1);
-                  case '[object Array]':
-                     return `[ ${core.serialize(object).map(core.output, true).join(', ')} ]`;
-                  case '[foreign HostObject]':
-                     const output = `${object}`;
-                     if (!output || output.startsWith('class ')) {
-                        return object.getCanonicalName
-                           ? object.getCanonicalName()
-                           : object.class ? object.class.getCanonicalName() : object;
-                     } else {
-                        return output;
-                     }
-                  default:
-                     switch (typeof object) {
-                        case 'function':
-                           return 'Function';
-                        case 'string':
-                           return `"${object}"`;
-                        case 'symbol':
-                           return `@@${`${object}`.slice(7, -1)}`;
-                        default:
-                           return `${object}`;
-                     }
-               }
-            }
-         } else {
-            if (![ null, undefined ].includes(object) && typeof object[''] === 'string') {
-               return object[''];
-            } else {
-               switch (toString.apply(object)) {
-                  case '[object Object]':
-                     const names = Object.getOwnPropertyNames(object);
-                     return `{ ${names.map((name) => `${name}: ${core.output(object[name], true)}`).join(', ')} }`;
-                  case '[object Function]':
-                     return `${object}`.replace(/\r/g, '');
-                  default:
-                     return core.output(object, true);
-               }
-            }
-         }
-      },
       get plugin () {
          return plugin;
       },
@@ -760,7 +853,7 @@
          server.getScheduler().cancelTasks(core.plugin);
          for (const command of Object.values(core.session.command)) command.instance.unregister(core.registry);
          for (const path in core.session.data) {
-            const data = JSON.stringify(core.serialize(core.session.data[path], true));
+            const data = JSON.stringify(core.format.serialize(core.session.data[path], true));
             core.root.file('data', `${path}.json`).add().write(data);
          }
          for (const key in global) delete global[key];
@@ -774,26 +867,26 @@
       get root () {
          return core.file(core.plugin.getDataFolder().getPath().replace(/[\\]/g, '/'));
       },
-      serialize: (object, nullify, nodes) => {
-         if (object === null || object !== 'object') {
-            return object;
-         } else {
-            nodes || (nodes = [ object ]);
-            let output = typeof object[Symbol.iterator] === 'function' ? [] : {};
-            for (const key in object) {
-               const value = object[key];
-               if (nodes.includes(value)) output[key] = nullify ? null : new core.circular();
-               else output[key] = core.serialize(value, nullify, [ ...nodes, object ]);
-            }
-            return output;
+      task: {
+         cancel: (index) => {
+            delete core.session.tasks[index - 1];
+         },
+         interval: (script, period = 1, ...args) => {
+            const callback = (...args) => {
+               core.task.timeout(callback, period, ...args);
+               core.session.tasks[index] = core.session.tasks.pop();
+               script(...args);
+            };
+            let index = core.task.timeout(callback, 0, ...args);
+            return index--;
+         },
+         timeout: (script, period = 0, ...args) => {
+            return core.session.tasks.push({
+               script,
+               args,
+               tick: core.session.tick + Math.ceil(period)
+            });
          }
-      },
-      send: (player, message, action) => {
-         const limit = action ? 128 : 2048;
-         message.length > limit && (message = `${message.slice(0, limit - 3)}...`);
-         if (action)
-            core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-         else player.sendMessage(message);
       },
       session: { types: {} },
       get storage () {
@@ -805,36 +898,54 @@
       type: (name) => {
          return core.session.types[name] || (core.session.types[name] = Java.type(name));
       },
-      unzip: (from, to) => {
-         const stream = new ZipInputStream(from);
-         try {
-            let entry;
-            while ((entry = stream.getNextEntry())) {
-               const file = core.file(to.getPath(), entry.getName());
-               if (entry.isDirectory()) {
-                  file.dir();
-               } else {
-                  const output = file.add().stream();
-                  try {
-                     stream.transferTo(output);
-                     output.close();
-                  } catch (error) {
-                     output.close();
-                     throw error;
-                  }
+      util: {
+         eval: (code) => {
+            return Polyglot.eval('js', code);
+         },
+         chain: (base, modifier) => {
+            const chain = (object) => modifier(object, chain);
+            chain(base);
+         },
+         transfer: (from, to, action) => {
+            core.util.chain([ from.io, to.io ], (io, loop) => {
+               if (io[0].isDirectory()) {
+                  core.file(io[1].getPath()).dir();
+                  for (const from of [ ...io[0].listFiles() ])
+                     loop([ from, core.file(io[1].getPath(), from.getName()).io ]);
+               } else if (io[0].exists() && !io[1].exists()) {
+                  Files[action](io[0].toPath(), io[1].toPath(), StandardCopyOption.REPLACE_EXISTING);
                }
-               stream.closeEntry();
+            });
+         },
+         unzip: (from, to) => {
+            const stream = new ZipInputStream(from);
+            try {
+               let entry;
+               while ((entry = stream.getNextEntry())) {
+                  const file = to.file(entry.getName());
+                  if (entry.isDirectory()) {
+                     file.dir();
+                  } else {
+                     const output = file.add().stream();
+                     try {
+                        stream.transferTo(output);
+                        output.close();
+                     } catch (error) {
+                        output.close();
+                        throw error;
+                     }
+                  }
+                  stream.closeEntry();
+               }
+               stream.close();
+               from.close();
+            } catch (error) {
+               stream.close();
+               from.close();
+               throw error;
             }
-            stream.close();
-            from.close();
-            return core.file(to.getPath());
-         } catch (error) {
-            stream.close();
-            from.close();
-            throw error;
          }
-      },
-      version: 'modern'
+      }
    };
 
    const Bukkit = core.type('org.bukkit.Bukkit');
@@ -844,6 +955,7 @@
    const Files = core.type('java.nio.file.Files');
    const HandlerList = core.type('org.bukkit.event.HandlerList');
    const Listener = core.extend('org.bukkit.event.Listener', {});
+   const Runnable = core.extend('java.lang.Runnable');
    const Paths = core.type('java.nio.file.Paths');
    const Scanner = core.type('java.util.Scanner');
    const Source = core.type('org.graalvm.polyglot.Source');
@@ -851,21 +963,13 @@
    const URL = core.type('java.net.URL');
    const ZipInputStream = core.type('java.util.zip.ZipInputStream');
 
-   let ChatMessageType, EventPriority, EventType, TextComponent;
-
-   try {
-      ChatMessageType = core.type('net.md_5.bungee.api.ChatMessageType');
-      TextComponent = core.type('net.md_5.bungee.api.chat.TextComponent');
-   } catch (error) {
-      core.version = 'legacy';
-   }
+   let EventPriority, EventType;
 
    try {
       EventPriority = core.type('org.bukkit.event.EventPriority');
    } catch (error) {
-      EventType = core.type('org.bukkit.event.Event$Type');
       EventPriority = core.type('org.bukkit.event.Event$Priority');
-      core.version = 'ancient';
+      EventType = core.type('org.bukkit.event.Event$Type');
    }
 
    const global = globalThis;
@@ -878,6 +982,9 @@
    const commandMap = server.getClass().getDeclaredField('commandMap');
    commandMap.setAccessible(true);
    const registry = commandMap.get(server);
+
+   const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+   const remote = 'https://raw.githubusercontent.com/grakkit/core/master';
 
    let storage = {};
    let trusted = [];
