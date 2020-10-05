@@ -867,6 +867,13 @@
       get root () {
          return core.file(core.plugin.getDataFolder().getPath().replace(/[\\]/g, '/'));
       },
+      send: (player, message, action) => {
+         const limit = action ? 128 : 2048;
+         message.length > limit && (message = `${message.slice(0, limit - 3)}...`);
+         if (action)
+            core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+         else player.sendMessage(message);
+      },
       task: {
          cancel: (index) => {
             delete core.session.tasks[index - 1];
