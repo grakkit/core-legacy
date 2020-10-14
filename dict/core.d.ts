@@ -71,19 +71,24 @@ export interface core {
    /** The server's plugin manager. */
    manager: obpPluginManager;
    module: {
-      /** Performs the given `action` on a module and informs the `player` on the results. */
-      action: (player: obcCommandSender, option: string, key: string) => void;
+      /** Performs the given action on a module and informs the player on the results. */
+      action: (player: obcCommandSender, option: 'add' | 'create' | 'remove' | 'update', key: string) => void;
       /** Downloads and registers a module's latest release to the server. */
       add: (key: string) => void;
       /** Deletes a module from the server. */
       delete: (key: string) => void;
+      /** Creates a module from scratch. */
+      create: (key: string) => void;
+      /** Stores all installed dependencies and their versions. */
+      dependencies: { [x: string]: string[] };
       /** Generates typescript references for all installed modules. */
       dict: () => void;
       /** Downloads a module's latest release to the server and returns that release's tag name. */
       download: (key: string) => string;
-      /** Returns the info on the latest release of a module. */
-      latest: (
-         key: string
+      /** Returns the info on the given version (latest if none is specified) of a module. */
+      version: (
+         key: string,
+         version?: string
       ) => {
          name: string;
          zipball_url: string;
@@ -94,8 +99,10 @@ export interface core {
          };
          node_id: string;
       };
-      /** Stores all installed modules and their versions. */
-      list: { [x: string]: string };
+      /** Stores all installed modules and their current versions. */
+      modules: { [x: string]: string };
+      /** Returns the package information for a module. */
+      package: (key: string) => { main: string; dependencies: { [x: string]: string } };
       /** Deletes and unregisters a module from the server. */
       remove: (key: string) => void;
       /** Updates a module if the latest release is not already installed. */
@@ -142,7 +149,7 @@ export interface core {
       /** References the current execution context. */
       origin: core$file;
       /** A list of all currently scheduled tasks. */
-      tasks: { script: Function; args: any[]; tick: number }[];
+      task: { script: Function; args: any[]; tick: number }[];
       /** The scheduler's current tick. */
       tick: number;
       /** Stores imported types as a cache. */

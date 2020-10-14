@@ -85,11 +85,12 @@
                      core.plugin
                   );
                } else {
+                  const type = core.type(name);
                   core.manager.registerEvent(
-                     core.type(name).class,
+                     type.class,
                      new Listener(),
                      EventPriority.HIGHEST,
-                     (info, event) => store.forEach((listener) => listener(event)),
+                     (info, event) => event instanceof type && store.forEach((listener) => listener(event)),
                      core.plugin
                   );
                }
@@ -324,7 +325,7 @@
                   }
                }
             } else {
-               if (![ null, undefined ].includes(object) && typeof object[''] === 'string') {
+               if (![ null, void 0 ].includes(object) && typeof object[''] === 'string') {
                   return object[''];
                } else {
                   switch (toString.apply(object)) {
@@ -359,21 +360,14 @@
       import: (source) => {
          if (source[0] === '@') {
             const key = source.slice(1);
-            const folder = core.root.file('modules', key);
-            let info;
-            try {
-               info = folder.file('package.json').json() || {};
-            } catch (error) {
-               info = {};
-            }
-            const file = folder.file(info.main || 'index.js');
+            const { index } = core.module.package(key);
             const state = [ core.session.origin, storage ];
             let result = null;
-            core.session.origin = file.file('..');
+            core.session.origin = index.file('..');
             core.session.export.module.push((output) => (result = output));
             storage = {};
             try {
-               core.import(`./${file.name}`);
+               core.import(`./${index.name}`);
                storage = state[1];
                core.session.export.module.pop();
                core.session.origin = state[0];
@@ -421,7 +415,7 @@
             export: { file: [], module: [] },
             legacy: !!EventType,
             origin: core.root,
-            tasks: [],
+            task: [],
             tick: 0,
             types: core.session.types
          };
@@ -430,8 +424,8 @@
             new Runnable({
                run: () => {
                   let index = 0;
-                  while (index < core.session.tasks.length) {
-                     const task = core.session.tasks[index++];
+                  while (index < core.session.task.length) {
+                     const task = core.session.task[index++];
                      if (task && task.tick === core.session.tick) {
                         try {
                            task.script.call(this, ...task.args);
@@ -441,7 +435,7 @@
                         }
                      }
                   }
-                  core.session.tasks = core.session.tasks.filter((task) => {
+                  core.session.task = core.session.task.filter((task) => {
                      return task && task.tick > core.session.tick;
                   });
                   ++core.session.tick;
@@ -591,21 +585,28 @@
                   option = option.toLowerCase();
                   switch (option) {
                      case 'list':
-                        player.sendMessage(`§7Installed modules: ${core.format.output(Object.keys(core.module.list))}`);
+                        const keys = Object.keys(core.module.modules);
+                        player.sendMessage(`§7Installed modules: ${core.format.output(keys)}`);
                         break;
                      case 'add':
+                     case 'create':
                      case 'remove':
                      case 'update':
                         switch (key) {
                            case '':
-                           case undefined:
+                           case void 0:
                               player.sendMessage('§cYou must specify a repository!');
                               break;
                            case '*':
-                              if (option === 'add') {
-                                 player.sendMessage('§7One sec, just gotta download the entire GitHub database...');
-                              } else {
-                                 for (const key of core.module.list) core.module.action(player, option, key);
+                              switch (option) {
+                                 case 'add':
+                                    player.sendMessage('§7One sec, just gotta download the entire GitHub database...');
+                                    break;
+                                 case 'create':
+                                    player.sendMessage('§7One sec, just gotta calculate all possible module names...');
+                                    break;
+                                 default:
+                                    for (const key of core.module.modules) core.module.action(player, option, key);
                               }
                               break;
                            default:
@@ -629,7 +630,8 @@
                            return trusted.filter((value) => value.includes(args[1]));
                         case 'remove':
                         case 'update':
-                           return [ '*', ...Object.keys(core.module.list).filter((value) => value.includes(args[1])) ];
+                           const keys = Object.keys(core.module.modules);
+                           return [ '*', ...keys.filter((value) => value.includes(args[1])) ];
                      }
                }
             }
@@ -745,7 +747,7 @@
       module: {
          action: (player, option, key) => {
             key = key.toLowerCase();
-            const action = { add: 'Install', remove: 'Delet', update: 'Updat' }[option];
+            const action = { add: 'Install', create: 'Creat', remove: 'Delet', update: 'Updat' }[option];
             try {
                player.sendMessage(`§7${action}ing... (${key})`);
                core.module[option](key);
@@ -767,51 +769,81 @@
                   case 'module-not-installed':
                      player.sendMessage('§cThat module has not already been installed!');
                      break;
+                  case 'module-update-invalid':
+                     player.sendMessage('§cThat module cannot be updated as it was created manually!');
+                     break;
                   default:
-                     player.sendMessage('§cAn unexpected error occured!');
+                     player.sendMessage(`§cAn unexpected error occured while ${action}ing a module!`);
                      console.error(error.stack || error.message || error);
                      break;
                }
             }
          },
          add: (key) => {
-            if (core.module.list[key]) {
+            if (core.module.modules[key]) {
                throw 'module-already-installed';
             } else {
-               core.module.list[key] = core.module.download(key);
+               core.module.modules[key] = core.module.download(key);
                core.module.dict();
             }
          },
-         delete: (key) => {
-            core.root.file('modules', key).remove();
+         create: (key) => {
+            if (core.module.modules[key]) {
+               throw 'module-already-installed';
+            } else {
+               const folder = core.root.file('modules', key);
+               folder.file('index.js').add().write("core.export({\n   abc: () => {\n      return 'xyz';\n   }\n});\n");
+               folder.file('module.d.ts').add().write('export interface Main {\n   abc (): string\n}\n');
+               folder.file('package.json').add().write('{\n   "main": "index.js",\n   "dependencies": {}\n}\n');
+               core.module.modules[key] = null;
+               core.module.dict();
+            }
+         },
+         delete: (key, version) => {
+            version ? core.root.file('dependencies', key, version).remove() : core.root.file('modules', key).remove();
+         },
+         get dependencies () {
+            return core.data('../dependencies');
          },
          dict: () => {
-            const keys = Object.keys(core.module.list);
-            keys.length === 0 && keys.push('    static import (name: string): any;');
             core.root.file('dict/imports.d.ts').add().write(
                [
                   'export class imports {',
-                  '    static import (name: string): any;',
-                  ...keys.map((key) => {
-                     return `    static import (name: '@${key}'): import('./../modules/${key}/module').Main;`;
+                  '   static import (name: string): any;',
+                  ...Object.keys(core.module.modules).map((key) => {
+                     return `   static import (name: '@${key}'): import('./../modules/${key}/module').Main;`;
                   }),
                   '}'
                ].join('\n')
             );
          },
-         download: (key) => {
-            const latest = core.module.latest(key);
-            if (latest) {
-               if (core.module.list[key] === latest.name) {
+         download: (key, version) => {
+            const info = core.module.version(key, version);
+            if (info) {
+               const dependencies = version && (core.module.dependencies[key] || (core.module.dependencies[key] = []));
+               if (version && dependencies.includes(version)) {
+                  return;
+               } else if (core.module.modules[key] === info.name) {
                   throw 'module-already-updated';
                } else {
+                  const downloads = core.root.file('downloads', key);
                   try {
-                     const from = core.fetch(latest.zipball_url).unzip(core.root.file('downloads', key));
-                     core.module.delete(key);
-                     from.children[0].move(core.root.file('modules', key)).remove();
-                     return latest.name;
+                     core.fetch(info.zipball_url).unzip(downloads);
+                     if (version) {
+                        downloads.children[0].move(core.root.file('dependencies', key, version)).remove();
+                        dependencies.push(version);
+                     } else {
+                        core.module.delete(key);
+                        downloads.children[0].move(core.root.file('modules', key)).remove();
+                     }
+                     /*
+                     for (const dependency of Object.entries(core.module.package(key, version).dependencies)) {
+                        core.module.download(...dependency);
+                     }
+                     */
+                     return info.name;
                   } catch (error) {
-                     core.root.file('downloads', key).remove();
+                     downloads.remove();
                      console.error(`An error occured while attempting to download the "${key}" repository!`);
                      console.error(error.stack || error.message || error);
                      throw 'module-download-failed';
@@ -821,27 +853,62 @@
                throw 'module-not-available';
             }
          },
-         latest: (key) => {
-            return core.fetch(`https://api.github.com/repos/${key}/tags`).json()[0];
-         },
-         get list () {
+         get modules () {
             return core.data('../modules');
          },
+         package: (key, version) => {
+            let main = 'index.js';
+            let dependencies = {};
+            const prefix = `The package file for "${key}${version ? `:${version}` : ''}"`;
+            const folder = version ? core.root.file('dependencies', key, version) : core.root.file('modules', key);
+            try {
+               const info = folder.file('package.json').json() || {};
+               if (typeof info.main === 'string') {
+                  main = info.main;
+               } else if (info.main !== void 0) {
+                  console.warn(`${prefix} specifies an invalid "main" property.`);
+               }
+               if (info.dependencies && typeof info.dependencies === 'object') {
+                  for (const key in info.dependencies) {
+                     const value = info.dependencies[key];
+                     if (![ 'string', 'undefined' ].includes(typeof value)) {
+                        console.warn(
+                           `${prefix} specifies an "dependencies" property with an invalid value at key "${key}"`
+                        );
+                     }
+                  }
+               } else if (info.dependencies !== void 0) {
+                  console.warn(`${prefix} specifies an invalid "dependencies" property.`);
+               }
+            } catch (error) {
+               console.error(`${prefix} could not be parsed as JSON!`);
+            }
+            return { main: folder.file(main), dependencies };
+         },
          remove: (key) => {
-            if (core.module.list[key]) {
+            if (core.module.modules[key] || core.module.modules[key] === null) {
                core.module.delete(key);
-               delete core.module.list[key];
+               delete core.module.modules[key];
                core.module.dict();
             } else {
                throw 'module-not-installed';
             }
          },
          update: (key) => {
-            if (core.module.list[key]) {
-               core.module.list[key] = core.module.download(key);
+            if (core.module.modules[key]) {
+               core.module.modules[key] = core.module.download(key);
                core.module.dict();
+            } else if (core.module.modules[key] === null) {
+               throw 'module-update-invalid';
             } else {
                throw 'module-not-installed';
+            }
+         },
+         version: (key, version) => {
+            for (const tag of core.fetch(`https://api.github.com/repos/${key}/tags`).json()) {
+               if (!version || tag.name === version) {
+                  return tag;
+               }
             }
          }
       },
@@ -876,19 +943,19 @@
       },
       task: {
          cancel: (index) => {
-            delete core.session.tasks[index - 1];
+            delete core.session.task[index - 1];
          },
          interval: (script, period = 1, ...args) => {
             const callback = (...args) => {
                core.task.timeout(callback, period, ...args);
-               core.session.tasks[index] = core.session.tasks.pop();
+               core.session.task[index] = core.session.task.pop();
                script(...args);
             };
             let index = core.task.timeout(callback, 0, ...args);
             return index--;
          },
          timeout: (script, period = 0, ...args) => {
-            return core.session.tasks.push({
+            return core.session.task.push({
                script,
                args,
                tick: core.session.tick + Math.ceil(period)
