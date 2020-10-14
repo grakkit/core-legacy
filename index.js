@@ -623,7 +623,7 @@
             tabComplete: (player, ...args) => {
                switch (args.length) {
                   case 1:
-                     return [ 'add', 'list', 'remove', 'update' ].filter((value) => value.includes(args[0]));
+                     return [ 'add', 'create', 'list', 'remove', 'update' ].filter((value) => value.includes(args[0]));
                   case 2:
                      switch (args[0]) {
                         case 'add':
