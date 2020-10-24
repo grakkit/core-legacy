@@ -556,57 +556,117 @@
                      player.sendMessage(`§c${core.format.error(error)}`);
                   }
                },
-               // one day imma fix this shit... (probably very soon tbh)
-               // like for real this shit is B A D
                tabComplete: (player, ...args) => {
-                  const input = args.slice(-1)[0];
-                  const single = /(\!|\^|\&|\*|\(|\-|\+|\=|\{|\||\;|\:|\,|\?|\/)/;
-                  const filter = /.*(\!|\^|\)|\&|\*|\(|\-|\+|\=|\{|\||\;|\:|\,|\?|\/)/;
-                  let index = 0;
-                  let string = null;
-                  let nodes = input;
-                  while (index < input.length) {
-                     const char = input[index];
-                     if (char === string) string = null;
-                     else if ([ "'", '"', '`' ].includes(char)) string = char;
-                     else if (!string && single.test(char)) nodes = input.slice(index + 1);
-                     ++index;
-                  }
-                  index = 0;
-                  nodes = nodes.replace(/(\[)|(\]\.)/g, '.').split('.');
+                  let body = '';
+                  let index = -1;
                   let scope = global;
-                  while (index < nodes.length - 1) {
-                     let node = nodes[index++];
-                     [ "'", '"', '`' ].includes(node[0]) && (node = node.slice(1, -1));
-                     node.length && node[0].match(/[0-9]/g) && (node = Number(node));
-                     if (scope[node]) scope = scope[node];
-                     else if (scope === global && node === 'self') scope = player;
-                     else index = Infinity;
-                  }
-                  if (index === nodes.length - 1) {
-                     const base = (input.match(filter) || [ '' ])[0] + input.replace(filter, '');
-                     let segment = nodes.slice(-1)[0];
-                     [ "'", '"', '`' ].includes(segment[0]) && (segment = segment.slice(1, -1));
-                     const properties = Object.getOwnPropertyNames(scope);
-                     if (scope === global && !properties.includes('self')) properties.push('self');
-                     if (typeof scope.length === 'number' && [ 'object', 'function' ].includes(typeof scope[0])) {
-                        properties.push(...Array(scope.length).join(' ').split(' ').map((value, index) => `${index}`));
+                  let valid = true;
+                  let string = false;
+                  let bracket = false;
+                  let comment = false;
+                  let property = '';
+                  const input = args.join(' ');
+                  while (valid && ++index < input.length) {
+                     const char = input[index];
+                     if (comment) {
+                        if (char === '*' && input[index + 1] === '/') {
+                           if (property) {
+                              input[index + 2] === ';' && (comment = false);
+                           } else {
+                              body = input.slice(0, index + 2);
+                              comment = false;
+                           }
+                        }
+                     } else if (string) {
+                        if (char === '\\') {
+                           ++index;
+                        } else if (char === string) {
+                           scope = {};
+                           string = false;
+                        }
+                     } else if (bracket === true) {
+                        [ "'", '"', '`' ].includes(char) ? (bracket = char) : (valid = false);
+                     } else if (typeof bracket === 'string') {
+                        switch (char) {
+                           case '\\':
+                              ++index;
+                              break;
+                           case bracket:
+                              bracket = -1;
+                              break;
+                           default:
+                              property += char;
+                        }
+                     } else {
+                        switch (char) {
+                           case '/':
+                              // add regex support? maybe when im actually good at coding...
+                              switch (input[index + 1]) {
+                                 case '/':
+                                    valid = false;
+                                    break;
+                                 case '*':
+                                    comment = true;
+                                    break;
+                              }
+                              break;
+                           case "'":
+                           case '"':
+                           case '`':
+                              bracket === -1 ? (valid = false) : (string = char);
+                              break;
+                           case ')':
+                           case '{':
+                           case '}':
+                              bracket || (scope = {});
+                              break;
+                           case '.':
+                           case '[':
+                              if (!bracket) {
+                                 if (char === '.' || property) {
+                                    body = input.slice(0, index + 1);
+                                    if (scope === global && property === 'self' && !scope.hasOwnProperty('self')) {
+                                       scope = player;
+                                    } else {
+                                       scope = scope[property] || {};
+                                    }
+                                    char === '.' || (bracket = true);
+                                    property = '';
+                                 } else {
+                                    body = input.slice(0, index + 1);
+                                    scope = global;
+                                 }
+                              }
+                              break;
+                           case ']':
+                              bracket === -1 && (bracket = false);
+                              break;
+                           case '\\':
+                              typeof bracket === 'string' ? ++index : (valid = false);
+                              break;
+                           case ' ':
+                              property ? (valid = false) : (body = '');
+                              break;
+                           default:
+                              if (char.match(/\+-\*\/\^=!&\|\?:\(,;/g)) {
+                                 if (!bracket) {
+                                    body = input.slice(0, index + 1);
+                                    scope = global;
+                                    property = '';
+                                 }
+                              } else {
+                                 property += char;
+                              }
+                        }
                      }
+                  }
+                  if (valid && scope && !(comment || string)) {
+                     const properties = Object.getOwnPropertyNames(scope);
+                     scope === global && !properties.includes('self') && properties.push('self');
                      return core.util
-                        .filter(segment, properties)
-                        .map((key) => {
-                           let property = '';
-                           if (key.length && key[0].match(/[0-9]/g)) property = `[${key}]`;
-                           else if (key.match(/[^0-9A-Za-z|\_|\$]/g)) return null;
-                           else property = `.${key}`;
-                           const path = base.split(property[0]);
-                           const name = property.slice(1);
-                           if (!base || !base.match(/[\.\[]/g)) return base.split(single).slice(0, -1).join('') + name;
-                           else if (scope === global) return base + name;
-                           else if (name.includes(path.slice(-1)[0]))
-                              return path.slice(0, -1).join(property[0]) + property;
-                        })
-                        .filter((property) => property);
+                        .filter(property, properties)
+                        .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
+                        .map((name) => (bracket ? `${body}\`${name.replace(/`/g, '\\`')}\`]` : `${body}${name}`));
                   }
                }
             });
