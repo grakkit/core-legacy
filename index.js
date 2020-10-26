@@ -389,7 +389,6 @@
                   core.session.scope = state[0];
                   core.session.origin = state[1];
                   core.session.stack.pop();
-                  delete done;
                };
                try {
                   core.import(`./${main.name}`);
@@ -417,7 +416,6 @@
                   importer.remove();
                   exporter.remove();
                   core.session.stack.pop();
-                  delete done;
                };
                try {
                   importer.parse();
@@ -666,7 +664,13 @@
                      return core.util
                         .filter(property, properties)
                         .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
-                        .map((name) => (bracket ? `${body}\`${name.replace(/`/g, '\\`')}\`]` : `${body}${name}`));
+                        .map((name) => {
+                           if (bracket) {
+                              return `${body}\`${name.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`]`;
+                           } else {
+                              return `${body}${name}`;
+                           }
+                        });
                   }
                }
             });
