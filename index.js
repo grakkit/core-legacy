@@ -535,7 +535,7 @@
             core.command({
                name: 'js',
                permission: 'grakkit.command.js',
-               error: '§cYou lack the permission §4(grakkit.command.js) §cto use that command!',
+               error: '\xa7cYou lack the permission \xa74(grakkit.command.js) \xa7cto use that command!',
                execute: (player, ...args) => {
                   const self = global.hasOwnProperty('self');
                   try {
@@ -545,13 +545,13 @@
                      if (toString.apply(result) === '[foreign HostFunction]') {
                         let input = args.slice(-1)[0].split('.').slice(-1)[0];
                         input.endsWith(']') && (input = eval(input.replace(/.*\[/, '').slice(0, -1)));
-                        player.sendMessage(`§7hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
+                        player.sendMessage(`\xa77hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
                      } else {
-                        player.sendMessage(`§7${core.format.output(result)}`);
+                        player.sendMessage(`\xa77${core.format.output(result)}`);
                      }
                   } catch (error) {
                      self || delete global.self;
-                     player.sendMessage(`§c${core.format.error(error)}`);
+                     player.sendMessage(`\xa7c${core.format.error(error)}`);
                   }
                },
                tabComplete: (player, ...args) => {
@@ -666,7 +666,7 @@
                         .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
                         .map((name) => {
                            if (bracket) {
-                              return `${body}\`${name.replace(/`/g, '\\`').replace(/\\/g, '\\\\')}\`]`;
+                              return `${body}\`${name.replace(/`/g, '\\`').split('\\').join('\\\\')}\`]`;
                            } else {
                               return `${body}${name}`;
                            }
@@ -679,14 +679,14 @@
             core.command({
                name: 'module',
                permission: 'grakkit.command.module',
-               error: '§cYou lack the permission §4(grakkit.command.module) §cto use that command!',
+               error: '\xa7cYou lack the permission \xa74(grakkit.command.module) \xa7cto use that command!',
                execute: (player, option, key, version) => {
                   if (option) {
                      option = option.toLowerCase();
                      switch (option) {
                         case 'list':
                            const keys = Object.keys(core.module.modules);
-                           player.sendMessage(`§7Installed modules: ${core.format.output(keys)}`);
+                           player.sendMessage(`\xa77Installed modules: ${core.format.output(keys)}`);
                            break;
                         case 'add':
                         case 'change':
@@ -696,21 +696,21 @@
                            switch (key) {
                               case '':
                               case void 0:
-                                 player.sendMessage('§cYou must specify a repository!');
+                                 player.sendMessage('\xa7cYou must specify a repository!');
                                  break;
                               case '*':
                                  switch (option) {
                                     case 'add':
                                        player.sendMessage(
-                                          '§7One sec, just gotta download the entire GitHub database...'
+                                          '\xa77One sec, just gotta download the entire GitHub database...'
                                        );
                                        break;
                                     case 'change':
-                                       player.sendMessage('§7Not every module uses the same release tags, dipshit.');
+                                       player.sendMessage('\xa77Not every module uses the same release tags, dipshit.');
                                        break;
                                     case 'create':
                                        player.sendMessage(
-                                          "§7So you're saying there's a finite number of possible names?"
+                                          "\xa77So you're saying there's a finite number of possible names?"
                                        );
                                        break;
                                     default:
@@ -722,10 +722,10 @@
                            }
                            break;
                         default:
-                           player.sendMessage('§cThat option is invalid!');
+                           player.sendMessage('\xa7cThat option is invalid!');
                      }
                   } else {
-                     player.sendMessage('§cYou must specify an option!');
+                     player.sendMessage('\xa7cYou must specify an option!');
                   }
                },
                tabComplete: (player, ...args) => {
@@ -748,15 +748,15 @@
          core.command({
             name: 'grakkit',
             permission: 'grakkit.command.grakkit',
-            error: '§cYou lack the permission §4(grakkit.command.grakkit) §cto use that command!',
+            error: '\xa7cYou lack the permission \xa74(grakkit.command.grakkit) \xa7cto use that command!',
             execute: (player, action, target) => {
                if (action) {
                   action = action.toLowerCase();
                   switch (action) {
                      case 'refresh':
-                        player.sendMessage('§7Refreshing...');
+                        player.sendMessage('\xa77Refreshing...');
                         core.refresh();
-                        player.sendMessage('§7Refresh Complete.');
+                        player.sendMessage('\xa77Refresh Complete.');
                         break;
                      case 'toggle':
                         if (target) {
@@ -771,32 +771,32 @@
                               case 'user':
                                  core.toggles[target] = core.toggles[target] === false ? true : false;
                                  const status = core.toggles[target] ? 'en' : 'dis';
-                                 player.sendMessage(`§7Toggle "${target}" has now been ${status}abled.`);
+                                 player.sendMessage(`\xa77Toggle "${target}" has now been ${status}abled.`);
                                  break;
                               default:
-                                 player.sendMessage('§cThat toggle is invalid!');
+                                 player.sendMessage('\xa7cThat toggle is invalid!');
                            }
                         } else {
-                           player.sendMessage('§cYou must specify a toggle!');
+                           player.sendMessage('\xa7cYou must specify a toggle!');
                         }
                         break;
                      case 'update':
-                        player.sendMessage('§7Updating...');
+                        player.sendMessage('\xa77Updating...');
                         try {
                            core.toggles.dict && core.root.file('dict').remove();
                            core.refresh(true);
                            core.root.file('index.js').write(core.fetch(`${remote}/index.js`).read()).execute();
-                           player.sendMessage('§7Update Complete.');
+                           player.sendMessage('\xa77Update Complete.');
                         } catch (error) {
-                           player.sendMessage('§cUpdate Failed!');
+                           player.sendMessage('\xa7cUpdate Failed!');
                            throw error;
                         }
                         break;
                      default:
-                        player.sendMessage('§cThat action is invalid!');
+                        player.sendMessage('\xa7cThat action is invalid!');
                   }
                } else {
-                  player.sendMessage('§cYou must specify an action!');
+                  player.sendMessage('\xa7cYou must specify an action!');
                }
             },
             tabComplete: (player, ...args) => {
@@ -865,40 +865,40 @@
             key = key.toLowerCase();
             const action = { add: 'Add', change: 'Chang', create: 'Creat', remove: 'Remov', update: 'Updat' }[option];
             try {
-               player.sendMessage(`§7${action}ing... (${key})`);
+               player.sendMessage(`\xa77${action}ing... (${key})`);
                core.module[option](key, version);
-               player.sendMessage(`§7Module ${action}ed. (${key})`);
+               player.sendMessage(`\xa77Module ${action}ed. (${key})`);
             } catch (error) {
                switch (error) {
                   case 'module-already-installed':
-                     player.sendMessage('§cThat module has already been installed!');
+                     player.sendMessage('\xa7cThat module has already been installed!');
                      break;
                   case 'module-already-changed':
-                     player.sendMessage('§cThat module is already installed with that version!');
+                     player.sendMessage('\xa7cThat module is already installed with that version!');
                      break;
                   case 'module-already-updated':
-                     player.sendMessage('§cThat module is already up to date!');
+                     player.sendMessage('\xa7cThat module is already up to date!');
                      break;
                   case 'module-change-invalid':
-                     player.sendMessage('§cThat module cannot be changed as it was created manually!');
+                     player.sendMessage('\xa7cThat module cannot be changed as it was created manually!');
                      break;
                   case 'module-download-failed':
-                     player.sendMessage('§cAn error occured while downloading that module!');
+                     player.sendMessage('\xa7cAn error occured while downloading that module!');
                      break;
                   case 'module-invalid-version':
-                     player.sendMessage('§cThat module has no release with that version!');
+                     player.sendMessage('\xa7cThat module has no release with that version!');
                      break;
                   case 'module-not-available':
-                     player.sendMessage('§cThat module has no releases available!');
+                     player.sendMessage('\xa7cThat module has no releases available!');
                      break;
                   case 'module-not-installed':
-                     player.sendMessage('§cThat module has not already been installed!');
+                     player.sendMessage('\xa7cThat module has not already been installed!');
                      break;
                   case 'module-update-invalid':
-                     player.sendMessage('§cThat module cannot be updated as it was created manually!');
+                     player.sendMessage('\xa7cThat module cannot be updated as it was created manually!');
                      break;
                   default:
-                     player.sendMessage(`§cAn unexpected error occured while ${action}ing the "${key}" module!`);
+                     player.sendMessage(`\xa7cAn unexpected error occured while ${action}ing the "${key}" module!`);
                      console.error(error.stack || error.message || error);
                }
             }
