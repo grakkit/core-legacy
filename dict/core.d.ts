@@ -22,10 +22,10 @@ export interface core {
          name: string;
          error?: string;
          aliases?: string[];
-         execute?: (player: obcCommandSender, ...args: string[]) => void;
+         execute?: (sender: obcCommandSender, ...args: string[]) => void;
          fallback?: string;
          permission?: string;
-         tabComplete?: (player: obcCommandSender, ...args: string[]) => string[];
+         tabComplete?: (sender: obcCommandSender, ...args: string[]) => string[];
       }
    ) => void;
    /** The main polyglot context. */
@@ -73,7 +73,7 @@ export interface core {
    module: {
       /** Performs the given action on a module and informs the player on the results. */
       action: (
-         player: obcCommandSender,
+         sender: obcCommandSender,
          option: 'add' | 'change' | 'create' | 'remove' | 'update',
          key: string,
          version?: string
@@ -142,9 +142,9 @@ export interface core {
       command: {
          [x: string]: {
             /** The executor for a given command. */
-            execute: (player: obcCommandSender, ...args: string[]) => void;
+            execute: (sender: obcCommandSender, ...args: string[]) => void;
             /** The tab-completer for a given command. */
-            tabComplete: (player: obcCommandSender, ...args: string[]) => string[];
+            tabComplete: (sender: obcCommandSender, ...args: string[]) => string[];
             /** The server instance of a given command. */
             instance: obcCommand;
          };
@@ -171,7 +171,7 @@ export interface core {
       type: any;
    };
    /** **Deprecated.** Sends a message to the given player in chat or in the action bar. */
-   send: (player: obcCommandSender, message: string, action: boolean) => void;
+   send: (sender: obcCommandSender, message: string, action: boolean) => void;
    /** A module-scoped state bag acting as dedicated global storage. */
    storage: any;
    /** A set of toggles used to control behavior in the initialization phase. */
