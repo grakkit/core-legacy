@@ -137,10 +137,6 @@ export class events {
         ...listeners: ((event: classes.csjeEvent) => {})[]
     ): void;
     static event (
-        name: 'java.awt.Event',
-        ...listeners: ((event: classes.jaEvent) => {})[]
-    ): void;
-    static event (
         name: 'jdk.jfr.Event',
         ...listeners: ((event: classes.jjEvent) => {})[]
     ): void;
@@ -750,10 +746,6 @@ export class events {
         ...listeners: ((event: classes.obeeEntityCombustEvent) => {})[]
     ): void;
     static event (
-        name: 'org.bukkit.event.entity.EntityCreatePortalEvent',
-        ...listeners: ((event: classes.obeeEntityCreatePortalEvent) => {})[]
-    ): void;
-    static event (
         name: 'org.bukkit.event.entity.EntityDamageByBlockEvent',
         ...listeners: ((event: classes.obeeEntityDamageByBlockEvent) => {})[]
     ): void;
@@ -816,10 +808,6 @@ export class events {
     static event (
         name: 'org.bukkit.event.entity.EntityPickupItemEvent',
         ...listeners: ((event: classes.obeeEntityPickupItemEvent) => {})[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPlaceEvent',
-        ...listeners: ((event: classes.obeeEntityPlaceEvent) => {})[]
     ): void;
     static event (
         name: 'org.bukkit.event.entity.EntityPortalEnterEvent',
@@ -892,10 +880,6 @@ export class events {
     static event (
         name: 'org.bukkit.event.entity.EntityToggleSwimEvent',
         ...listeners: ((event: classes.obeeEntityToggleSwimEvent) => {})[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityTransformedEvent',
-        ...listeners: ((event: classes.cdpeeEntityTransformedEvent) => {})[]
     ): void;
     static event (
         name: 'org.bukkit.event.entity.EntityTransformEvent',
@@ -1142,14 +1126,6 @@ export class events {
         ...listeners: ((event: classes.obepPlayerChannelEvent) => {})[]
     ): void;
     static event (
-        name: 'org.bukkit.event.player.PlayerChatEvent',
-        ...listeners: ((event: classes.obepPlayerChatEvent) => {})[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerChatTabCompleteEvent',
-        ...listeners: ((event: classes.obepPlayerChatTabCompleteEvent) => {})[]
-    ): void;
-    static event (
         name: 'com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent',
         ...listeners: ((event: classes.cdpepPlayerClientOptionsChangeEvent) => {})[]
     ): void;
@@ -1210,10 +1186,6 @@ export class events {
         ...listeners: ((event: classes.obepPlayerHarvestBlockEvent) => {})[]
     ): void;
     static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerInitialSpawnEvent',
-        ...listeners: ((event: classes.cdpepPlayerInitialSpawnEvent) => {})[]
-    ): void;
-    static event (
         name: 'org.bukkit.event.player.PlayerInteractAtEntityEvent',
         ...listeners: ((event: classes.obepPlayerInteractAtEntityEvent) => {})[]
     ): void;
@@ -1270,10 +1242,6 @@ export class events {
         ...listeners: ((event: classes.obepPlayerLevelChangeEvent) => {})[]
     ): void;
     static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerLocaleChangeEvent',
-        ...listeners: ((event: classes.cdpepPlayerLocaleChangeEvent) => {})[]
-    ): void;
-    static event (
         name: 'org.bukkit.event.player.PlayerLocaleChangeEvent',
         ...listeners: ((event: classes.obepPlayerLocaleChangeEvent) => {})[]
     ): void;
@@ -1298,20 +1266,12 @@ export class events {
         ...listeners: ((event: classes.cdpepPlayerPickupExperienceEvent) => {})[]
     ): void;
     static event (
-        name: 'org.bukkit.event.player.PlayerPickupItemEvent',
-        ...listeners: ((event: classes.obepPlayerPickupItemEvent) => {})[]
-    ): void;
-    static event (
         name: 'org.bukkit.event.player.PlayerPortalEvent',
         ...listeners: ((event: classes.obepPlayerPortalEvent) => {})[]
     ): void;
     static event (
         name: 'com.destroystokyo.paper.event.player.PlayerPostRespawnEvent',
         ...listeners: ((event: classes.cdpepPlayerPostRespawnEvent) => {})[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerPreLoginEvent',
-        ...listeners: ((event: classes.obepPlayerPreLoginEvent) => {})[]
     ): void;
     static event (
         name: 'org.bukkit.event.player.PlayerQuitEvent',
@@ -1444,10 +1404,6 @@ export class events {
     static event (
         name: 'org.bukkit.event.inventory.PrepareAnvilEvent',
         ...listeners: ((event: classes.obeiPrepareAnvilEvent) => {})[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.inventory.PrepareGrindstoneEvent',
-        ...listeners: ((event: classes.cdpeiPrepareGrindstoneEvent) => {})[]
     ): void;
     static event (
         name: 'org.bukkit.event.inventory.PrepareItemCraftEvent',
