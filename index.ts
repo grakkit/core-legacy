@@ -22,7 +22,7 @@ declare const Polyglot: {
 }
 
 /** The best thing that's ever happened to minecraft, change my mind. */
-const core = (function () {
+export const index = (function () {
 
    //@ts-expect-error
    const session$type: types = {};
@@ -328,10 +328,6 @@ const core = (function () {
             }
          }
       },
-      /** Used by modules to export their code. */
-      export (object: any) {
-         (core.session.export.module.slice(-1)[0] || (() => {}))(object);
-      },
       /** Make a GET request to the given URL. */
       fetch (from: string) {
          const link = new URL(from).openConnection();
@@ -492,27 +488,23 @@ const core = (function () {
       },
       /** Imports a module, prefixed with `@`, or a file relative to the current origin. */
       import <X extends keyof imports> (source: X) {
-         if (core.session.stack.push(`${source}`) < 64) {
+         if (core.session.stack.length < 64) {
             if (`${source}`[0] === '@') {
                const key = `${source}`.slice(1);
                const version = core.session.scope[key];
                const { main, dependencies } = core.module.package(key, version, !!version);
                const state = core.session.origin;
                const store = [ core.session.scope, storage ];
-               let result: imports[X] = null;
                core.session.scope = dependencies;
                core.session.origin = main.file('..');
-               core.session.export.module.push((output) => (result = output));
                storage = {};
                const done = () => {
                   storage = store[1];
-                  core.session.export.module.pop();
                   core.session.scope = store[0];
                   core.session.origin = state;
-                  core.session.stack.pop();
                };
                try {
-                  core.import(`./${main.name}`);
+                  const result: imports[X] = core.import(`./${main.name}`).Main;
                   done();
                   return result;
                } catch (error) {
@@ -521,18 +513,19 @@ const core = (function () {
                   throw error;
                }
             } else {
+               core.session.stack.push(`${source}`);
                const file = core.session.origin.file(`${source}`);
                const uuid = UUID.randomUUID().toString();
                const importer = file.file(`../import.${file.name}.${uuid}.grakkit`);
                const exporter = file.file(`../export.${file.name}.${uuid}.grakkit`);
                file.copy(exporter);
-               importer.add().write(`import * as output from '${exporter.name}'; (core.session.export.file.slice(-1)[0] || (() => {}))(output);`);
+               importer.add().write(`import * as output from '${exporter.name}'; core.session.export.slice(-1)[0](output);`);
                const state = core.session.origin;
                let result: imports[X] = null;
                core.session.origin = file.file('..');
-               core.session.export.file.push((output) => (result = output));
+               core.session.export.push((output) => (result = output));
                const done = () => {
-                  core.session.export.file.pop();
+                  core.session.export.pop();
                   core.session.origin = state;
                   importer.remove();
                   exporter.remove();
@@ -561,7 +554,7 @@ const core = (function () {
             command: {},
             data: {},
             event: {},
-            export: { file: [], module: [] },
+            export: [],
             legacy: !!EventType,
             origin: core.root,
             scope: {},
@@ -1041,9 +1034,7 @@ const core = (function () {
                throw 'module-already-installed';
             } else {
                const folder = core.root.file('modules', key);
-               folder.file('index.js').add().write("core.export({\n   abc: () => {\n      return 'xyz';\n   }\n});\n");
-               folder.file('module.d.ts').add().write('export interface Main {\n   abc (): string\n}\n');
-               folder.file('package.json').add().write('{\n   "main": "index.js",\n   "dependencies": {}\n}\n');
+               folder.file('index.js').add().write("export const Main = {}\n");
                core.module.modules[key] = null;
                core.module.dict();
             }
@@ -1091,7 +1082,7 @@ const core = (function () {
                   [
                      'export interface imports {',
                      ...Object.keys(core.module.modules).map((key) => {
-                        return `   '@${key}': import('./../modules/${key}/module').Main;`;
+                        return `   '@${key}': typeof import('./../modules/${key}/index').Main;`;
                      }),
                      '   [x: string]: any;',
                      '}'
@@ -1154,28 +1145,21 @@ const core = (function () {
          package (key: string, version?: string, dependency?: boolean) {
             let main = 'index.js';
             let dependencies: { [x: string]: string } = {};
-            const prefix = `The package file for "${key}${dependency ? `:${version}` : ''}"`;
+            const prefix = `The dependency file for "${key}${dependency ? `:${version}` : ''}"`;
             const folder = dependency ? core.root.file('dependencies', key, version) : core.root.file('modules', key);
             try {
-               const info = folder.file('package.json').json() || {};
-               if (typeof info.main === 'string') {
-                  main = info.main;
-               } else if (info.main !== void 0) {
-                  console.warn(`${prefix} specifies an invalid "main" property.`);
-               }
-               if (info.dependencies && typeof info.dependencies === 'object') {
-                  for (const key in info.dependencies) {
-                     const value = info.dependencies[key];
+               const info = folder.file('dependencies.json').json() || {};
+               if (info && typeof info === 'object') {
+                  for (const key in info) {
+                     const value = info[key];
                      if (![ 'string', 'undefined' ].includes(typeof value)) {
-                        console.warn(
-                           `${prefix} specifies an "dependencies" property with an invalid value at key "${key}"`
-                        );
+                        console.warn(`${prefix} specifies an invalid value at key "${key}"`);
                      } else {
-                        dependencies[key] = info.dependencies[key];
+                        dependencies[key] = info[key];
                      }
                   }
-               } else if (info.dependencies !== void 0) {
-                  console.warn(`${prefix} specifies an invalid "dependencies" property.`);
+               } else if (info !== void 0) {
+                  console.warn(`${prefix} is invalid.`);
                }
             } catch (error) {
                console.error(`${prefix} could not be parsed as JSON!`);
@@ -1270,8 +1254,7 @@ const core = (function () {
             };
          } = {};
          const event: { [x: string]: ((event: any) => void)[] } = {};
-         const file: ((value: any) => void)[] = [];
-         const module: ((value: any) => void)[] = [];
+         const __export__: ((value: any) => void)[] = [];
          const scope: { [x: string]: string } = {};
          const stack: string[] = [];
          const task: { script: Function; args: any[]; tick: number }[] = [];
@@ -1283,7 +1266,7 @@ const core = (function () {
             /** Stores all registered event listeners. */
             event,
             /** Stores all file and module export functions. */
-            export: { file, module },
+            export: __export__,
             /** An identifier used for compatibility with very old versions. */
             legacy: !!EventType,
             /** References the current execution context. */
@@ -1384,5 +1367,3 @@ const core = (function () {
    core.init();
    return core;
 })();
-
-export declare const index: typeof core;
