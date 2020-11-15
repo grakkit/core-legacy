@@ -1,1716 +1,431 @@
 import * as classes from './classes'
-export class events {
-    static event (
-        name: 'java.awt.desktop.AboutEvent',
-        ...listeners: ((event: classes.jadAboutEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.AccessWatchpointEvent',
-        ...listeners: ((event: classes.csjeAccessWatchpointEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.ActionEvent',
-        ...listeners: ((event: classes.jaeActionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.ActiveEvent',
-        ...listeners: ((event: classes.jaActiveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.AdjustmentEvent',
-        ...listeners: ((event: classes.jaeAdjustmentEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.AncestorEvent',
-        ...listeners: ((event: classes.jseAncestorEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.AppEvent',
-        ...listeners: ((event: classes.jadAppEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.AppForegroundEvent',
-        ...listeners: ((event: classes.jadAppForegroundEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.AppHiddenEvent',
-        ...listeners: ((event: classes.jadAppHiddenEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.AppReopenedEvent',
-        ...listeners: ((event: classes.jadAppReopenedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.nio.sctp.AssociationChangeNotification.AssocChangeEvent',
-        ...listeners: ((event: classes.csnsAAssocChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.AWTEvent',
-        ...listeners: ((event: classes.jaAWTEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.beancontext.BeanContextEvent',
-        ...listeners: ((event: classes.jbbBeanContextEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.beancontext.BeanContextMembershipEvent',
-        ...listeners: ((event: classes.jbbBeanContextMembershipEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.beancontext.BeanContextServiceAvailableEvent',
-        ...listeners: ((event: classes.jbbBeanContextServiceAvailableEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.beancontext.BeanContextServiceRevokedEvent',
-        ...listeners: ((event: classes.jbbBeanContextServiceRevokedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.BreakpointEvent',
-        ...listeners: ((event: classes.csjeBreakpointEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.CaretEvent',
-        ...listeners: ((event: classes.jseCaretEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.ChangeEvent',
-        ...listeners: ((event: classes.jseChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ClassPrepareEvent',
-        ...listeners: ((event: classes.csjeClassPrepareEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ClassUnloadEvent',
-        ...listeners: ((event: classes.csjeClassUnloadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.ComponentEvent',
-        ...listeners: ((event: classes.jaeComponentEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.sql.ConnectionEvent',
-        ...listeners: ((event: classes.jsConnectionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.ContainerEvent',
-        ...listeners: ((event: classes.jaeContainerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.DocumentEvent',
-        ...listeners: ((event: classes.jseDocumentEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.events.DocumentEvent',
-        ...listeners: ((event: classes.owdeDocumentEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DragGestureEvent',
-        ...listeners: ((event: classes.jadDragGestureEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DragSourceDragEvent',
-        ...listeners: ((event: classes.jadDragSourceDragEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DragSourceDropEvent',
-        ...listeners: ((event: classes.jadDragSourceDropEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DragSourceEvent',
-        ...listeners: ((event: classes.jadDragSourceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DropTargetDragEvent',
-        ...listeners: ((event: classes.jadDropTargetDragEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DropTargetDropEvent',
-        ...listeners: ((event: classes.jadDropTargetDropEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.dnd.DropTargetEvent',
-        ...listeners: ((event: classes.jadDropTargetEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.Event',
-        ...listeners: ((event: classes.csjeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'jdk.jfr.Event',
-        ...listeners: ((event: classes.jjEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.events.Event',
-        ...listeners: ((event: classes.owdeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ExceptionEvent',
-        ...listeners: ((event: classes.csjeExceptionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.FilesEvent',
-        ...listeners: ((event: classes.jadFilesEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.datatransfer.FlavorEvent',
-        ...listeners: ((event: classes.jadFlavorEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.FocusEvent',
-        ...listeners: ((event: classes.jaeFocusEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.text.html.FormSubmitEvent',
-        ...listeners: ((event: classes.jsthFormSubmitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.net.ssl.HandshakeCompletedEvent',
-        ...listeners: ((event: classes.jnsHandshakeCompletedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.HierarchyEvent',
-        ...listeners: ((event: classes.jaeHierarchyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.text.html.HTMLFrameHyperlinkEvent',
-        ...listeners: ((event: classes.jsthHTMLFrameHyperlinkEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.HyperlinkEvent',
-        ...listeners: ((event: classes.jseHyperlinkEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.IndexedPropertyChangeEvent',
-        ...listeners: ((event: classes.jbIndexedPropertyChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.InputEvent',
-        ...listeners: ((event: classes.jaeInputEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.InputMethodEvent',
-        ...listeners: ((event: classes.jaeInputMethodEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.InternalFrameEvent',
-        ...listeners: ((event: classes.jseInternalFrameEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.InvocationEvent',
-        ...listeners: ((event: classes.jaeInvocationEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.ItemEvent',
-        ...listeners: ((event: classes.jaeItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.KeyEvent',
-        ...listeners: ((event: classes.jaeKeyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.sound.sampled.LineEvent',
-        ...listeners: ((event: classes.jssLineEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.ListDataEvent',
-        ...listeners: ((event: classes.jseListDataEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.ListSelectionEvent',
-        ...listeners: ((event: classes.jseListSelectionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.LocatableEvent',
-        ...listeners: ((event: classes.csjeLocatableEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.ls.LSLoadEvent',
-        ...listeners: ((event: classes.owdlLSLoadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.ls.LSProgressEvent',
-        ...listeners: ((event: classes.owdlLSProgressEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.MenuDragMouseEvent',
-        ...listeners: ((event: classes.jseMenuDragMouseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.MenuEvent',
-        ...listeners: ((event: classes.jseMenuEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.MenuKeyEvent',
-        ...listeners: ((event: classes.jseMenuKeyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MethodEntryEvent',
-        ...listeners: ((event: classes.csjeMethodEntryEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MethodExitEvent',
-        ...listeners: ((event: classes.csjeMethodExitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.sound.midi.MidiEvent',
-        ...listeners: ((event: classes.jsmMidiEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ModificationWatchpointEvent',
-        ...listeners: ((event: classes.csjeModificationWatchpointEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MonitorContendedEnteredEvent',
-        ...listeners: ((event: classes.csjeMonitorContendedEnteredEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MonitorContendedEnterEvent',
-        ...listeners: ((event: classes.csjeMonitorContendedEnterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MonitorWaitedEvent',
-        ...listeners: ((event: classes.csjeMonitorWaitedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.MonitorWaitEvent',
-        ...listeners: ((event: classes.csjeMonitorWaitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.MouseEvent',
-        ...listeners: ((event: classes.jaeMouseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.events.MouseEvent',
-        ...listeners: ((event: classes.owdeMouseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.MouseWheelEvent',
-        ...listeners: ((event: classes.jaeMouseWheelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.events.MutationEvent',
-        ...listeners: ((event: classes.owdeMutationEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.naming.event.NamingEvent',
-        ...listeners: ((event: classes.jneNamingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.naming.event.NamingExceptionEvent',
-        ...listeners: ((event: classes.jneNamingExceptionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.util.prefs.NodeChangeEvent',
-        ...listeners: ((event: classes.jupNodeChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.OpenFilesEvent',
-        ...listeners: ((event: classes.jadOpenFilesEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.OpenURIEvent',
-        ...listeners: ((event: classes.jadOpenURIEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.PaintEvent',
-        ...listeners: ((event: classes.jaePaintEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.nio.sctp.PeerAddressChangeNotification.AddressChangeEvent',
-        ...listeners: ((event: classes.csnsPAddressChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.PopupMenuEvent',
-        ...listeners: ((event: classes.jsePopupMenuEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.util.prefs.PreferenceChangeEvent',
-        ...listeners: ((event: classes.jupPreferenceChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.PreferencesEvent',
-        ...listeners: ((event: classes.jadPreferencesEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.print.event.PrintEvent',
-        ...listeners: ((event: classes.jpePrintEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.PrintFilesEvent',
-        ...listeners: ((event: classes.jadPrintFilesEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.print.event.PrintJobAttributeEvent',
-        ...listeners: ((event: classes.jpePrintJobAttributeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.print.event.PrintJobEvent',
-        ...listeners: ((event: classes.jpePrintJobEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.print.event.PrintServiceAttributeEvent',
-        ...listeners: ((event: classes.jpePrintServiceAttributeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.beans.PropertyChangeEvent',
-        ...listeners: ((event: classes.jbPropertyChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.QuitEvent',
-        ...listeners: ((event: classes.jadQuitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'jdk.jfr.consumer.RecordedEvent',
-        ...listeners: ((event: classes.jjcRecordedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.sql.RowSetEvent',
-        ...listeners: ((event: classes.jsRowSetEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.RowSorterEvent',
-        ...listeners: ((event: classes.jseRowSorterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.ScreenSleepEvent',
-        ...listeners: ((event: classes.jadScreenSleepEvent) => any)[]
-    ): void;
-    static event (
-        name: 'jdk.jshell.SnippetEvent',
-        ...listeners: ((event: classes.jjSnippetEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.net.ssl.SSLSessionBindingEvent',
-        ...listeners: ((event: classes.jnsSSLSessionBindingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.sql.StatementEvent',
-        ...listeners: ((event: classes.jsStatementEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.StepEvent',
-        ...listeners: ((event: classes.csjeStepEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.SystemSleepEvent',
-        ...listeners: ((event: classes.jadSystemSleepEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.TableColumnModelEvent',
-        ...listeners: ((event: classes.jseTableColumnModelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.TableModelEvent',
-        ...listeners: ((event: classes.jseTableModelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.source.util.TaskEvent',
-        ...listeners: ((event: classes.cssuTaskEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.TextEvent',
-        ...listeners: ((event: classes.jaeTextEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ThreadDeathEvent',
-        ...listeners: ((event: classes.csjeThreadDeathEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.ThreadStartEvent',
-        ...listeners: ((event: classes.csjeThreadStartEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.TreeExpansionEvent',
-        ...listeners: ((event: classes.jseTreeExpansionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.TreeModelEvent',
-        ...listeners: ((event: classes.jseTreeModelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.TreeSelectionEvent',
-        ...listeners: ((event: classes.jseTreeSelectionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.w3c.dom.events.UIEvent',
-        ...listeners: ((event: classes.owdeUIEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.swing.event.UndoableEditEvent',
-        ...listeners: ((event: classes.jseUndoableEditEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.naming.ldap.UnsolicitedNotificationEvent',
-        ...listeners: ((event: classes.jnlUnsolicitedNotificationEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.desktop.UserSessionEvent',
-        ...listeners: ((event: classes.jadUserSessionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.VMDeathEvent',
-        ...listeners: ((event: classes.csjeVMDeathEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.VMDisconnectEvent',
-        ...listeners: ((event: classes.csjeVMDisconnectEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.VMStartEvent',
-        ...listeners: ((event: classes.csjeVMStartEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.nio.file.WatchEvent',
-        ...listeners: ((event: classes.jnfWatchEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.sun.jdi.event.WatchpointEvent',
-        ...listeners: ((event: classes.csjeWatchpointEvent) => any)[]
-    ): void;
-    static event (
-        name: 'java.awt.event.WindowEvent',
-        ...listeners: ((event: classes.jaeWindowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'javax.xml.stream.events.XMLEvent',
-        ...listeners: ((event: classes.jxseXMLEvent) => any)[]
-    ): void;
-
-    static event (
-        name: 'org.graalvm.polyglot.management.ExecutionEvent',
-        ...listeners: ((event: classes.ogpmExecutionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.graalvm.polyglot.ResourceLimitEvent',
-        ...listeners: ((event: classes.ogpResourceLimitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.block.AnvilDamagedEvent',
-        ...listeners: ((event: classes.cdpebAnvilDamagedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.AreaEffectCloudApplyEvent',
-        ...listeners: ((event: classes.obeeAreaEffectCloudApplyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ArrowBodyCountChangeEvent',
-        ...listeners: ((event: classes.obeeArrowBodyCountChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.AsyncPlayerChatEvent',
-        ...listeners: ((event: classes.obepAsyncPlayerChatEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.AsyncPlayerPreLoginEvent',
-        ...listeners: ((event: classes.obepAsyncPlayerPreLoginEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.AsyncTabCompleteEvent',
-        ...listeners: ((event: classes.cdpesAsyncTabCompleteEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.BatToggleSleepEvent',
-        ...listeners: ((event: classes.obeeBatToggleSleepEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.block.BeaconEffectEvent',
-        ...listeners: ((event: classes.cdpebBeaconEffectEvent) => any)[]
-    ): void;
-    static event (
-        name: 'io.papermc.paper.event.block.BellRingEvent',
-        ...listeners: ((event: classes.ippebBellRingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockBreakEvent',
-        ...listeners: ((event: classes.obebBlockBreakEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockBurnEvent',
-        ...listeners: ((event: classes.obebBlockBurnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockCanBuildEvent',
-        ...listeners: ((event: classes.obebBlockCanBuildEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockCookEvent',
-        ...listeners: ((event: classes.obebBlockCookEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockDamageEvent',
-        ...listeners: ((event: classes.obebBlockDamageEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.block.BlockDestroyEvent',
-        ...listeners: ((event: classes.cdpebBlockDestroyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockDispenseArmorEvent',
-        ...listeners: ((event: classes.obebBlockDispenseArmorEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockDispenseEvent',
-        ...listeners: ((event: classes.obebBlockDispenseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockDropItemEvent',
-        ...listeners: ((event: classes.obebBlockDropItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockEvent',
-        ...listeners: ((event: classes.obebBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockExpEvent',
-        ...listeners: ((event: classes.obebBlockExpEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockExplodeEvent',
-        ...listeners: ((event: classes.obebBlockExplodeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockFadeEvent',
-        ...listeners: ((event: classes.obebBlockFadeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockFertilizeEvent',
-        ...listeners: ((event: classes.obebBlockFertilizeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockFormEvent',
-        ...listeners: ((event: classes.obebBlockFormEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockFromToEvent',
-        ...listeners: ((event: classes.obebBlockFromToEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockGrowEvent',
-        ...listeners: ((event: classes.obebBlockGrowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockIgniteEvent',
-        ...listeners: ((event: classes.obebBlockIgniteEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockMultiPlaceEvent',
-        ...listeners: ((event: classes.obebBlockMultiPlaceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockPhysicsEvent',
-        ...listeners: ((event: classes.obebBlockPhysicsEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockPistonEvent',
-        ...listeners: ((event: classes.obebBlockPistonEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockPistonExtendEvent',
-        ...listeners: ((event: classes.obebBlockPistonExtendEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockPistonRetractEvent',
-        ...listeners: ((event: classes.obebBlockPistonRetractEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockPlaceEvent',
-        ...listeners: ((event: classes.obebBlockPlaceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockRedstoneEvent',
-        ...listeners: ((event: classes.obebBlockRedstoneEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockShearEntityEvent',
-        ...listeners: ((event: classes.obebBlockShearEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.BlockSpreadEvent',
-        ...listeners: ((event: classes.obebBlockSpreadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.BrewEvent',
-        ...listeners: ((event: classes.obeiBrewEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.BrewingStandFuelEvent',
-        ...listeners: ((event: classes.obeiBrewingStandFuelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.BroadcastMessageEvent',
-        ...listeners: ((event: classes.obesBroadcastMessageEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.CauldronLevelChangeEvent',
-        ...listeners: ((event: classes.obebCauldronLevelChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.ChunkEvent',
-        ...listeners: ((event: classes.obewChunkEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.ChunkLoadEvent',
-        ...listeners: ((event: classes.obewChunkLoadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.ChunkPopulateEvent',
-        ...listeners: ((event: classes.obewChunkPopulateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.ChunkUnloadEvent',
-        ...listeners: ((event: classes.obewChunkUnloadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.conversations.ConversationAbandonedEvent',
-        ...listeners: ((event: classes.obcConversationAbandonedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.CraftItemEvent',
-        ...listeners: ((event: classes.obeiCraftItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.CreatureSpawnEvent',
-        ...listeners: ((event: classes.obeeCreatureSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.CreeperIgniteEvent',
-        ...listeners: ((event: classes.cdpeeCreeperIgniteEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.CreeperPowerEvent',
-        ...listeners: ((event: classes.obeeCreeperPowerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.enchantment.EnchantItemEvent',
-        ...listeners: ((event: classes.obeeEnchantItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EnderDragonChangePhaseEvent',
-        ...listeners: ((event: classes.obeeEnderDragonChangePhaseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EnderDragonFireballHitEvent',
-        ...listeners: ((event: classes.cdpeeEnderDragonFireballHitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EnderDragonFlameEvent',
-        ...listeners: ((event: classes.cdpeeEnderDragonFlameEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EnderDragonShootFireballEvent',
-        ...listeners: ((event: classes.cdpeeEnderDragonShootFireballEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent',
-        ...listeners: ((event: classes.cdpeeEndermanAttackPlayerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EndermanEscapeEvent',
-        ...listeners: ((event: classes.cdpeeEndermanEscapeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityAddToWorldEvent',
-        ...listeners: ((event: classes.cdpeeEntityAddToWorldEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityAirChangeEvent',
-        ...listeners: ((event: classes.obeeEntityAirChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.EntityBlockFormEvent',
-        ...listeners: ((event: classes.obebEntityBlockFormEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityBreakDoorEvent',
-        ...listeners: ((event: classes.obeeEntityBreakDoorEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityBreedEvent',
-        ...listeners: ((event: classes.obeeEntityBreedEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityChangeBlockEvent',
-        ...listeners: ((event: classes.obeeEntityChangeBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityCombustByBlockEvent',
-        ...listeners: ((event: classes.obeeEntityCombustByBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityCombustByEntityEvent',
-        ...listeners: ((event: classes.obeeEntityCombustByEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityCombustEvent',
-        ...listeners: ((event: classes.obeeEntityCombustEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityDamageByBlockEvent',
-        ...listeners: ((event: classes.obeeEntityDamageByBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityDamageByEntityEvent',
-        ...listeners: ((event: classes.obeeEntityDamageByEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityDamageEvent',
-        ...listeners: ((event: classes.obeeEntityDamageEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityDeathEvent',
-        ...listeners: ((event: classes.obeeEntityDeathEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.spigotmc.event.entity.EntityDismountEvent',
-        ...listeners: ((event: classes.oseeEntityDismountEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityDropItemEvent',
-        ...listeners: ((event: classes.obeeEntityDropItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityEnterBlockEvent',
-        ...listeners: ((event: classes.obeeEntityEnterBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityEnterLoveModeEvent',
-        ...listeners: ((event: classes.obeeEntityEnterLoveModeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityEvent',
-        ...listeners: ((event: classes.obeeEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityExplodeEvent',
-        ...listeners: ((event: classes.obeeEntityExplodeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityInteractEvent',
-        ...listeners: ((event: classes.obeeEntityInteractEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityJumpEvent',
-        ...listeners: ((event: classes.cdpeeEntityJumpEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent',
-        ...listeners: ((event: classes.cdpeeEntityKnockbackByEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.spigotmc.event.entity.EntityMountEvent',
-        ...listeners: ((event: classes.oseeEntityMountEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityPathfindEvent',
-        ...listeners: ((event: classes.cdpeeEntityPathfindEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPickupItemEvent',
-        ...listeners: ((event: classes.obeeEntityPickupItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPortalEnterEvent',
-        ...listeners: ((event: classes.obeeEntityPortalEnterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPortalEvent',
-        ...listeners: ((event: classes.obeeEntityPortalEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPortalExitEvent',
-        ...listeners: ((event: classes.obeeEntityPortalExitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPoseChangeEvent',
-        ...listeners: ((event: classes.obeeEntityPoseChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityPotionEffectEvent',
-        ...listeners: ((event: classes.obeeEntityPotionEffectEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityRegainHealthEvent',
-        ...listeners: ((event: classes.obeeEntityRegainHealthEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent',
-        ...listeners: ((event: classes.cdpeeEntityRemoveFromWorldEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityResurrectEvent',
-        ...listeners: ((event: classes.obeeEntityResurrectEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityShootBowEvent',
-        ...listeners: ((event: classes.obeeEntityShootBowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntitySpawnEvent',
-        ...listeners: ((event: classes.obeeEntitySpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntitySpellCastEvent',
-        ...listeners: ((event: classes.obeeEntitySpellCastEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityTameEvent',
-        ...listeners: ((event: classes.obeeEntityTameEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityTargetEvent',
-        ...listeners: ((event: classes.obeeEntityTargetEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityTargetLivingEntityEvent',
-        ...listeners: ((event: classes.obeeEntityTargetLivingEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent',
-        ...listeners: ((event: classes.cdpeeEntityTeleportEndGatewayEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityTeleportEvent',
-        ...listeners: ((event: classes.obeeEntityTeleportEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityToggleGlideEvent',
-        ...listeners: ((event: classes.obeeEntityToggleGlideEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityToggleSwimEvent',
-        ...listeners: ((event: classes.obeeEntityToggleSwimEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityTransformEvent',
-        ...listeners: ((event: classes.obeeEntityTransformEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.EntityUnleashEvent',
-        ...listeners: ((event: classes.obeeEntityUnleashEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.EntityZapEvent',
-        ...listeners: ((event: classes.cdpeeEntityZapEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.Event',
-        ...listeners: ((event: classes.obeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ExpBottleEvent',
-        ...listeners: ((event: classes.obeeExpBottleEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent',
-        ...listeners: ((event: classes.cdpeeExperienceOrbMergeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ExplosionPrimeEvent',
-        ...listeners: ((event: classes.obeeExplosionPrimeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.profile.FillProfileEvent',
-        ...listeners: ((event: classes.cdpepFillProfileEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.FireworkExplodeEvent',
-        ...listeners: ((event: classes.obeeFireworkExplodeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.FluidLevelChangeEvent',
-        ...listeners: ((event: classes.obebFluidLevelChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.FoodLevelChangeEvent',
-        ...listeners: ((event: classes.obeeFoodLevelChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.FurnaceBurnEvent',
-        ...listeners: ((event: classes.obeiFurnaceBurnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.FurnaceExtractEvent',
-        ...listeners: ((event: classes.obeiFurnaceExtractEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.FurnaceSmeltEvent',
-        ...listeners: ((event: classes.obeiFurnaceSmeltEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.GS4QueryEvent',
-        ...listeners: ((event: classes.cdpesGS4QueryEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.hanging.HangingBreakByEntityEvent',
-        ...listeners: ((event: classes.obehHangingBreakByEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.hanging.HangingBreakEvent',
-        ...listeners: ((event: classes.obehHangingBreakEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.hanging.HangingEvent',
-        ...listeners: ((event: classes.obehHangingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.hanging.HangingPlaceEvent',
-        ...listeners: ((event: classes.obehHangingPlaceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.HorseJumpEvent',
-        ...listeners: ((event: classes.obeeHorseJumpEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.IllegalPacketEvent',
-        ...listeners: ((event: classes.cdpepIllegalPacketEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryClickEvent',
-        ...listeners: ((event: classes.obeiInventoryClickEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryCloseEvent',
-        ...listeners: ((event: classes.obeiInventoryCloseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryCreativeEvent',
-        ...listeners: ((event: classes.obeiInventoryCreativeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryDragEvent',
-        ...listeners: ((event: classes.obeiInventoryDragEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryEvent',
-        ...listeners: ((event: classes.obeiInventoryEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryInteractEvent',
-        ...listeners: ((event: classes.obeiInventoryInteractEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryMoveItemEvent',
-        ...listeners: ((event: classes.obeiInventoryMoveItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryOpenEvent',
-        ...listeners: ((event: classes.obeiInventoryOpenEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.InventoryPickupItemEvent',
-        ...listeners: ((event: classes.obeiInventoryPickupItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ItemDespawnEvent',
-        ...listeners: ((event: classes.obeeItemDespawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ItemMergeEvent',
-        ...listeners: ((event: classes.obeeItemMergeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ItemSpawnEvent',
-        ...listeners: ((event: classes.obeeItemSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.LeavesDecayEvent',
-        ...listeners: ((event: classes.obebLeavesDecayEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.weather.LightningStrikeEvent',
-        ...listeners: ((event: classes.obewLightningStrikeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.LingeringPotionSplashEvent',
-        ...listeners: ((event: classes.obeeLingeringPotionSplashEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.profile.LookupProfileEvent',
-        ...listeners: ((event: classes.cdpepLookupProfileEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.loottable.LootableInventoryReplenishEvent',
-        ...listeners: ((event: classes.cdplLootableInventoryReplenishEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.LootGenerateEvent',
-        ...listeners: ((event: classes.obewLootGenerateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.MapInitializeEvent',
-        ...listeners: ((event: classes.obesMapInitializeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.MoistureChangeEvent',
-        ...listeners: ((event: classes.obebMoistureChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.NotePlayEvent',
-        ...listeners: ((event: classes.obebNotePlayEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.PaperServerListPingEvent',
-        ...listeners: ((event: classes.cdpesPaperServerListPingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent',
-        ...listeners: ((event: classes.cdpeePhantomPreSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.PigZapEvent',
-        ...listeners: ((event: classes.obeePigZapEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.PigZombieAngerEvent',
-        ...listeners: ((event: classes.obeePigZombieAngerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent',
-        ...listeners: ((event: classes.cdpepPlayerAdvancementCriterionGrantEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerAdvancementDoneEvent',
-        ...listeners: ((event: classes.obepPlayerAdvancementDoneEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerAnimationEvent',
-        ...listeners: ((event: classes.obepPlayerAnimationEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerArmorChangeEvent',
-        ...listeners: ((event: classes.cdpepPlayerArmorChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerArmorStandManipulateEvent',
-        ...listeners: ((event: classes.obepPlayerArmorStandManipulateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent',
-        ...listeners: ((event: classes.cdpepPlayerAttackEntityCooldownResetEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerAttemptPickupItemEvent',
-        ...listeners: ((event: classes.obepPlayerAttemptPickupItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerBedEnterEvent',
-        ...listeners: ((event: classes.obepPlayerBedEnterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerBedLeaveEvent',
-        ...listeners: ((event: classes.obepPlayerBedLeaveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerBucketEmptyEvent',
-        ...listeners: ((event: classes.obepPlayerBucketEmptyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerBucketEvent',
-        ...listeners: ((event: classes.obepPlayerBucketEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerBucketFillEvent',
-        ...listeners: ((event: classes.obepPlayerBucketFillEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerChangedMainHandEvent',
-        ...listeners: ((event: classes.obepPlayerChangedMainHandEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerChangedWorldEvent',
-        ...listeners: ((event: classes.obepPlayerChangedWorldEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerChannelEvent',
-        ...listeners: ((event: classes.obepPlayerChannelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent',
-        ...listeners: ((event: classes.cdpepPlayerClientOptionsChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerCommandPreprocessEvent',
-        ...listeners: ((event: classes.obepPlayerCommandPreprocessEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerCommandSendEvent',
-        ...listeners: ((event: classes.obepPlayerCommandSendEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent',
-        ...listeners: ((event: classes.cdpepPlayerConnectionCloseEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.PlayerDeathEvent',
-        ...listeners: ((event: classes.obeePlayerDeathEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerDropItemEvent',
-        ...listeners: ((event: classes.obepPlayerDropItemEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerEditBookEvent',
-        ...listeners: ((event: classes.obepPlayerEditBookEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerEggThrowEvent',
-        ...listeners: ((event: classes.obepPlayerEggThrowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerElytraBoostEvent',
-        ...listeners: ((event: classes.cdpepPlayerElytraBoostEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerEvent',
-        ...listeners: ((event: classes.obepPlayerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerExpChangeEvent',
-        ...listeners: ((event: classes.obepPlayerExpChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerFishEvent',
-        ...listeners: ((event: classes.obepPlayerFishEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerGameModeChangeEvent',
-        ...listeners: ((event: classes.obepPlayerGameModeChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerHandshakeEvent',
-        ...listeners: ((event: classes.cdpepPlayerHandshakeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerHarvestBlockEvent',
-        ...listeners: ((event: classes.obepPlayerHarvestBlockEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerInteractAtEntityEvent',
-        ...listeners: ((event: classes.obepPlayerInteractAtEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerInteractEntityEvent',
-        ...listeners: ((event: classes.obepPlayerInteractEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerInteractEvent',
-        ...listeners: ((event: classes.obepPlayerInteractEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerItemBreakEvent',
-        ...listeners: ((event: classes.obepPlayerItemBreakEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerItemConsumeEvent',
-        ...listeners: ((event: classes.obepPlayerItemConsumeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerItemDamageEvent',
-        ...listeners: ((event: classes.obepPlayerItemDamageEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerItemHeldEvent',
-        ...listeners: ((event: classes.obepPlayerItemHeldEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerItemMendEvent',
-        ...listeners: ((event: classes.obepPlayerItemMendEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerJoinEvent',
-        ...listeners: ((event: classes.obepPlayerJoinEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerJumpEvent',
-        ...listeners: ((event: classes.cdpepPlayerJumpEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerKickEvent',
-        ...listeners: ((event: classes.obepPlayerKickEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent',
-        ...listeners: ((event: classes.cdpepPlayerLaunchProjectileEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.PlayerLeashEntityEvent',
-        ...listeners: ((event: classes.obeePlayerLeashEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerLevelChangeEvent',
-        ...listeners: ((event: classes.obepPlayerLevelChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerLocaleChangeEvent',
-        ...listeners: ((event: classes.obepPlayerLocaleChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerLoginEvent',
-        ...listeners: ((event: classes.obepPlayerLoginEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerMoveEvent',
-        ...listeners: ((event: classes.obepPlayerMoveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent',
-        ...listeners: ((event: classes.cdpeePlayerNaturallySpawnCreaturesEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerPickupArrowEvent',
-        ...listeners: ((event: classes.obepPlayerPickupArrowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent',
-        ...listeners: ((event: classes.cdpepPlayerPickupExperienceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerPortalEvent',
-        ...listeners: ((event: classes.obepPlayerPortalEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerPostRespawnEvent',
-        ...listeners: ((event: classes.cdpepPlayerPostRespawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerQuitEvent',
-        ...listeners: ((event: classes.obepPlayerQuitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerReadyArrowEvent',
-        ...listeners: ((event: classes.cdpepPlayerReadyArrowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent',
-        ...listeners: ((event: classes.cdpepPlayerRecipeBookClickEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerRecipeDiscoverEvent',
-        ...listeners: ((event: classes.obepPlayerRecipeDiscoverEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerRegisterChannelEvent',
-        ...listeners: ((event: classes.obepPlayerRegisterChannelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerResourcePackStatusEvent',
-        ...listeners: ((event: classes.obepPlayerResourcePackStatusEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerRespawnEvent',
-        ...listeners: ((event: classes.obepPlayerRespawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerRiptideEvent',
-        ...listeners: ((event: classes.obepPlayerRiptideEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerShearEntityEvent',
-        ...listeners: ((event: classes.obepPlayerShearEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.spigotmc.event.player.PlayerSpawnLocationEvent',
-        ...listeners: ((event: classes.osepPlayerSpawnLocationEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent',
-        ...listeners: ((event: classes.cdpepPlayerStartSpectatingEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerStatisticIncrementEvent',
-        ...listeners: ((event: classes.obepPlayerStatisticIncrementEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent',
-        ...listeners: ((event: classes.cdpepPlayerStopSpectatingEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerSwapHandItemsEvent',
-        ...listeners: ((event: classes.obepPlayerSwapHandItemsEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerTakeLecternBookEvent',
-        ...listeners: ((event: classes.obepPlayerTakeLecternBookEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent',
-        ...listeners: ((event: classes.cdpepPlayerTeleportEndGatewayEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerTeleportEvent',
-        ...listeners: ((event: classes.obepPlayerTeleportEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerToggleFlightEvent',
-        ...listeners: ((event: classes.obepPlayerToggleFlightEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerToggleSneakEvent',
-        ...listeners: ((event: classes.obepPlayerToggleSneakEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerToggleSprintEvent',
-        ...listeners: ((event: classes.obepPlayerToggleSprintEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerUnleashEntityEvent',
-        ...listeners: ((event: classes.obepPlayerUnleashEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerUnregisterChannelEvent',
-        ...listeners: ((event: classes.obepPlayerUnregisterChannelEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent',
-        ...listeners: ((event: classes.cdpepPlayerUseUnknownEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.player.PlayerVelocityEvent',
-        ...listeners: ((event: classes.obepPlayerVelocityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.PluginDisableEvent',
-        ...listeners: ((event: classes.obesPluginDisableEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.PluginEnableEvent',
-        ...listeners: ((event: classes.obesPluginEnableEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.PluginEvent',
-        ...listeners: ((event: classes.obesPluginEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.PortalCreateEvent',
-        ...listeners: ((event: classes.obewPortalCreateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.PotionSplashEvent',
-        ...listeners: ((event: classes.obeePotionSplashEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent',
-        ...listeners: ((event: classes.cdpeePreCreatureSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.profile.PreFillProfileEvent',
-        ...listeners: ((event: classes.cdpepPreFillProfileEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.profile.PreLookupProfileEvent',
-        ...listeners: ((event: classes.cdpepPreLookupProfileEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.PrepareAnvilEvent',
-        ...listeners: ((event: classes.obeiPrepareAnvilEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.PrepareItemCraftEvent',
-        ...listeners: ((event: classes.obeiPrepareItemCraftEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.enchantment.PrepareItemEnchantEvent',
-        ...listeners: ((event: classes.obeePrepareItemEnchantEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.inventory.PrepareResultEvent',
-        ...listeners: ((event: classes.cdpeiPrepareResultEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.PrepareSmithingEvent',
-        ...listeners: ((event: classes.obeiPrepareSmithingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent',
-        ...listeners: ((event: classes.cdpeePreSpawnerSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent',
-        ...listeners: ((event: classes.cdpepProfileWhitelistVerifyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.ProjectileCollideEvent',
-        ...listeners: ((event: classes.cdpeeProjectileCollideEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ProjectileHitEvent',
-        ...listeners: ((event: classes.obeeProjectileHitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.ProjectileLaunchEvent',
-        ...listeners: ((event: classes.obeeProjectileLaunchEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.raid.RaidEvent',
-        ...listeners: ((event: classes.oberRaidEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.raid.RaidFinishEvent',
-        ...listeners: ((event: classes.oberRaidFinishEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.raid.RaidSpawnWaveEvent',
-        ...listeners: ((event: classes.oberRaidSpawnWaveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.raid.RaidStopEvent',
-        ...listeners: ((event: classes.oberRaidStopEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.raid.RaidTriggerEvent',
-        ...listeners: ((event: classes.oberRaidTriggerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.RemoteServerCommandEvent',
-        ...listeners: ((event: classes.obesRemoteServerCommandEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServerCommandEvent',
-        ...listeners: ((event: classes.obesServerCommandEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServerEvent',
-        ...listeners: ((event: classes.obesServerEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.ServerExceptionEvent',
-        ...listeners: ((event: classes.cdpesServerExceptionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServerListPingEvent',
-        ...listeners: ((event: classes.obesServerListPingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServerLoadEvent',
-        ...listeners: ((event: classes.obesServerLoadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.ServerTickEndEvent',
-        ...listeners: ((event: classes.cdpesServerTickEndEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.ServerTickStartEvent',
-        ...listeners: ((event: classes.cdpesServerTickStartEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServiceEvent',
-        ...listeners: ((event: classes.obesServiceEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServiceRegisterEvent',
-        ...listeners: ((event: classes.obesServiceRegisterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.ServiceUnregisterEvent',
-        ...listeners: ((event: classes.obesServiceUnregisterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.SheepDyeWoolEvent',
-        ...listeners: ((event: classes.obeeSheepDyeWoolEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.SheepRegrowWoolEvent',
-        ...listeners: ((event: classes.obeeSheepRegrowWoolEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.SignChangeEvent',
-        ...listeners: ((event: classes.obebSignChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent',
-        ...listeners: ((event: classes.cdpeeSkeletonHorseTrapEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent',
-        ...listeners: ((event: classes.cdpeeSlimeChangeDirectionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SlimePathfindEvent',
-        ...listeners: ((event: classes.cdpeeSlimePathfindEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.SlimeSplitEvent',
-        ...listeners: ((event: classes.obeeSlimeSplitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SlimeSwimEvent',
-        ...listeners: ((event: classes.cdpeeSlimeSwimEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent',
-        ...listeners: ((event: classes.cdpeeSlimeTargetLivingEntityEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.SlimeWanderEvent',
-        ...listeners: ((event: classes.cdpeeSlimeWanderEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.SpawnChangeEvent',
-        ...listeners: ((event: classes.obewSpawnChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.SpawnerSpawnEvent',
-        ...listeners: ((event: classes.obeeSpawnerSpawnEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.block.SpongeAbsorbEvent',
-        ...listeners: ((event: classes.obebSpongeAbsorbEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.StriderTemperatureChangeEvent',
-        ...listeners: ((event: classes.obeeStriderTemperatureChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.StructureGrowEvent',
-        ...listeners: ((event: classes.obewStructureGrowEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.server.TabCompleteEvent',
-        ...listeners: ((event: classes.obesTabCompleteEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.ThrownEggHatchEvent',
-        ...listeners: ((event: classes.cdpeeThrownEggHatchEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.weather.ThunderChangeEvent',
-        ...listeners: ((event: classes.obewThunderChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.TimeSkipEvent',
-        ...listeners: ((event: classes.obewTimeSkipEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.block.TNTPrimeEvent',
-        ...listeners: ((event: classes.cdpebTNTPrimeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.inventory.TradeSelectEvent',
-        ...listeners: ((event: classes.obeiTradeSelectEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.TurtleGoHomeEvent',
-        ...listeners: ((event: classes.cdpeeTurtleGoHomeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.TurtleLayEggEvent',
-        ...listeners: ((event: classes.cdpeeTurtleLayEggEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.TurtleStartDiggingEvent',
-        ...listeners: ((event: classes.cdpeeTurtleStartDiggingEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.command.UnknownCommandEvent',
-        ...listeners: ((event: classes.obecUnknownCommandEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleBlockCollisionEvent',
-        ...listeners: ((event: classes.obevVehicleBlockCollisionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleCollisionEvent',
-        ...listeners: ((event: classes.obevVehicleCollisionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleCreateEvent',
-        ...listeners: ((event: classes.obevVehicleCreateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleDamageEvent',
-        ...listeners: ((event: classes.obevVehicleDamageEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleDestroyEvent',
-        ...listeners: ((event: classes.obevVehicleDestroyEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleEnterEvent',
-        ...listeners: ((event: classes.obevVehicleEnterEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleEntityCollisionEvent',
-        ...listeners: ((event: classes.obevVehicleEntityCollisionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleEvent',
-        ...listeners: ((event: classes.obevVehicleEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleExitEvent',
-        ...listeners: ((event: classes.obevVehicleExitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleMoveEvent',
-        ...listeners: ((event: classes.obevVehicleMoveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.vehicle.VehicleUpdateEvent',
-        ...listeners: ((event: classes.obevVehicleUpdateEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.VillagerAcquireTradeEvent',
-        ...listeners: ((event: classes.obeeVillagerAcquireTradeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.VillagerCareerChangeEvent',
-        ...listeners: ((event: classes.obeeVillagerCareerChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.entity.VillagerReplenishTradeEvent',
-        ...listeners: ((event: classes.obeeVillagerReplenishTradeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.weather.WeatherChangeEvent',
-        ...listeners: ((event: classes.obewWeatherChangeEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.weather.WeatherEvent',
-        ...listeners: ((event: classes.obewWeatherEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.server.WhitelistToggleEvent',
-        ...listeners: ((event: classes.cdpesWhitelistToggleEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.WitchConsumePotionEvent',
-        ...listeners: ((event: classes.cdpeeWitchConsumePotionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.WitchReadyPotionEvent',
-        ...listeners: ((event: classes.cdpeeWitchReadyPotionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'com.destroystokyo.paper.event.entity.WitchThrowPotionEvent',
-        ...listeners: ((event: classes.cdpeeWitchThrowPotionEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.WorldEvent',
-        ...listeners: ((event: classes.obewWorldEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.WorldInitEvent',
-        ...listeners: ((event: classes.obewWorldInitEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.WorldLoadEvent',
-        ...listeners: ((event: classes.obewWorldLoadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.WorldSaveEvent',
-        ...listeners: ((event: classes.obewWorldSaveEvent) => any)[]
-    ): void;
-    static event (
-        name: 'org.bukkit.event.world.WorldUnloadEvent',
-        ...listeners: ((event: classes.obewWorldUnloadEvent) => any)[]
-    ): void;
-    static event (
-        name: 'net.md_5.bungee.api.chat.ClickEvent',
-        ...listeners: ((event: classes.nmbacClickEvent) => any)[]
-    ): void;
-    static event (
-        name: 'net.md_5.bungee.api.chat.HoverEvent',
-        ...listeners: ((event: classes.nmbacHoverEvent) => any)[]
-    ): void;
+export interface events {
+    'java.awt.desktop.AboutEvent': classes.jadAboutEvent;
+    'com.sun.jdi.event.AccessWatchpointEvent': classes.csjeAccessWatchpointEvent;
+    'java.awt.event.ActionEvent': classes.jaeActionEvent;
+    'java.awt.ActiveEvent': classes.jaActiveEvent;
+    'java.awt.event.AdjustmentEvent': classes.jaeAdjustmentEvent;
+    'javax.swing.event.AncestorEvent': classes.jseAncestorEvent;
+    'java.awt.desktop.AppEvent': classes.jadAppEvent;
+    'java.awt.desktop.AppForegroundEvent': classes.jadAppForegroundEvent;
+    'java.awt.desktop.AppHiddenEvent': classes.jadAppHiddenEvent;
+    'java.awt.desktop.AppReopenedEvent': classes.jadAppReopenedEvent;
+    'com.sun.nio.sctp.AssociationChangeNotification.AssocChangeEvent': classes.csnsAAssocChangeEvent;
+    'java.awt.AWTEvent': classes.jaAWTEvent;
+    'java.beans.beancontext.BeanContextEvent': classes.jbbBeanContextEvent;
+    'java.beans.beancontext.BeanContextMembershipEvent': classes.jbbBeanContextMembershipEvent;
+    'java.beans.beancontext.BeanContextServiceAvailableEvent': classes.jbbBeanContextServiceAvailableEvent;
+    'java.beans.beancontext.BeanContextServiceRevokedEvent': classes.jbbBeanContextServiceRevokedEvent;
+    'com.sun.jdi.event.BreakpointEvent': classes.csjeBreakpointEvent;
+    'javax.swing.event.CaretEvent': classes.jseCaretEvent;
+    'javax.swing.event.ChangeEvent': classes.jseChangeEvent;
+    'com.sun.jdi.event.ClassPrepareEvent': classes.csjeClassPrepareEvent;
+    'com.sun.jdi.event.ClassUnloadEvent': classes.csjeClassUnloadEvent;
+    'java.awt.event.ComponentEvent': classes.jaeComponentEvent;
+    'javax.sql.ConnectionEvent': classes.jsConnectionEvent;
+    'java.awt.event.ContainerEvent': classes.jaeContainerEvent;
+    'javax.swing.event.DocumentEvent': classes.jseDocumentEvent;
+    'org.w3c.dom.events.DocumentEvent': classes.owdeDocumentEvent;
+    'java.awt.dnd.DragGestureEvent': classes.jadDragGestureEvent;
+    'java.awt.dnd.DragSourceDragEvent': classes.jadDragSourceDragEvent;
+    'java.awt.dnd.DragSourceDropEvent': classes.jadDragSourceDropEvent;
+    'java.awt.dnd.DragSourceEvent': classes.jadDragSourceEvent;
+    'java.awt.dnd.DropTargetDragEvent': classes.jadDropTargetDragEvent;
+    'java.awt.dnd.DropTargetDropEvent': classes.jadDropTargetDropEvent;
+    'java.awt.dnd.DropTargetEvent': classes.jadDropTargetEvent;
+    'com.sun.jdi.event.Event': classes.csjeEvent;
+    'jdk.jfr.Event': classes.jjEvent;
+    'org.w3c.dom.events.Event': classes.owdeEvent;
+    'com.sun.jdi.event.ExceptionEvent': classes.csjeExceptionEvent;
+    'java.awt.desktop.FilesEvent': classes.jadFilesEvent;
+    'java.awt.datatransfer.FlavorEvent': classes.jadFlavorEvent;
+    'java.awt.event.FocusEvent': classes.jaeFocusEvent;
+    'javax.swing.text.html.FormSubmitEvent': classes.jsthFormSubmitEvent;
+    'javax.net.ssl.HandshakeCompletedEvent': classes.jnsHandshakeCompletedEvent;
+    'java.awt.event.HierarchyEvent': classes.jaeHierarchyEvent;
+    'javax.swing.text.html.HTMLFrameHyperlinkEvent': classes.jsthHTMLFrameHyperlinkEvent;
+    'javax.swing.event.HyperlinkEvent': classes.jseHyperlinkEvent;
+    'java.beans.IndexedPropertyChangeEvent': classes.jbIndexedPropertyChangeEvent;
+    'java.awt.event.InputEvent': classes.jaeInputEvent;
+    'java.awt.event.InputMethodEvent': classes.jaeInputMethodEvent;
+    'javax.swing.event.InternalFrameEvent': classes.jseInternalFrameEvent;
+    'java.awt.event.InvocationEvent': classes.jaeInvocationEvent;
+    'java.awt.event.ItemEvent': classes.jaeItemEvent;
+    'java.awt.event.KeyEvent': classes.jaeKeyEvent;
+    'javax.sound.sampled.LineEvent': classes.jssLineEvent;
+    'javax.swing.event.ListDataEvent': classes.jseListDataEvent;
+    'javax.swing.event.ListSelectionEvent': classes.jseListSelectionEvent;
+    'com.sun.jdi.event.LocatableEvent': classes.csjeLocatableEvent;
+    'org.w3c.dom.ls.LSLoadEvent': classes.owdlLSLoadEvent;
+    'org.w3c.dom.ls.LSProgressEvent': classes.owdlLSProgressEvent;
+    'javax.swing.event.MenuDragMouseEvent': classes.jseMenuDragMouseEvent;
+    'javax.swing.event.MenuEvent': classes.jseMenuEvent;
+    'javax.swing.event.MenuKeyEvent': classes.jseMenuKeyEvent;
+    'com.sun.jdi.event.MethodEntryEvent': classes.csjeMethodEntryEvent;
+    'com.sun.jdi.event.MethodExitEvent': classes.csjeMethodExitEvent;
+    'javax.sound.midi.MidiEvent': classes.jsmMidiEvent;
+    'com.sun.jdi.event.ModificationWatchpointEvent': classes.csjeModificationWatchpointEvent;
+    'com.sun.jdi.event.MonitorContendedEnteredEvent': classes.csjeMonitorContendedEnteredEvent;
+    'com.sun.jdi.event.MonitorContendedEnterEvent': classes.csjeMonitorContendedEnterEvent;
+    'com.sun.jdi.event.MonitorWaitedEvent': classes.csjeMonitorWaitedEvent;
+    'com.sun.jdi.event.MonitorWaitEvent': classes.csjeMonitorWaitEvent;
+    'java.awt.event.MouseEvent': classes.jaeMouseEvent;
+    'org.w3c.dom.events.MouseEvent': classes.owdeMouseEvent;
+    'java.awt.event.MouseWheelEvent': classes.jaeMouseWheelEvent;
+    'org.w3c.dom.events.MutationEvent': classes.owdeMutationEvent;
+    'javax.naming.event.NamingEvent': classes.jneNamingEvent;
+    'javax.naming.event.NamingExceptionEvent': classes.jneNamingExceptionEvent;
+    'java.util.prefs.NodeChangeEvent': classes.jupNodeChangeEvent;
+    'java.awt.desktop.OpenFilesEvent': classes.jadOpenFilesEvent;
+    'java.awt.desktop.OpenURIEvent': classes.jadOpenURIEvent;
+    'java.awt.event.PaintEvent': classes.jaePaintEvent;
+    'com.sun.nio.sctp.PeerAddressChangeNotification.AddressChangeEvent': classes.csnsPAddressChangeEvent;
+    'javax.swing.event.PopupMenuEvent': classes.jsePopupMenuEvent;
+    'java.util.prefs.PreferenceChangeEvent': classes.jupPreferenceChangeEvent;
+    'java.awt.desktop.PreferencesEvent': classes.jadPreferencesEvent;
+    'javax.print.event.PrintEvent': classes.jpePrintEvent;
+    'java.awt.desktop.PrintFilesEvent': classes.jadPrintFilesEvent;
+    'javax.print.event.PrintJobAttributeEvent': classes.jpePrintJobAttributeEvent;
+    'javax.print.event.PrintJobEvent': classes.jpePrintJobEvent;
+    'javax.print.event.PrintServiceAttributeEvent': classes.jpePrintServiceAttributeEvent;
+    'java.beans.PropertyChangeEvent': classes.jbPropertyChangeEvent;
+    'java.awt.desktop.QuitEvent': classes.jadQuitEvent;
+    'jdk.jfr.consumer.RecordedEvent': classes.jjcRecordedEvent;
+    'javax.sql.RowSetEvent': classes.jsRowSetEvent;
+    'javax.swing.event.RowSorterEvent': classes.jseRowSorterEvent;
+    'java.awt.desktop.ScreenSleepEvent': classes.jadScreenSleepEvent;
+    'jdk.jshell.SnippetEvent': classes.jjSnippetEvent;
+    'javax.net.ssl.SSLSessionBindingEvent': classes.jnsSSLSessionBindingEvent;
+    'javax.sql.StatementEvent': classes.jsStatementEvent;
+    'com.sun.jdi.event.StepEvent': classes.csjeStepEvent;
+    'java.awt.desktop.SystemSleepEvent': classes.jadSystemSleepEvent;
+    'javax.swing.event.TableColumnModelEvent': classes.jseTableColumnModelEvent;
+    'javax.swing.event.TableModelEvent': classes.jseTableModelEvent;
+    'com.sun.source.util.TaskEvent': classes.cssuTaskEvent;
+    'java.awt.event.TextEvent': classes.jaeTextEvent;
+    'com.sun.jdi.event.ThreadDeathEvent': classes.csjeThreadDeathEvent;
+    'com.sun.jdi.event.ThreadStartEvent': classes.csjeThreadStartEvent;
+    'javax.swing.event.TreeExpansionEvent': classes.jseTreeExpansionEvent;
+    'javax.swing.event.TreeModelEvent': classes.jseTreeModelEvent;
+    'javax.swing.event.TreeSelectionEvent': classes.jseTreeSelectionEvent;
+    'org.w3c.dom.events.UIEvent': classes.owdeUIEvent;
+    'javax.swing.event.UndoableEditEvent': classes.jseUndoableEditEvent;
+    'javax.naming.ldap.UnsolicitedNotificationEvent': classes.jnlUnsolicitedNotificationEvent;
+    'java.awt.desktop.UserSessionEvent': classes.jadUserSessionEvent;
+    'com.sun.jdi.event.VMDeathEvent': classes.csjeVMDeathEvent;
+    'com.sun.jdi.event.VMDisconnectEvent': classes.csjeVMDisconnectEvent;
+    'com.sun.jdi.event.VMStartEvent': classes.csjeVMStartEvent;
+    'java.nio.file.WatchEvent': classes.jnfWatchEvent;
+    'com.sun.jdi.event.WatchpointEvent': classes.csjeWatchpointEvent;
+    'java.awt.event.WindowEvent': classes.jaeWindowEvent;
+    'javax.xml.stream.events.XMLEvent': classes.jxseXMLEvent;
+    'org.graalvm.polyglot.management.ExecutionEvent': classes.ogpmExecutionEvent;
+    'org.graalvm.polyglot.ResourceLimitEvent': classes.ogpResourceLimitEvent;
+    'com.destroystokyo.paper.event.block.AnvilDamagedEvent': classes.cdpebAnvilDamagedEvent;
+    'org.bukkit.event.entity.AreaEffectCloudApplyEvent': classes.obeeAreaEffectCloudApplyEvent;
+    'org.bukkit.event.entity.ArrowBodyCountChangeEvent': classes.obeeArrowBodyCountChangeEvent;
+    'org.bukkit.event.player.AsyncPlayerChatEvent': classes.obepAsyncPlayerChatEvent;
+    'org.bukkit.event.player.AsyncPlayerPreLoginEvent': classes.obepAsyncPlayerPreLoginEvent;
+    'com.destroystokyo.paper.event.server.AsyncTabCompleteEvent': classes.cdpesAsyncTabCompleteEvent;
+    'org.bukkit.event.entity.BatToggleSleepEvent': classes.obeeBatToggleSleepEvent;
+    'com.destroystokyo.paper.event.block.BeaconEffectEvent': classes.cdpebBeaconEffectEvent;
+    'io.papermc.paper.event.block.BellRingEvent': classes.ippebBellRingEvent;
+    'org.bukkit.event.block.BlockBreakEvent': classes.obebBlockBreakEvent;
+    'org.bukkit.event.block.BlockBurnEvent': classes.obebBlockBurnEvent;
+    'org.bukkit.event.block.BlockCanBuildEvent': classes.obebBlockCanBuildEvent;
+    'org.bukkit.event.block.BlockCookEvent': classes.obebBlockCookEvent;
+    'org.bukkit.event.block.BlockDamageEvent': classes.obebBlockDamageEvent;
+    'com.destroystokyo.paper.event.block.BlockDestroyEvent': classes.cdpebBlockDestroyEvent;
+    'org.bukkit.event.block.BlockDispenseArmorEvent': classes.obebBlockDispenseArmorEvent;
+    'org.bukkit.event.block.BlockDispenseEvent': classes.obebBlockDispenseEvent;
+    'org.bukkit.event.block.BlockDropItemEvent': classes.obebBlockDropItemEvent;
+    'org.bukkit.event.block.BlockEvent': classes.obebBlockEvent;
+    'org.bukkit.event.block.BlockExpEvent': classes.obebBlockExpEvent;
+    'org.bukkit.event.block.BlockExplodeEvent': classes.obebBlockExplodeEvent;
+    'org.bukkit.event.block.BlockFadeEvent': classes.obebBlockFadeEvent;
+    'org.bukkit.event.block.BlockFertilizeEvent': classes.obebBlockFertilizeEvent;
+    'org.bukkit.event.block.BlockFormEvent': classes.obebBlockFormEvent;
+    'org.bukkit.event.block.BlockFromToEvent': classes.obebBlockFromToEvent;
+    'org.bukkit.event.block.BlockGrowEvent': classes.obebBlockGrowEvent;
+    'org.bukkit.event.block.BlockIgniteEvent': classes.obebBlockIgniteEvent;
+    'org.bukkit.event.block.BlockMultiPlaceEvent': classes.obebBlockMultiPlaceEvent;
+    'org.bukkit.event.block.BlockPhysicsEvent': classes.obebBlockPhysicsEvent;
+    'org.bukkit.event.block.BlockPistonEvent': classes.obebBlockPistonEvent;
+    'org.bukkit.event.block.BlockPistonExtendEvent': classes.obebBlockPistonExtendEvent;
+    'org.bukkit.event.block.BlockPistonRetractEvent': classes.obebBlockPistonRetractEvent;
+    'org.bukkit.event.block.BlockPlaceEvent': classes.obebBlockPlaceEvent;
+    'org.bukkit.event.block.BlockRedstoneEvent': classes.obebBlockRedstoneEvent;
+    'org.bukkit.event.block.BlockShearEntityEvent': classes.obebBlockShearEntityEvent;
+    'org.bukkit.event.block.BlockSpreadEvent': classes.obebBlockSpreadEvent;
+    'org.bukkit.event.inventory.BrewEvent': classes.obeiBrewEvent;
+    'org.bukkit.event.inventory.BrewingStandFuelEvent': classes.obeiBrewingStandFuelEvent;
+    'org.bukkit.event.server.BroadcastMessageEvent': classes.obesBroadcastMessageEvent;
+    'org.bukkit.event.block.CauldronLevelChangeEvent': classes.obebCauldronLevelChangeEvent;
+    'org.bukkit.event.world.ChunkEvent': classes.obewChunkEvent;
+    'org.bukkit.event.world.ChunkLoadEvent': classes.obewChunkLoadEvent;
+    'org.bukkit.event.world.ChunkPopulateEvent': classes.obewChunkPopulateEvent;
+    'org.bukkit.event.world.ChunkUnloadEvent': classes.obewChunkUnloadEvent;
+    'org.bukkit.conversations.ConversationAbandonedEvent': classes.obcConversationAbandonedEvent;
+    'org.bukkit.event.inventory.CraftItemEvent': classes.obeiCraftItemEvent;
+    'org.bukkit.event.entity.CreatureSpawnEvent': classes.obeeCreatureSpawnEvent;
+    'com.destroystokyo.paper.event.entity.CreeperIgniteEvent': classes.cdpeeCreeperIgniteEvent;
+    'org.bukkit.event.entity.CreeperPowerEvent': classes.obeeCreeperPowerEvent;
+    'org.bukkit.event.enchantment.EnchantItemEvent': classes.obeeEnchantItemEvent;
+    'org.bukkit.event.entity.EnderDragonChangePhaseEvent': classes.obeeEnderDragonChangePhaseEvent;
+    'com.destroystokyo.paper.event.entity.EnderDragonFireballHitEvent': classes.cdpeeEnderDragonFireballHitEvent;
+    'com.destroystokyo.paper.event.entity.EnderDragonFlameEvent': classes.cdpeeEnderDragonFlameEvent;
+    'com.destroystokyo.paper.event.entity.EnderDragonShootFireballEvent': classes.cdpeeEnderDragonShootFireballEvent;
+    'com.destroystokyo.paper.event.entity.EndermanAttackPlayerEvent': classes.cdpeeEndermanAttackPlayerEvent;
+    'com.destroystokyo.paper.event.entity.EndermanEscapeEvent': classes.cdpeeEndermanEscapeEvent;
+    'com.destroystokyo.paper.event.entity.EntityAddToWorldEvent': classes.cdpeeEntityAddToWorldEvent;
+    'org.bukkit.event.entity.EntityAirChangeEvent': classes.obeeEntityAirChangeEvent;
+    'org.bukkit.event.block.EntityBlockFormEvent': classes.obebEntityBlockFormEvent;
+    'org.bukkit.event.entity.EntityBreakDoorEvent': classes.obeeEntityBreakDoorEvent;
+    'org.bukkit.event.entity.EntityBreedEvent': classes.obeeEntityBreedEvent;
+    'org.bukkit.event.entity.EntityChangeBlockEvent': classes.obeeEntityChangeBlockEvent;
+    'org.bukkit.event.entity.EntityCombustByBlockEvent': classes.obeeEntityCombustByBlockEvent;
+    'org.bukkit.event.entity.EntityCombustByEntityEvent': classes.obeeEntityCombustByEntityEvent;
+    'org.bukkit.event.entity.EntityCombustEvent': classes.obeeEntityCombustEvent;
+    'org.bukkit.event.entity.EntityDamageByBlockEvent': classes.obeeEntityDamageByBlockEvent;
+    'org.bukkit.event.entity.EntityDamageByEntityEvent': classes.obeeEntityDamageByEntityEvent;
+    'org.bukkit.event.entity.EntityDamageEvent': classes.obeeEntityDamageEvent;
+    'org.bukkit.event.entity.EntityDeathEvent': classes.obeeEntityDeathEvent;
+    'org.spigotmc.event.entity.EntityDismountEvent': classes.oseeEntityDismountEvent;
+    'org.bukkit.event.entity.EntityDropItemEvent': classes.obeeEntityDropItemEvent;
+    'org.bukkit.event.entity.EntityEnterBlockEvent': classes.obeeEntityEnterBlockEvent;
+    'org.bukkit.event.entity.EntityEnterLoveModeEvent': classes.obeeEntityEnterLoveModeEvent;
+    'org.bukkit.event.entity.EntityEvent': classes.obeeEntityEvent;
+    'org.bukkit.event.entity.EntityExplodeEvent': classes.obeeEntityExplodeEvent;
+    'org.bukkit.event.entity.EntityInteractEvent': classes.obeeEntityInteractEvent;
+    'com.destroystokyo.paper.event.entity.EntityJumpEvent': classes.cdpeeEntityJumpEvent;
+    'com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent': classes.cdpeeEntityKnockbackByEntityEvent;
+    'org.spigotmc.event.entity.EntityMountEvent': classes.oseeEntityMountEvent;
+    'com.destroystokyo.paper.event.entity.EntityPathfindEvent': classes.cdpeeEntityPathfindEvent;
+    'org.bukkit.event.entity.EntityPickupItemEvent': classes.obeeEntityPickupItemEvent;
+    'org.bukkit.event.entity.EntityPortalEnterEvent': classes.obeeEntityPortalEnterEvent;
+    'org.bukkit.event.entity.EntityPortalEvent': classes.obeeEntityPortalEvent;
+    'org.bukkit.event.entity.EntityPortalExitEvent': classes.obeeEntityPortalExitEvent;
+    'org.bukkit.event.entity.EntityPoseChangeEvent': classes.obeeEntityPoseChangeEvent;
+    'org.bukkit.event.entity.EntityPotionEffectEvent': classes.obeeEntityPotionEffectEvent;
+    'org.bukkit.event.entity.EntityRegainHealthEvent': classes.obeeEntityRegainHealthEvent;
+    'com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent': classes.cdpeeEntityRemoveFromWorldEvent;
+    'org.bukkit.event.entity.EntityResurrectEvent': classes.obeeEntityResurrectEvent;
+    'org.bukkit.event.entity.EntityShootBowEvent': classes.obeeEntityShootBowEvent;
+    'org.bukkit.event.entity.EntitySpawnEvent': classes.obeeEntitySpawnEvent;
+    'org.bukkit.event.entity.EntitySpellCastEvent': classes.obeeEntitySpellCastEvent;
+    'org.bukkit.event.entity.EntityTameEvent': classes.obeeEntityTameEvent;
+    'org.bukkit.event.entity.EntityTargetEvent': classes.obeeEntityTargetEvent;
+    'org.bukkit.event.entity.EntityTargetLivingEntityEvent': classes.obeeEntityTargetLivingEntityEvent;
+    'com.destroystokyo.paper.event.entity.EntityTeleportEndGatewayEvent': classes.cdpeeEntityTeleportEndGatewayEvent;
+    'org.bukkit.event.entity.EntityTeleportEvent': classes.obeeEntityTeleportEvent;
+    'org.bukkit.event.entity.EntityToggleGlideEvent': classes.obeeEntityToggleGlideEvent;
+    'org.bukkit.event.entity.EntityToggleSwimEvent': classes.obeeEntityToggleSwimEvent;
+    'org.bukkit.event.entity.EntityTransformEvent': classes.obeeEntityTransformEvent;
+    'org.bukkit.event.entity.EntityUnleashEvent': classes.obeeEntityUnleashEvent;
+    'com.destroystokyo.paper.event.entity.EntityZapEvent': classes.cdpeeEntityZapEvent;
+    'org.bukkit.event.Event': classes.obeEvent;
+    'org.bukkit.event.entity.ExpBottleEvent': classes.obeeExpBottleEvent;
+    'com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent': classes.cdpeeExperienceOrbMergeEvent;
+    'org.bukkit.event.entity.ExplosionPrimeEvent': classes.obeeExplosionPrimeEvent;
+    'com.destroystokyo.paper.event.profile.FillProfileEvent': classes.cdpepFillProfileEvent;
+    'org.bukkit.event.entity.FireworkExplodeEvent': classes.obeeFireworkExplodeEvent;
+    'org.bukkit.event.block.FluidLevelChangeEvent': classes.obebFluidLevelChangeEvent;
+    'org.bukkit.event.entity.FoodLevelChangeEvent': classes.obeeFoodLevelChangeEvent;
+    'org.bukkit.event.inventory.FurnaceBurnEvent': classes.obeiFurnaceBurnEvent;
+    'org.bukkit.event.inventory.FurnaceExtractEvent': classes.obeiFurnaceExtractEvent;
+    'org.bukkit.event.inventory.FurnaceSmeltEvent': classes.obeiFurnaceSmeltEvent;
+    'com.destroystokyo.paper.event.server.GS4QueryEvent': classes.cdpesGS4QueryEvent;
+    'org.bukkit.event.hanging.HangingBreakByEntityEvent': classes.obehHangingBreakByEntityEvent;
+    'org.bukkit.event.hanging.HangingBreakEvent': classes.obehHangingBreakEvent;
+    'org.bukkit.event.hanging.HangingEvent': classes.obehHangingEvent;
+    'org.bukkit.event.hanging.HangingPlaceEvent': classes.obehHangingPlaceEvent;
+    'org.bukkit.event.entity.HorseJumpEvent': classes.obeeHorseJumpEvent;
+    'com.destroystokyo.paper.event.player.IllegalPacketEvent': classes.cdpepIllegalPacketEvent;
+    'org.bukkit.event.inventory.InventoryClickEvent': classes.obeiInventoryClickEvent;
+    'org.bukkit.event.inventory.InventoryCloseEvent': classes.obeiInventoryCloseEvent;
+    'org.bukkit.event.inventory.InventoryCreativeEvent': classes.obeiInventoryCreativeEvent;
+    'org.bukkit.event.inventory.InventoryDragEvent': classes.obeiInventoryDragEvent;
+    'org.bukkit.event.inventory.InventoryEvent': classes.obeiInventoryEvent;
+    'org.bukkit.event.inventory.InventoryInteractEvent': classes.obeiInventoryInteractEvent;
+    'org.bukkit.event.inventory.InventoryMoveItemEvent': classes.obeiInventoryMoveItemEvent;
+    'org.bukkit.event.inventory.InventoryOpenEvent': classes.obeiInventoryOpenEvent;
+    'org.bukkit.event.inventory.InventoryPickupItemEvent': classes.obeiInventoryPickupItemEvent;
+    'org.bukkit.event.entity.ItemDespawnEvent': classes.obeeItemDespawnEvent;
+    'org.bukkit.event.entity.ItemMergeEvent': classes.obeeItemMergeEvent;
+    'org.bukkit.event.entity.ItemSpawnEvent': classes.obeeItemSpawnEvent;
+    'org.bukkit.event.block.LeavesDecayEvent': classes.obebLeavesDecayEvent;
+    'org.bukkit.event.weather.LightningStrikeEvent': classes.obewLightningStrikeEvent;
+    'org.bukkit.event.entity.LingeringPotionSplashEvent': classes.obeeLingeringPotionSplashEvent;
+    'com.destroystokyo.paper.event.profile.LookupProfileEvent': classes.cdpepLookupProfileEvent;
+    'com.destroystokyo.paper.loottable.LootableInventoryReplenishEvent': classes.cdplLootableInventoryReplenishEvent;
+    'org.bukkit.event.world.LootGenerateEvent': classes.obewLootGenerateEvent;
+    'org.bukkit.event.server.MapInitializeEvent': classes.obesMapInitializeEvent;
+    'org.bukkit.event.block.MoistureChangeEvent': classes.obebMoistureChangeEvent;
+    'org.bukkit.event.block.NotePlayEvent': classes.obebNotePlayEvent;
+    'com.destroystokyo.paper.event.server.PaperServerListPingEvent': classes.cdpesPaperServerListPingEvent;
+    'com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent': classes.cdpeePhantomPreSpawnEvent;
+    'org.bukkit.event.entity.PigZapEvent': classes.obeePigZapEvent;
+    'org.bukkit.event.entity.PigZombieAngerEvent': classes.obeePigZombieAngerEvent;
+    'com.destroystokyo.paper.event.player.PlayerAdvancementCriterionGrantEvent': classes.cdpepPlayerAdvancementCriterionGrantEvent;
+    'org.bukkit.event.player.PlayerAdvancementDoneEvent': classes.obepPlayerAdvancementDoneEvent;
+    'org.bukkit.event.player.PlayerAnimationEvent': classes.obepPlayerAnimationEvent;
+    'com.destroystokyo.paper.event.player.PlayerArmorChangeEvent': classes.cdpepPlayerArmorChangeEvent;
+    'org.bukkit.event.player.PlayerArmorStandManipulateEvent': classes.obepPlayerArmorStandManipulateEvent;
+    'com.destroystokyo.paper.event.player.PlayerAttackEntityCooldownResetEvent': classes.cdpepPlayerAttackEntityCooldownResetEvent;
+    'org.bukkit.event.player.PlayerAttemptPickupItemEvent': classes.obepPlayerAttemptPickupItemEvent;
+    'org.bukkit.event.player.PlayerBedEnterEvent': classes.obepPlayerBedEnterEvent;
+    'org.bukkit.event.player.PlayerBedLeaveEvent': classes.obepPlayerBedLeaveEvent;
+    'org.bukkit.event.player.PlayerBucketEmptyEvent': classes.obepPlayerBucketEmptyEvent;
+    'org.bukkit.event.player.PlayerBucketEvent': classes.obepPlayerBucketEvent;
+    'org.bukkit.event.player.PlayerBucketFillEvent': classes.obepPlayerBucketFillEvent;
+    'org.bukkit.event.player.PlayerChangedMainHandEvent': classes.obepPlayerChangedMainHandEvent;
+    'org.bukkit.event.player.PlayerChangedWorldEvent': classes.obepPlayerChangedWorldEvent;
+    'org.bukkit.event.player.PlayerChannelEvent': classes.obepPlayerChannelEvent;
+    'com.destroystokyo.paper.event.player.PlayerClientOptionsChangeEvent': classes.cdpepPlayerClientOptionsChangeEvent;
+    'org.bukkit.event.player.PlayerCommandPreprocessEvent': classes.obepPlayerCommandPreprocessEvent;
+    'org.bukkit.event.player.PlayerCommandSendEvent': classes.obepPlayerCommandSendEvent;
+    'com.destroystokyo.paper.event.player.PlayerConnectionCloseEvent': classes.cdpepPlayerConnectionCloseEvent;
+    'org.bukkit.event.entity.PlayerDeathEvent': classes.obeePlayerDeathEvent;
+    'org.bukkit.event.player.PlayerDropItemEvent': classes.obepPlayerDropItemEvent;
+    'org.bukkit.event.player.PlayerEditBookEvent': classes.obepPlayerEditBookEvent;
+    'org.bukkit.event.player.PlayerEggThrowEvent': classes.obepPlayerEggThrowEvent;
+    'com.destroystokyo.paper.event.player.PlayerElytraBoostEvent': classes.cdpepPlayerElytraBoostEvent;
+    'org.bukkit.event.player.PlayerEvent': classes.obepPlayerEvent;
+    'org.bukkit.event.player.PlayerExpChangeEvent': classes.obepPlayerExpChangeEvent;
+    'org.bukkit.event.player.PlayerFishEvent': classes.obepPlayerFishEvent;
+    'org.bukkit.event.player.PlayerGameModeChangeEvent': classes.obepPlayerGameModeChangeEvent;
+    'com.destroystokyo.paper.event.player.PlayerHandshakeEvent': classes.cdpepPlayerHandshakeEvent;
+    'org.bukkit.event.player.PlayerHarvestBlockEvent': classes.obepPlayerHarvestBlockEvent;
+    'org.bukkit.event.player.PlayerInteractAtEntityEvent': classes.obepPlayerInteractAtEntityEvent;
+    'org.bukkit.event.player.PlayerInteractEntityEvent': classes.obepPlayerInteractEntityEvent;
+    'org.bukkit.event.player.PlayerInteractEvent': classes.obepPlayerInteractEvent;
+    'org.bukkit.event.player.PlayerItemBreakEvent': classes.obepPlayerItemBreakEvent;
+    'org.bukkit.event.player.PlayerItemConsumeEvent': classes.obepPlayerItemConsumeEvent;
+    'org.bukkit.event.player.PlayerItemDamageEvent': classes.obepPlayerItemDamageEvent;
+    'org.bukkit.event.player.PlayerItemHeldEvent': classes.obepPlayerItemHeldEvent;
+    'org.bukkit.event.player.PlayerItemMendEvent': classes.obepPlayerItemMendEvent;
+    'org.bukkit.event.player.PlayerJoinEvent': classes.obepPlayerJoinEvent;
+    'com.destroystokyo.paper.event.player.PlayerJumpEvent': classes.cdpepPlayerJumpEvent;
+    'org.bukkit.event.player.PlayerKickEvent': classes.obepPlayerKickEvent;
+    'com.destroystokyo.paper.event.player.PlayerLaunchProjectileEvent': classes.cdpepPlayerLaunchProjectileEvent;
+    'org.bukkit.event.entity.PlayerLeashEntityEvent': classes.obeePlayerLeashEntityEvent;
+    'org.bukkit.event.player.PlayerLevelChangeEvent': classes.obepPlayerLevelChangeEvent;
+    'org.bukkit.event.player.PlayerLocaleChangeEvent': classes.obepPlayerLocaleChangeEvent;
+    'org.bukkit.event.player.PlayerLoginEvent': classes.obepPlayerLoginEvent;
+    'org.bukkit.event.player.PlayerMoveEvent': classes.obepPlayerMoveEvent;
+    'com.destroystokyo.paper.event.entity.PlayerNaturallySpawnCreaturesEvent': classes.cdpeePlayerNaturallySpawnCreaturesEvent;
+    'org.bukkit.event.player.PlayerPickupArrowEvent': classes.obepPlayerPickupArrowEvent;
+    'com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent': classes.cdpepPlayerPickupExperienceEvent;
+    'org.bukkit.event.player.PlayerPortalEvent': classes.obepPlayerPortalEvent;
+    'com.destroystokyo.paper.event.player.PlayerPostRespawnEvent': classes.cdpepPlayerPostRespawnEvent;
+    'org.bukkit.event.player.PlayerQuitEvent': classes.obepPlayerQuitEvent;
+    'com.destroystokyo.paper.event.player.PlayerReadyArrowEvent': classes.cdpepPlayerReadyArrowEvent;
+    'com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent': classes.cdpepPlayerRecipeBookClickEvent;
+    'org.bukkit.event.player.PlayerRecipeDiscoverEvent': classes.obepPlayerRecipeDiscoverEvent;
+    'org.bukkit.event.player.PlayerRegisterChannelEvent': classes.obepPlayerRegisterChannelEvent;
+    'org.bukkit.event.player.PlayerResourcePackStatusEvent': classes.obepPlayerResourcePackStatusEvent;
+    'org.bukkit.event.player.PlayerRespawnEvent': classes.obepPlayerRespawnEvent;
+    'org.bukkit.event.player.PlayerRiptideEvent': classes.obepPlayerRiptideEvent;
+    'org.bukkit.event.player.PlayerShearEntityEvent': classes.obepPlayerShearEntityEvent;
+    'org.spigotmc.event.player.PlayerSpawnLocationEvent': classes.osepPlayerSpawnLocationEvent;
+    'com.destroystokyo.paper.event.player.PlayerStartSpectatingEntityEvent': classes.cdpepPlayerStartSpectatingEntityEvent;
+    'org.bukkit.event.player.PlayerStatisticIncrementEvent': classes.obepPlayerStatisticIncrementEvent;
+    'com.destroystokyo.paper.event.player.PlayerStopSpectatingEntityEvent': classes.cdpepPlayerStopSpectatingEntityEvent;
+    'org.bukkit.event.player.PlayerSwapHandItemsEvent': classes.obepPlayerSwapHandItemsEvent;
+    'org.bukkit.event.player.PlayerTakeLecternBookEvent': classes.obepPlayerTakeLecternBookEvent;
+    'com.destroystokyo.paper.event.player.PlayerTeleportEndGatewayEvent': classes.cdpepPlayerTeleportEndGatewayEvent;
+    'org.bukkit.event.player.PlayerTeleportEvent': classes.obepPlayerTeleportEvent;
+    'org.bukkit.event.player.PlayerToggleFlightEvent': classes.obepPlayerToggleFlightEvent;
+    'org.bukkit.event.player.PlayerToggleSneakEvent': classes.obepPlayerToggleSneakEvent;
+    'org.bukkit.event.player.PlayerToggleSprintEvent': classes.obepPlayerToggleSprintEvent;
+    'org.bukkit.event.player.PlayerUnleashEntityEvent': classes.obepPlayerUnleashEntityEvent;
+    'org.bukkit.event.player.PlayerUnregisterChannelEvent': classes.obepPlayerUnregisterChannelEvent;
+    'com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent': classes.cdpepPlayerUseUnknownEntityEvent;
+    'org.bukkit.event.player.PlayerVelocityEvent': classes.obepPlayerVelocityEvent;
+    'org.bukkit.event.server.PluginDisableEvent': classes.obesPluginDisableEvent;
+    'org.bukkit.event.server.PluginEnableEvent': classes.obesPluginEnableEvent;
+    'org.bukkit.event.server.PluginEvent': classes.obesPluginEvent;
+    'org.bukkit.event.world.PortalCreateEvent': classes.obewPortalCreateEvent;
+    'org.bukkit.event.entity.PotionSplashEvent': classes.obeePotionSplashEvent;
+    'com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent': classes.cdpeePreCreatureSpawnEvent;
+    'com.destroystokyo.paper.event.profile.PreFillProfileEvent': classes.cdpepPreFillProfileEvent;
+    'com.destroystokyo.paper.event.profile.PreLookupProfileEvent': classes.cdpepPreLookupProfileEvent;
+    'org.bukkit.event.inventory.PrepareAnvilEvent': classes.obeiPrepareAnvilEvent;
+    'org.bukkit.event.inventory.PrepareItemCraftEvent': classes.obeiPrepareItemCraftEvent;
+    'org.bukkit.event.enchantment.PrepareItemEnchantEvent': classes.obeePrepareItemEnchantEvent;
+    'com.destroystokyo.paper.event.inventory.PrepareResultEvent': classes.cdpeiPrepareResultEvent;
+    'org.bukkit.event.inventory.PrepareSmithingEvent': classes.obeiPrepareSmithingEvent;
+    'com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent': classes.cdpeePreSpawnerSpawnEvent;
+    'com.destroystokyo.paper.event.profile.ProfileWhitelistVerifyEvent': classes.cdpepProfileWhitelistVerifyEvent;
+    'com.destroystokyo.paper.event.entity.ProjectileCollideEvent': classes.cdpeeProjectileCollideEvent;
+    'org.bukkit.event.entity.ProjectileHitEvent': classes.obeeProjectileHitEvent;
+    'org.bukkit.event.entity.ProjectileLaunchEvent': classes.obeeProjectileLaunchEvent;
+    'org.bukkit.event.raid.RaidEvent': classes.oberRaidEvent;
+    'org.bukkit.event.raid.RaidFinishEvent': classes.oberRaidFinishEvent;
+    'org.bukkit.event.raid.RaidSpawnWaveEvent': classes.oberRaidSpawnWaveEvent;
+    'org.bukkit.event.raid.RaidStopEvent': classes.oberRaidStopEvent;
+    'org.bukkit.event.raid.RaidTriggerEvent': classes.oberRaidTriggerEvent;
+    'org.bukkit.event.server.RemoteServerCommandEvent': classes.obesRemoteServerCommandEvent;
+    'org.bukkit.event.server.ServerCommandEvent': classes.obesServerCommandEvent;
+    'org.bukkit.event.server.ServerEvent': classes.obesServerEvent;
+    'com.destroystokyo.paper.event.server.ServerExceptionEvent': classes.cdpesServerExceptionEvent;
+    'org.bukkit.event.server.ServerListPingEvent': classes.obesServerListPingEvent;
+    'org.bukkit.event.server.ServerLoadEvent': classes.obesServerLoadEvent;
+    'com.destroystokyo.paper.event.server.ServerTickEndEvent': classes.cdpesServerTickEndEvent;
+    'com.destroystokyo.paper.event.server.ServerTickStartEvent': classes.cdpesServerTickStartEvent;
+    'org.bukkit.event.server.ServiceEvent': classes.obesServiceEvent;
+    'org.bukkit.event.server.ServiceRegisterEvent': classes.obesServiceRegisterEvent;
+    'org.bukkit.event.server.ServiceUnregisterEvent': classes.obesServiceUnregisterEvent;
+    'org.bukkit.event.entity.SheepDyeWoolEvent': classes.obeeSheepDyeWoolEvent;
+    'org.bukkit.event.entity.SheepRegrowWoolEvent': classes.obeeSheepRegrowWoolEvent;
+    'org.bukkit.event.block.SignChangeEvent': classes.obebSignChangeEvent;
+    'com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent': classes.cdpeeSkeletonHorseTrapEvent;
+    'com.destroystokyo.paper.event.entity.SlimeChangeDirectionEvent': classes.cdpeeSlimeChangeDirectionEvent;
+    'com.destroystokyo.paper.event.entity.SlimePathfindEvent': classes.cdpeeSlimePathfindEvent;
+    'org.bukkit.event.entity.SlimeSplitEvent': classes.obeeSlimeSplitEvent;
+    'com.destroystokyo.paper.event.entity.SlimeSwimEvent': classes.cdpeeSlimeSwimEvent;
+    'com.destroystokyo.paper.event.entity.SlimeTargetLivingEntityEvent': classes.cdpeeSlimeTargetLivingEntityEvent;
+    'com.destroystokyo.paper.event.entity.SlimeWanderEvent': classes.cdpeeSlimeWanderEvent;
+    'org.bukkit.event.world.SpawnChangeEvent': classes.obewSpawnChangeEvent;
+    'org.bukkit.event.entity.SpawnerSpawnEvent': classes.obeeSpawnerSpawnEvent;
+    'org.bukkit.event.block.SpongeAbsorbEvent': classes.obebSpongeAbsorbEvent;
+    'org.bukkit.event.entity.StriderTemperatureChangeEvent': classes.obeeStriderTemperatureChangeEvent;
+    'org.bukkit.event.world.StructureGrowEvent': classes.obewStructureGrowEvent;
+    'org.bukkit.event.server.TabCompleteEvent': classes.obesTabCompleteEvent;
+    'com.destroystokyo.paper.event.entity.ThrownEggHatchEvent': classes.cdpeeThrownEggHatchEvent;
+    'org.bukkit.event.weather.ThunderChangeEvent': classes.obewThunderChangeEvent;
+    'org.bukkit.event.world.TimeSkipEvent': classes.obewTimeSkipEvent;
+    'com.destroystokyo.paper.event.block.TNTPrimeEvent': classes.cdpebTNTPrimeEvent;
+    'org.bukkit.event.inventory.TradeSelectEvent': classes.obeiTradeSelectEvent;
+    'com.destroystokyo.paper.event.entity.TurtleGoHomeEvent': classes.cdpeeTurtleGoHomeEvent;
+    'com.destroystokyo.paper.event.entity.TurtleLayEggEvent': classes.cdpeeTurtleLayEggEvent;
+    'com.destroystokyo.paper.event.entity.TurtleStartDiggingEvent': classes.cdpeeTurtleStartDiggingEvent;
+    'org.bukkit.event.command.UnknownCommandEvent': classes.obecUnknownCommandEvent;
+    'org.bukkit.event.vehicle.VehicleBlockCollisionEvent': classes.obevVehicleBlockCollisionEvent;
+    'org.bukkit.event.vehicle.VehicleCollisionEvent': classes.obevVehicleCollisionEvent;
+    'org.bukkit.event.vehicle.VehicleCreateEvent': classes.obevVehicleCreateEvent;
+    'org.bukkit.event.vehicle.VehicleDamageEvent': classes.obevVehicleDamageEvent;
+    'org.bukkit.event.vehicle.VehicleDestroyEvent': classes.obevVehicleDestroyEvent;
+    'org.bukkit.event.vehicle.VehicleEnterEvent': classes.obevVehicleEnterEvent;
+    'org.bukkit.event.vehicle.VehicleEntityCollisionEvent': classes.obevVehicleEntityCollisionEvent;
+    'org.bukkit.event.vehicle.VehicleEvent': classes.obevVehicleEvent;
+    'org.bukkit.event.vehicle.VehicleExitEvent': classes.obevVehicleExitEvent;
+    'org.bukkit.event.vehicle.VehicleMoveEvent': classes.obevVehicleMoveEvent;
+    'org.bukkit.event.vehicle.VehicleUpdateEvent': classes.obevVehicleUpdateEvent;
+    'org.bukkit.event.entity.VillagerAcquireTradeEvent': classes.obeeVillagerAcquireTradeEvent;
+    'org.bukkit.event.entity.VillagerCareerChangeEvent': classes.obeeVillagerCareerChangeEvent;
+    'org.bukkit.event.entity.VillagerReplenishTradeEvent': classes.obeeVillagerReplenishTradeEvent;
+    'org.bukkit.event.weather.WeatherChangeEvent': classes.obewWeatherChangeEvent;
+    'org.bukkit.event.weather.WeatherEvent': classes.obewWeatherEvent;
+    'com.destroystokyo.paper.event.server.WhitelistToggleEvent': classes.cdpesWhitelistToggleEvent;
+    'com.destroystokyo.paper.event.entity.WitchConsumePotionEvent': classes.cdpeeWitchConsumePotionEvent;
+    'com.destroystokyo.paper.event.entity.WitchReadyPotionEvent': classes.cdpeeWitchReadyPotionEvent;
+    'com.destroystokyo.paper.event.entity.WitchThrowPotionEvent': classes.cdpeeWitchThrowPotionEvent;
+    'org.bukkit.event.world.WorldEvent': classes.obewWorldEvent;
+    'org.bukkit.event.world.WorldInitEvent': classes.obewWorldInitEvent;
+    'org.bukkit.event.world.WorldLoadEvent': classes.obewWorldLoadEvent;
+    'org.bukkit.event.world.WorldSaveEvent': classes.obewWorldSaveEvent;
+    'org.bukkit.event.world.WorldUnloadEvent': classes.obewWorldUnloadEvent;
+    'net.md_5.bungee.api.chat.ClickEvent': classes.nmbacClickEvent;
+    'net.md_5.bungee.api.chat.HoverEvent': classes.nmbacHoverEvent;
 }

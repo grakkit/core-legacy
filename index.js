@@ -1,8 +1,151 @@
 (function () {
-   /** @type {import('./dict/core').core} */
+   const session$type = {};
+   const type = (name) => {
+      return session$type[name] || (session$type[name] = Java.type(name));
+   };
+   const Bukkit = type('org.bukkit.Bukkit');
+   const Command = Java.extend(type('org.bukkit.command.Command'));
+   const FileInputStream = type('java.io.FileInputStream');
+   const FileOutputStream = type('java.io.FileOutputStream');
+   const Files = type('java.nio.file.Files');
+   const HandlerList = type('org.bukkit.event.HandlerList');
+   const Listener = Java.extend(type('org.bukkit.event.Listener'), {});
+   const Runnable = Java.extend(type('java.lang.Runnable'));
+   const Runtime = type('java.lang.Runtime');
+   const Paths = type('java.nio.file.Paths');
+   const Scanner = type('java.util.Scanner');
+   const Source = type('org.graalvm.polyglot.Source');
+   const StandardCopyOption = type('java.nio.file.StandardCopyOption');
+   const URL = type('java.net.URL');
+   const UUID = type('java.util.UUID');
+   const ZipInputStream = type('java.util.zip.ZipInputStream');
+   let EventPriority, EventType;
+   try {
+      EventPriority = type('org.bukkit.event.EventPriority');
+   } catch (error) {
+      EventPriority = type('org.bukkit.event.Event$Priority');
+      EventType = type('org.bukkit.event.Event$Type');
+   }
+   const server = Bukkit.getServer();
+   const manager = server.getPluginManager();
+   const plugin = manager.getPlugin('grakkit');
+   const context = plugin.getClass().static.context;
+   const commandMap = server.getClass().getDeclaredField('commandMap');
+   commandMap.setAccessible(true);
+   const registry = commandMap.get(server);
+   const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+   const remote = 'https://raw.githubusercontent.com/grakkit/grakkit/master';
+   let storage = {};
+   let trusted = [];
+   const file = (...path) => {
+      const io = Paths.get(path[0], ...path.slice(1)).normalize().toFile();
+      const thing = {
+         add: () => {
+            thing.file('..').dir();
+            io.createNewFile();
+            return thing;
+         },
+         get children () {
+            return [ ...(io.listFiles() || []) ].map((sub) => core.file(sub.getPath()));
+         },
+         copy: (to) => {
+            core.util.transfer(thing, to, 'copy');
+            return thing;
+         },
+         dir: () => {
+            core.util.chain(io, (io, loop) => {
+               const up = io.getParentFile();
+               up && !up.exists() && loop(up);
+               io.mkdir();
+            });
+            return thing;
+         },
+         execute: () => {
+            if (io.exists()) {
+               if (io.isDirectory()) {
+                  const origin = core.session.origin;
+                  core.session.origin = thing;
+                  for (const file of thing.children) file.io.isDirectory() || file.execute();
+                  core.session.origin = origin;
+               } else {
+                  if (thing.name.endsWith('.js')) {
+                     try {
+                        core.import(thing.name);
+                     } catch (error) {
+                        console.error(error.stack || error.message || error);
+                     }
+                  }
+               }
+            }
+            return thing;
+         },
+         get exists () {
+            return io.exists();
+         },
+         file: (...sub) => {
+            return file(...path, ...sub);
+         },
+         flush: () => {
+            core.util.chain(io, (io, loop) => {
+               const up = io.getParentFile();
+               up && up.listFiles() && !up.listFiles()[0] && up.delete() && loop(up);
+            });
+            return thing;
+         },
+         get io () {
+            return io;
+         },
+         json: () => {
+            try {
+               return JSON.parse(thing.read());
+            } catch (error) {
+               return null;
+            }
+         },
+         move: (to) => {
+            core.util.transfer(thing, to, 'move');
+            return thing.flush();
+         },
+         get name () {
+            return io.getName();
+         },
+         parse: () => {
+            io.exists() &&
+               core.context.eval(
+                  Source.newBuilder('js', io).mimeType('application/javascript+module').cached(false).build()
+               );
+            return thing;
+         },
+         get path () {
+            return io.getPath().replace(/(\\)/g, '/');
+         },
+         read: () => {
+            return !io.exists() ? null : !io.isDirectory() ? Files.readString(io.toPath()) : null;
+         },
+         remove: () => {
+            core.util.chain(io, (io, loop) => {
+               io.isDirectory() && [ ...io.listFiles() ].forEach(loop);
+               io.exists() && io.delete();
+            });
+            return thing.flush();
+         },
+         stream: () => {
+            return new FileOutputStream(io);
+         },
+         write: (content) => {
+            io.exists() && !io.isDirectory() && Files.writeString(io.toPath(), content);
+            return thing;
+         },
+         unzip: (to) => {
+            core.util.unzip(new FileInputStream(io), to);
+            return thing;
+         }
+      };
+      return thing;
+   };
+   const root = file(plugin.getDataFolder().getPath().replace(/[\\]/g, '/'));
    const core = {
-      command: (options) => {
-         core.session.command[options.name] = { execute: options.execute, tabComplete: options.tabComplete };
+      command (options) {
          const command =
             core.registry.getCommand(options.name) ||
             new Command(options.name, {
@@ -44,18 +187,20 @@
          command.setPermission(options.permission || null);
          command.setPermissionMessage(options.error || null);
          core.registry.register(options.fallback || 'grakkit', command);
-         core.session.command[options.name].instance = command;
+         core.session.command[options.name] = {
+            execute: options.execute,
+            tabComplete: options.tabComplete,
+            instance: command
+         };
       },
-      get context () {
-         return context;
-      },
-      data: (...path) => {
-         const name = Paths.get(...path).normalize().toString();
+      context,
+      data (...path) {
+         const name = Paths.get(path[0], ...path.slice(1)).normalize().toString();
          const store = core.session.data;
          store[name] || (store[name] = core.root.file('data', `${path}.json`).json() || {});
          return store[name];
       },
-      event: (name, ...listeners) => {
+      event (name, ...listeners) {
          const store = core.session.event[name] || (core.session.event[name] = []);
          for (const listener of listeners) {
             if (store.push(listener) === 1) {
@@ -97,17 +242,10 @@
             }
          }
       },
-      export: (object, file) => {
-         if (file) {
-            (core.session.export.file.slice(-1)[0] || (() => {}))(object);
-         } else {
-            (core.session.export.module.slice(-1)[0] || (() => {}))(object);
-         }
+      export (object) {
+         (core.session.export.module.slice(-1)[0] || (() => {}))(object);
       },
-      extend: (name, ...args) => {
-         return Java.extend(core.type(name), ...args);
-      },
-      fetch: (from) => {
+      fetch (from) {
          const link = new URL(from).openConnection();
          link.setDoOutput(true);
          link.setRequestMethod('GET');
@@ -136,129 +274,10 @@
             throw code;
          }
       },
-      file: (...path) => {
-         const io = Paths.get(...path).normalize().toFile();
-         const thing = {
-            add: () => {
-               thing.file('..').dir();
-               io.createNewFile();
-               return thing;
-            },
-            get children () {
-               return [ ...(io.listFiles() || []) ].map((sub) => core.file(sub.getPath()));
-            },
-            copy: (to) => {
-               core.util.transfer(thing, to, 'copy');
-               return thing;
-            },
-            dir: () => {
-               core.util.chain(io, (io, loop) => {
-                  const up = io.getParentFile();
-                  up && !up.exists() && loop(up);
-                  io.mkdir();
-               });
-               return thing;
-            },
-            execute: () => {
-               if (io.exists()) {
-                  if (io.isDirectory()) {
-                     const origin = core.session.origin;
-                     core.session.origin = thing;
-                     for (const file of thing.children) file.io.isDirectory() || file.execute();
-                     core.session.origin = origin;
-                  } else {
-                     if (thing.name.endsWith('.js')) {
-                        try {
-                           core.import(thing.name);
-                        } catch (error) {
-                           console.error(error.stack || error.message || error);
-                        }
-                     }
-                  }
-               }
-               return thing;
-            },
-            get exists () {
-               return io.exists();
-            },
-            file: (...sub) => {
-               return core.file(...path, ...sub);
-            },
-            flush: () => {
-               core.util.chain(io, (io, loop) => {
-                  const up = io.getParentFile();
-                  up && up.listFiles() && !up.listFiles()[0] && up.delete() && loop(up);
-               });
-               return thing;
-            },
-            get io () {
-               return io;
-            },
-            json: (handler) => {
-               let content;
-               try {
-                  content = JSON.parse(thing.read());
-               } catch (error) {
-                  content = null;
-               }
-               if (handler) {
-                  handler(content);
-                  return thing;
-               } else {
-                  return content;
-               }
-            },
-            move: (to) => {
-               core.util.transfer(thing, to, 'move');
-               return thing.flush();
-            },
-            get name () {
-               return io.getName();
-            },
-            parse: () => {
-               io.exists() &&
-                  core.context.eval(
-                     Source.newBuilder('js', io).mimeType('application/javascript+module').cached(false).build()
-                  );
-               return thing;
-            },
-            get path () {
-               return io.getPath().replace(/(\\)/g, '/');
-            },
-            read: (handler) => {
-               const content = !io.exists() ? null : !io.isDirectory() ? Files.readString(io.toPath()) : null;
-               if (handler) {
-                  handler(content);
-                  return thing;
-               } else {
-                  return content;
-               }
-            },
-            remove: () => {
-               core.util.chain(io, (io, loop) => {
-                  io.isDirectory() && [ ...io.listFiles() ].forEach(loop);
-                  io.exists() && io.delete();
-               });
-               return thing.flush();
-            },
-            stream: () => {
-               return new FileOutputStream(io);
-            },
-            write: (content) => {
-               io.exists() && !io.isDirectory() && Files.writeString(io.toPath(), content);
-               return thing;
-            },
-            unzip: (to) => {
-               core.util.unzip(new FileInputStream(io), to);
-               return thing;
-            }
-         };
-         return thing;
-      },
+      file,
       format: {
          circular: Symbol(),
-         // this needs to be completely overhauled, like, bad
-         error: (error) => {
+         error (error) {
             let type = 'Error';
             let message = `${error}`;
             if (error.stack) {
@@ -275,9 +294,9 @@
                               });
                               message = [ 'Invalid arguments! Expected:\u00a74', ...sets ].join('\n -> ').slice(0, -1);
                            } else if (reason.startsWith('Arity error')) {
-                              message = `Insufficient arguments! Expected: ${reason.split('-')[1].split(' ')[2]}`;
+                              message = `Invalid argument amount! Expected: ${reason.split('-')[1].split(' ')[2]}`;
                            } else if (reason.startsWith('UnsupportedTypeException')) {
-                              message = 'Invalid arguments!';
+                              message = 'Invalid arguments! Expected: \u00a74N/A';
                            } else if (reason.startsWith('Unknown identifier')) {
                               message = `That method (${reason.split(': ')[1]}) is not a member of its parent!`;
                            } else if (reason.startsWith('Message not supported')) {
@@ -302,8 +321,7 @@
             }
             return `${type}: ${message}`;
          },
-         // need to fix first member in top level object/array showing as full object
-         output: (object, nested) => {
+         output (object, nested) {
             if (nested) {
                if (object === core.format.circular) {
                   return 'Circular';
@@ -332,7 +350,7 @@
                            case 'string':
                               return `"${object}"`;
                            case 'symbol':
-                              return `@@${`${object}`.slice(7, -1)}`;
+                              return `@@${String(object).slice(7, -1)}`;
                            default:
                               return `${object}`;
                         }
@@ -356,7 +374,7 @@
                }
             }
          },
-         serialize: (object, nullify, nodes) => {
+         serialize (object, nullify, nodes) {
             if (object === null || object !== 'object') {
                return object;
             } else {
@@ -371,23 +389,24 @@
             }
          }
       },
-      import: (source) => {
-         if (core.session.stack.push(source) < 64) {
-            if (source[0] === '@') {
-               const key = source.slice(1);
+      import (source) {
+         if (core.session.stack.push(`${source}`) < 64) {
+            if (`${source}`[0] === '@') {
+               const key = `${source}`.slice(1);
                const version = core.session.scope[key];
                const { main, dependencies } = core.module.package(key, version, !!version);
-               const state = [ core.session.scope, core.session.origin, storage ];
+               const state = core.session.origin;
+               const store = [ core.session.scope, storage ];
                let result = null;
                core.session.scope = dependencies;
                core.session.origin = main.file('..');
                core.session.export.module.push((output) => (result = output));
                storage = {};
                const done = () => {
-                  storage = state[1];
+                  storage = store[1];
                   core.session.export.module.pop();
-                  core.session.scope = state[0];
-                  core.session.origin = state[1];
+                  core.session.scope = store[0];
+                  core.session.origin = state;
                   core.session.stack.pop();
                };
                try {
@@ -400,12 +419,16 @@
                   throw error;
                }
             } else {
-               const file = core.session.origin.file(source);
+               const file = core.session.origin.file(`${source}`);
                const uuid = UUID.randomUUID().toString();
                const importer = file.file(`../import.${file.name}.${uuid}.grakkit`);
                const exporter = file.file(`../export.${file.name}.${uuid}.grakkit`);
                file.copy(exporter);
-               importer.add().write(`import * as output from '${exporter.name}'; core.export(output, true);`);
+               importer
+                  .add()
+                  .write(
+                     `import * as output from '${exporter.name}'; (core.session.export.file.slice(-1)[0] || (() => {}))(output);`
+                  );
                const state = core.session.origin;
                let result = null;
                core.session.origin = file.file('..');
@@ -434,7 +457,7 @@
             return null;
          }
       },
-      init: () => {
+      init () {
          core.session = {
             command: {},
             data: {},
@@ -473,7 +496,7 @@
             0,
             1
          );
-         Object.assign(global, {
+         Object.assign(globalThis, {
             atob: (data) => {
                let index = 0;
                let result = '';
@@ -514,7 +537,7 @@
                core.task.cancel(handle);
             },
             core,
-            global,
+            global: globalThis,
             server,
             setInterval: (handler, timeout = 50, ...argumentz) => {
                return core.task.interval(
@@ -537,11 +560,11 @@
                permission: 'grakkit.command.js',
                error: '\xa7cYou lack the permission \xa74(grakkit.command.js) \xa7cto use that command!',
                execute: (player, ...args) => {
-                  const self = global.hasOwnProperty('self');
+                  const self = globalThis.hasOwnProperty('self');
                   try {
-                     self || (global.self = player);
+                     self || (globalThis.self = player);
                      const result = core.util.eval(args.join(' '));
-                     self || delete global.self;
+                     self || delete globalThis.self;
                      if (toString.apply(result) === '[foreign HostFunction]') {
                         let input = args.slice(-1)[0].split('.').slice(-1)[0];
                         input.endsWith(']') && (input = eval(input.replace(/.*\[/, '').slice(0, -1)));
@@ -550,14 +573,14 @@
                         player.sendMessage(`\xa77${core.format.output(result)}`);
                      }
                   } catch (error) {
-                     self || delete global.self;
+                     self || delete globalThis.self;
                      player.sendMessage(`\xa7c${core.format.error(error)}`);
                   }
                },
                tabComplete: (player, ...args) => {
                   let body = '';
                   let index = -1;
-                  let scope = global;
+                  let scope = globalThis;
                   let valid = true;
                   let string = false;
                   let bracket = false;
@@ -598,7 +621,6 @@
                      } else {
                         switch (char) {
                            case '/':
-                              // add regex support? maybe when im actually good at coding...
                               switch (input[index + 1]) {
                                  case '/':
                                     valid = false;
@@ -623,7 +645,7 @@
                               if (!bracket) {
                                  if (char === '.' || property) {
                                     body = input.slice(0, index + 1);
-                                    if (scope === global && property === 'self' && !scope.hasOwnProperty('self')) {
+                                    if (scope === globalThis && property === 'self' && !scope.hasOwnProperty('self')) {
                                        scope = player;
                                     } else {
                                        scope = scope[property] || {};
@@ -632,7 +654,7 @@
                                     property = '';
                                  } else {
                                     body = input.slice(0, index + 1);
-                                    scope = global;
+                                    scope = globalThis;
                                  }
                               }
                               break;
@@ -649,7 +671,7 @@
                               if (char.match(/\+-\*\/\^=!&\|\?:\(,;/g)) {
                                  if (!bracket) {
                                     body = input.slice(0, index + 1);
-                                    scope = global;
+                                    scope = globalThis;
                                     property = '';
                                  }
                               } else {
@@ -660,7 +682,7 @@
                   }
                   if (valid && scope && !(comment || string)) {
                      const properties = Object.getOwnPropertyNames(scope);
-                     scope === global && !properties.includes('self') && properties.push('self');
+                     scope === globalThis && !properties.includes('self') && properties.push('self');
                      return core.util
                         .filter(property, properties)
                         .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
@@ -762,7 +784,6 @@
                         if (target) {
                            target = target.toLowerCase();
                            switch (target) {
-                              case 'config':
                               case 'dict':
                               case 'js':
                               case 'module':
@@ -783,19 +804,12 @@
                      case 'update':
                         player.sendMessage('\xa77Updating...');
                         try {
-                           if (core.toggles.dict !== false) {
-                              core.root.file('dict/classes.d.ts').remove();
-                              core.root.file('dict/core.d.ts').remove();
-                              core.root.file('dict/events.d.ts').remove();
-                              core.root.file('dict/index.d.ts').remove();
-                              core.root.file('dict/types.d.ts').remove();
-                           }
-                           if (core.toggles.config !== false) {
-                              core.root.file('package.json').remove();
-                              core.root.file('tsconfig.json').remove();
-                           }
+                           const process = Runtime.getRuntime().exec(
+                              `grakkit update core --root "${core.root.io.getAbsolutePath()}"`
+                           );
+                           process.waitFor();
                            core.refresh(true);
-                           core.root.file('index.js').write(core.fetch(`${remote}/index.js`).read()).execute();
+                           core.root.file('index.js').execute();
                            player.sendMessage('\xa77Update Complete.');
                         } catch (error) {
                            player.sendMessage('\xa7cUpdate Failed!');
@@ -816,15 +830,7 @@
                   case 2:
                      switch (args[0]) {
                         case 'toggle':
-                           return core.util.filter(args[1], [
-                              'config',
-                              'dict',
-                              'js',
-                              'module',
-                              'scripts',
-                              'trusted',
-                              'user'
-                           ]);
+                           return core.util.filter(args[1], [ 'dict', 'js', 'module', 'scripts', 'trusted', 'user' ]);
                      }
                }
             }
@@ -842,46 +848,16 @@
                console.error(error.stack || error.message || error);
             }
          }
-         if (core.toggles.dict !== false) {
-            for (const name of [ 'classes', 'core', 'events', 'index', 'types' ]) {
-               const target = core.root.file('dict', `${name}.d.ts`);
-               if (!target.exists) {
-                  try {
-                     console.log(`Downloading dictionary... ${target.path}`);
-                     target.add().write(core.fetch(`${remote}/dict/${name}.d.ts`).read());
-                  } catch (error) {
-                     console.error(`An error occured while attempting to download the "${target.path}" dictionary!`);
-                     console.error(error.stack || error.message || error);
-                  }
-               }
-            }
-         }
          if (core.toggles.user !== false) {
             core.root.file('user.js').add().execute();
          }
          if (core.toggles.scripts !== false) {
             core.root.file('scripts').dir().execute();
          }
-         if (core.toggles.config !== false) {
-            for (const name of [ 'package', 'tsconfig' ]) {
-               const target = core.root.file(`${name}.json`);
-               if (!target.exists) {
-                  try {
-                     console.log(`Downloading configuration... ${target.path}`);
-                     target.add().write(core.fetch(`${remote}/${name}.json`).read());
-                  } catch (error) {
-                     console.error(`An error occured while attempting to download the "${target.path}" configuration!`);
-                     console.error(error.stack || error.message || error);
-                  }
-               }
-            }
-         }
       },
-      get manager () {
-         return manager;
-      },
+      manager,
       module: {
-         action: (player, option, key, version) => {
+         action (player, option, key, version) {
             key = key.toLowerCase();
             const action = { add: 'Add', change: 'Chang', create: 'Creat', remove: 'Remov', update: 'Updat' }[option];
             try {
@@ -923,7 +899,7 @@
                }
             }
          },
-         add: (key, version) => {
+         add (key, version) {
             if (core.module.modules[key]) {
                throw 'module-already-installed';
             } else {
@@ -931,7 +907,7 @@
                core.module.dict();
             }
          },
-         change: (key, version) => {
+         change (key, version) {
             if (core.module.modules[key]) {
                core.module.modules[key] = core.module.download(key, version);
                core.module.dict();
@@ -941,7 +917,7 @@
                throw 'module-not-installed';
             }
          },
-         create: (key) => {
+         create (key, version) {
             if (core.module.modules[key]) {
                throw 'module-already-installed';
             } else {
@@ -953,7 +929,7 @@
                core.module.dict();
             }
          },
-         delete: (key, version, dependency) => {
+         delete (key, version, dependency) {
             const root = dependency && core.module.dependencies[key];
             for (const entry of Object.entries(core.module.package(key, version, dependency).dependencies)) {
                let remove = true;
@@ -988,21 +964,21 @@
          get dependencies () {
             return core.data('../dependencies');
          },
-         dict: () => {
+         dict () {
             if (core.toggles.dict !== false) {
                core.root.file('dict/imports.d.ts').add().write(
                   [
-                     'export class imports {',
-                     '   static import (name: string): any;',
+                     'export interface imports {',
                      ...Object.keys(core.module.modules).map((key) => {
-                        return `   static import (name: '@${key}'): import('./../modules/${key}/module').Main;`;
+                        return `   '@${key}': import('./../modules/${key}/module').Main;`;
                      }),
+                     '   [x: string]: any;',
                      '}'
                   ].join('\n')
                );
             }
          },
-         download: (key, version, dependency) => {
+         download (key, version, dependency) {
             let target;
             const info = core.module.version(key, version);
             if (info) {
@@ -1051,7 +1027,7 @@
          get modules () {
             return core.data('../modules');
          },
-         package: (key, version, dependency) => {
+         package (key, version, dependency) {
             let main = 'index.js';
             let dependencies = {};
             const prefix = `The package file for "${key}${dependency ? `:${version}` : ''}"`;
@@ -1082,7 +1058,7 @@
             }
             return { main: folder.file(main), dependencies };
          },
-         remove: (key) => {
+         remove (key, version) {
             if (core.module.modules[key] || core.module.modules[key] === null) {
                core.module.delete(key);
                delete core.module.modules[key];
@@ -1091,7 +1067,7 @@
                throw 'module-not-installed';
             }
          },
-         update: (key) => {
+         update (key, version) {
             if (core.module.modules[key]) {
                core.module.modules[key] = core.module.download(key);
                core.module.dict();
@@ -1101,7 +1077,7 @@
                throw 'module-not-installed';
             }
          },
-         version: (key, version) => {
+         version (key, version) {
             for (const tag of core.fetch(`https://api.github.com/repos/${key}/tags`).json()) {
                if (!version || tag.name === version) {
                   return tag;
@@ -1109,40 +1085,27 @@
             }
          }
       },
-      get plugin () {
-         return plugin;
-      },
-      refresh: (disable) => {
+      plugin,
+      refresh (disable) {
          HandlerList.unregisterAll(core.plugin);
          server.getScheduler().cancelTasks(core.plugin);
-         for (const command of Object.values(core.session.command)) command.instance.unregister(core.registry);
+         for (const key in core.session.command) core.session.command[key].instance.unregister(core.registry);
          for (const path in core.session.data) {
             const data = JSON.stringify(core.format.serialize(core.session.data[path], true));
             core.root.file('data', `${path}.json`).add().write(data);
          }
-         for (const key in global) delete global[key];
+         for (const key in globalThis) delete globalThis[key];
          storage = {};
          trusted = [];
          disable || core.init();
       },
-      get registry () {
-         return registry;
-      },
-      get root () {
-         return core.file(core.plugin.getDataFolder().getPath().replace(/[\\]/g, '/'));
-      },
-      send: (player, message, action) => {
-         const limit = action ? 128 : 2048;
-         message.length > limit && (message = `${message.slice(0, limit - 3)}...`);
-         if (action)
-            core.version === 'modern' && player.sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
-         else player.sendMessage(message);
-      },
+      registry,
+      root,
       task: {
-         cancel: (index) => {
+         cancel (index) {
             delete core.session.task[index - 1];
          },
-         interval: (script, period = 1, ...args) => {
+         interval (script, period = 1, ...args) {
             const callback = (...args) => {
                core.task.timeout(callback, period, ...args);
                core.session.task[index] = core.session.task.pop();
@@ -1151,7 +1114,7 @@
             let index = core.task.timeout(callback, 0, ...args);
             return index--;
          },
-         timeout: (script, period = 0, ...args) => {
+         timeout (script, period = 0, ...args) {
             return core.session.task.push({
                script,
                args,
@@ -1159,28 +1122,47 @@
             });
          }
       },
-      session: { type: {} },
+      session: (() => {
+         const command = {};
+         const event = {};
+         const file = [];
+         const module = [];
+         const scope = {};
+         const stack = [];
+         const task = [];
+         return {
+            command,
+            data: {},
+            event,
+            export: { file, module },
+            legacy: !!EventType,
+            origin: root,
+            scope,
+            stack,
+            task,
+            tick: 0,
+            type: session$type
+         };
+      })(),
       get storage () {
          return storage;
       },
       get toggles () {
          return core.data('../toggles');
       },
-      type: (name) => {
-         return core.session.type[name] || (core.session.type[name] = Java.type(name));
-      },
+      type,
       util: {
-         chain: (base, modifier) => {
+         chain (base, modifier) {
             const chain = (object) => modifier(object, chain);
             chain(base);
          },
-         eval: (code) => {
+         eval (code) {
             return Polyglot.eval('js', code);
          },
-         filter: (value, array) => {
+         filter (value, array) {
             return array.filter((element) => element.toLowerCase().includes(value.toLowerCase()));
          },
-         transfer: (from, to, action) => {
+         transfer (from, to, action) {
             core.util.chain([ from.io, to.io ], (io, loop) => {
                if (io[0].isDirectory()) {
                   core.file(io[1].getPath()).dir();
@@ -1191,7 +1173,7 @@
                }
             });
          },
-         unzip: (from, to) => {
+         unzip (from, to) {
             const stream = new ZipInputStream(from);
             try {
                let entry;
@@ -1221,48 +1203,5 @@
          }
       }
    };
-
-   const Bukkit = core.type('org.bukkit.Bukkit');
-   const Command = core.extend('org.bukkit.command.Command');
-   const FileInputStream = core.type('java.io.FileInputStream');
-   const FileOutputStream = core.type('java.io.FileOutputStream');
-   const Files = core.type('java.nio.file.Files');
-   const HandlerList = core.type('org.bukkit.event.HandlerList');
-   const Listener = core.extend('org.bukkit.event.Listener', {});
-   const Runnable = core.extend('java.lang.Runnable');
-   const Paths = core.type('java.nio.file.Paths');
-   const Scanner = core.type('java.util.Scanner');
-   const Source = core.type('org.graalvm.polyglot.Source');
-   const StandardCopyOption = core.type('java.nio.file.StandardCopyOption');
-   const URL = core.type('java.net.URL');
-   const UUID = core.type('java.util.UUID');
-   const ZipInputStream = core.type('java.util.zip.ZipInputStream');
-
-   let EventPriority, EventType;
-
-   try {
-      EventPriority = core.type('org.bukkit.event.EventPriority');
-   } catch (error) {
-      EventPriority = core.type('org.bukkit.event.Event$Priority');
-      EventType = core.type('org.bukkit.event.Event$Type');
-   }
-
-   const global = globalThis;
-   const server = Bukkit.getServer();
-
-   const manager = server.getPluginManager();
-   const plugin = manager.getPlugin('grakkit');
-   const context = plugin.getClass().static.context;
-
-   const commandMap = server.getClass().getDeclaredField('commandMap');
-   commandMap.setAccessible(true);
-   const registry = commandMap.get(server);
-
-   const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-   const remote = 'https://raw.githubusercontent.com/grakkit/core/master';
-
-   let storage = {};
-   let trusted = [];
-
    core.init();
 })();
