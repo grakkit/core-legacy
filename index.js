@@ -1,10 +1,10 @@
-const index = (function () {
+export const index = (function () {
     const session$type = {};
     const type = (name) => {
         return session$type[name] || (session$type[name] = Java.type(name));
     };
+    const ArrayList = type('java.util.ArrayList');
     const Bukkit = type('org.bukkit.Bukkit');
-    const Command = Java.extend(type('org.bukkit.command.Command'));
     const FileInputStream = type('java.io.FileInputStream');
     const FileOutputStream = type('java.io.FileOutputStream');
     const Files = type('java.nio.file.Files');
@@ -147,57 +147,44 @@ const index = (function () {
     const root = file(plugin.getDataFolder().getPath().replace(/[\\]/g, '/'));
     const core = {
         command(options) {
-            const command = core.registry.getCommand(options.name) ||
-                new Command(options.name, {
-                    execute: (player, name, args) => {
-                        if (options.permission && !player.hasPermission(options.permission)) {
-                            options.error && player.sendMessage(options.error);
-                            return false;
-                        }
-                        else {
-                            try {
-                                (core.session.command[options.name].execute || (() => { }))(player, ...args);
-                                return true;
-                            }
-                            catch (error) {
-                                console.error(`An error occured while attempting to execute the "${name}" command!`);
-                                console.error(error.stack || error.message || error);
-                                return false;
-                            }
-                        }
-                    },
-                    tabComplete: (player, name, args) => {
-                        try {
-                            const results = (core.session.command[options.name].tabComplete || (() => { }))(player, ...args);
-                            if (!results) {
-                                return [];
-                            }
-                            else if (typeof results === 'string') {
-                                return [results];
-                            }
-                            else if (typeof results[Symbol.iterator] === 'function') {
-                                return [...results];
-                            }
-                            else {
-                                return [];
-                            }
-                        }
-                        catch (error) {
-                            console.error(`An error occured while attempting to tab-complete the "${name}" command!`);
-                            console.error(error.stack || error.message || error);
-                            return [];
-                        }
+            const list = new ArrayList();
+            for (const element of [...(options.aliases || [])])
+                list.add(element);
+            core.plugin.register(`${options.fallback || 'grakkit'}:${options.name}`, options.name, "", "", list, options.permission || '', options.error || '', options.fallback || 'grakkit', (player, name, args) => {
+                if (options.permission && !player.hasPermission(options.permission)) {
+                    options.error && player.sendMessage(options.error);
+                }
+                else {
+                    try {
+                        options.execute(player, ...args);
                     }
-                });
-            command.setAliases([...(options.aliases || [])]);
-            command.setPermission(options.permission || null);
-            command.setPermissionMessage(options.error || null);
-            core.registry.register(options.fallback || 'grakkit', command);
-            core.session.command[options.name] = {
-                execute: options.execute,
-                tabComplete: options.tabComplete,
-                instance: command
-            };
+                    catch (error) {
+                        console.error(`An error occured while attempting to execute the "${name}" command!`);
+                        console.error(error.stack || error.message || error);
+                    }
+                }
+            }, (player, name, args) => {
+                try {
+                    const results = options.tabComplete(player, ...args);
+                    if (!results) {
+                        return [];
+                    }
+                    else if (typeof results === 'string') {
+                        return [results];
+                    }
+                    else if (typeof results[Symbol.iterator] === 'function') {
+                        return [...results];
+                    }
+                    else {
+                        return [];
+                    }
+                }
+                catch (error) {
+                    console.error(`An error occured while attempting to tab-complete the "${name}" command!`);
+                    console.error(error.stack || error.message || error);
+                    return [];
+                }
+            });
         },
         context,
         data(...path) {
@@ -462,7 +449,6 @@ const index = (function () {
         },
         init() {
             core.session = {
-                command: {},
                 data: {},
                 event: {},
                 export: [],
@@ -545,227 +531,223 @@ const index = (function () {
                     return core.task.timeout(typeof handler === 'string' ? () => core.util.eval(handler) : handler, Math.ceil(timeout / 50), ...argumentz);
                 }
             });
-            if (core.toggles.js !== false) {
-                core.command({
-                    name: 'js',
-                    permission: 'grakkit.command.js',
-                    error: '\xa7cYou lack the permission \xa74(grakkit.command.js) \xa7cto use that command!',
-                    execute: (player, ...args) => {
-                        const self = globalThis.hasOwnProperty('self');
-                        try {
-                            self || (globalThis.self = player);
-                            const result = core.util.eval(args.join(' '));
-                            self || delete globalThis.self;
-                            if (toString.apply(result) === '[foreign HostFunction]') {
-                                let input = args.slice(-1)[0].split('.').slice(-1)[0];
-                                input.endsWith(']') && (input = eval(input.replace(/.*\[/, '').slice(0, -1)));
-                                player.sendMessage(`\xa77hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
-                            }
-                            else {
-                                player.sendMessage(`\xa77${core.format.output(result)}`);
-                            }
+            core.command({
+                name: 'js',
+                permission: 'grakkit.command.js',
+                error: '\xa7cYou lack the permission \xa74(grakkit.command.js) \xa7cto use that command!',
+                execute: (player, ...args) => {
+                    const self = globalThis.hasOwnProperty('self');
+                    try {
+                        self || (globalThis.self = player);
+                        const result = core.util.eval(args.join(' '));
+                        self || delete globalThis.self;
+                        if (toString.apply(result) === '[foreign HostFunction]') {
+                            let input = args.slice(-1)[0].split('.').slice(-1)[0];
+                            input.endsWith(']') && (input = eval(input.replace(/.*\[/, '').slice(0, -1)));
+                            player.sendMessage(`\xa77hostFunction ${input.split(/[|;]/g)[0]}() { [native code] }`);
                         }
-                        catch (error) {
-                            self || delete globalThis.self;
-                            player.sendMessage(`\xa7c${core.format.error(error)}`);
-                        }
-                    },
-                    tabComplete: (player, ...args) => {
-                        let body = '';
-                        let index = -1;
-                        let scope = globalThis;
-                        let valid = true;
-                        let string = false;
-                        let bracket = false;
-                        let comment = false;
-                        let property = '';
-                        const input = args.join(' ');
-                        while (valid && ++index < input.length) {
-                            const char = input[index];
-                            if (comment) {
-                                if (char === '*' && input[index + 1] === '/') {
-                                    if (property) {
-                                        input[index + 2] === ';' && (comment = false);
-                                    }
-                                    else {
-                                        body = input.slice(0, index + 2);
-                                        comment = false;
-                                    }
-                                }
-                            }
-                            else if (string) {
-                                if (char === '\\') {
-                                    ++index;
-                                }
-                                else if (char === string) {
-                                    scope = {};
-                                    string = false;
-                                }
-                            }
-                            else if (bracket === true) {
-                                ["'", '"', '`'].includes(char) ? (bracket = char) : (valid = false);
-                            }
-                            else if (typeof bracket === 'string') {
-                                switch (char) {
-                                    case '\\':
-                                        ++index;
-                                        break;
-                                    case bracket:
-                                        bracket = -1;
-                                        break;
-                                    default:
-                                        property += char;
-                                }
-                            }
-                            else {
-                                switch (char) {
-                                    case '/':
-                                        switch (input[index + 1]) {
-                                            case '/':
-                                                valid = false;
-                                                break;
-                                            case '*':
-                                                comment = true;
-                                                break;
-                                        }
-                                        break;
-                                    case "'":
-                                    case '"':
-                                    case '`':
-                                        bracket === -1 ? (valid = false) : (string = char);
-                                        break;
-                                    case ')':
-                                    case '{':
-                                    case '}':
-                                        bracket || (scope = {});
-                                        break;
-                                    case '.':
-                                    case '[':
-                                        if (!bracket) {
-                                            if (char === '.' || property) {
-                                                body = input.slice(0, index + 1);
-                                                if (scope === globalThis && property === 'self' && !scope.hasOwnProperty('self')) {
-                                                    scope = player;
-                                                }
-                                                else {
-                                                    scope = scope[property] || {};
-                                                }
-                                                char === '.' || (bracket = true);
-                                                property = '';
-                                            }
-                                            else {
-                                                body = input.slice(0, index + 1);
-                                                scope = globalThis;
-                                            }
-                                        }
-                                        break;
-                                    case ']':
-                                        bracket === -1 && (bracket = false);
-                                        break;
-                                    case '\\':
-                                        typeof bracket === 'string' ? ++index : (valid = false);
-                                        break;
-                                    case ' ':
-                                        property ? (valid = false) : (body = '');
-                                        break;
-                                    default:
-                                        if (char.match(/\+-\*\/\^=!&\|\?:\(,;/g)) {
-                                            if (!bracket) {
-                                                body = input.slice(0, index + 1);
-                                                scope = globalThis;
-                                                property = '';
-                                            }
-                                        }
-                                        else {
-                                            property += char;
-                                        }
-                                }
-                            }
-                        }
-                        if (valid && scope && !(comment || string)) {
-                            const properties = Object.getOwnPropertyNames(scope);
-                            scope === globalThis && !properties.includes('self') && properties.push('self');
-                            return core.util
-                                .filter(property, properties)
-                                .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
-                                .map((name) => {
-                                if (bracket) {
-                                    return `${body}\`${name.replace(/`/g, '\\`').split('\\').join('\\\\')}\`]`;
-                                }
-                                else {
-                                    return `${body}${name}`;
-                                }
-                            });
+                        else {
+                            player.sendMessage(`\xa77${core.format.output(result)}`);
                         }
                     }
-                });
-            }
-            if (core.toggles.module !== false) {
-                core.command({
-                    name: 'module',
-                    permission: 'grakkit.command.module',
-                    error: '\xa7cYou lack the permission \xa74(grakkit.command.module) \xa7cto use that command!',
-                    execute: (player, option, key, version) => {
-                        if (option) {
-                            option = option.toLowerCase();
-                            switch (option) {
-                                case 'list':
-                                    const keys = Object.keys(core.module.modules);
-                                    player.sendMessage(`\xa77Installed modules: ${core.format.output(keys)}`);
+                    catch (error) {
+                        self || delete globalThis.self;
+                        player.sendMessage(`\xa7c${core.format.error(error)}`);
+                    }
+                },
+                tabComplete: (player, ...args) => {
+                    let body = '';
+                    let index = -1;
+                    let scope = globalThis;
+                    let valid = true;
+                    let string = false;
+                    let bracket = false;
+                    let comment = false;
+                    let property = '';
+                    const input = args.join(' ');
+                    while (valid && ++index < input.length) {
+                        const char = input[index];
+                        if (comment) {
+                            if (char === '*' && input[index + 1] === '/') {
+                                if (property) {
+                                    input[index + 2] === ';' && (comment = false);
+                                }
+                                else {
+                                    body = input.slice(0, index + 2);
+                                    comment = false;
+                                }
+                            }
+                        }
+                        else if (string) {
+                            if (char === '\\') {
+                                ++index;
+                            }
+                            else if (char === string) {
+                                scope = {};
+                                string = false;
+                            }
+                        }
+                        else if (bracket === true) {
+                            ["'", '"', '`'].includes(char) ? (bracket = char) : (valid = false);
+                        }
+                        else if (typeof bracket === 'string') {
+                            switch (char) {
+                                case '\\':
+                                    ++index;
                                     break;
-                                case 'add':
-                                case 'change':
-                                case 'create':
-                                case 'remove':
-                                case 'update':
-                                    switch (key) {
-                                        case '':
-                                        case void 0:
-                                            player.sendMessage('\xa7cYou must specify a repository!');
-                                            break;
-                                        case '*':
-                                            switch (option) {
-                                                case 'add':
-                                                    player.sendMessage('\xa77One sec, just gotta download the entire GitHub database...');
-                                                    break;
-                                                case 'change':
-                                                    player.sendMessage('\xa77Not every module uses the same release tags, dipshit.');
-                                                    break;
-                                                case 'create':
-                                                    player.sendMessage("\xa77So you're saying there's a finite number of possible names?");
-                                                    break;
-                                                default:
-                                                    for (const key in core.module.modules)
-                                                        core.module.action(player, option, key);
-                                            }
-                                            break;
-                                        default:
-                                            core.module.action(player, option, key, version);
-                                    }
+                                case bracket:
+                                    bracket = -1;
                                     break;
                                 default:
-                                    player.sendMessage('\xa7cThat option is invalid!');
+                                    property += char;
                             }
                         }
                         else {
-                            player.sendMessage('\xa7cYou must specify an option!');
-                        }
-                    },
-                    tabComplete: (player, ...args) => {
-                        switch (args.length) {
-                            case 1:
-                                return core.util.filter(args[0], ['add', 'change', 'create', 'list', 'remove', 'update']);
-                            case 2:
-                                switch (args[0]) {
-                                    case 'change':
-                                    case 'remove':
-                                    case 'update':
-                                        return ['*', ...core.util.filter(args[1], Object.keys(core.module.modules))];
-                                }
+                            switch (char) {
+                                case '/':
+                                    switch (input[index + 1]) {
+                                        case '/':
+                                            valid = false;
+                                            break;
+                                        case '*':
+                                            comment = true;
+                                            break;
+                                    }
+                                    break;
+                                case "'":
+                                case '"':
+                                case '`':
+                                    bracket === -1 ? (valid = false) : (string = char);
+                                    break;
+                                case ')':
+                                case '{':
+                                case '}':
+                                    bracket || (scope = {});
+                                    break;
+                                case '.':
+                                case '[':
+                                    if (!bracket) {
+                                        if (char === '.' || property) {
+                                            body = input.slice(0, index + 1);
+                                            if (scope === globalThis && property === 'self' && !scope.hasOwnProperty('self')) {
+                                                scope = player;
+                                            }
+                                            else {
+                                                scope = scope[property] || {};
+                                            }
+                                            char === '.' || (bracket = true);
+                                            property = '';
+                                        }
+                                        else {
+                                            body = input.slice(0, index + 1);
+                                            scope = globalThis;
+                                        }
+                                    }
+                                    break;
+                                case ']':
+                                    bracket === -1 && (bracket = false);
+                                    break;
+                                case '\\':
+                                    typeof bracket === 'string' ? ++index : (valid = false);
+                                    break;
+                                case ' ':
+                                    property ? (valid = false) : (body = '');
+                                    break;
+                                default:
+                                    if (char.match(/\+-\*\/\^=!&\|\?:\(,;/g)) {
+                                        if (!bracket) {
+                                            body = input.slice(0, index + 1);
+                                            scope = globalThis;
+                                            property = '';
+                                        }
+                                    }
+                                    else {
+                                        property += char;
+                                    }
+                            }
                         }
                     }
-                });
-            }
+                    if (valid && scope && !(comment || string)) {
+                        const properties = Object.getOwnPropertyNames(scope);
+                        scope === globalThis && !properties.includes('self') && properties.push('self');
+                        return core.util
+                            .filter(property, properties)
+                            .filter((name) => bracket || name === (name.match(/[_A-Z$][_0-9A-Z$]*/gi) || [])[0])
+                            .map((name) => {
+                            if (bracket) {
+                                return `${body}\`${name.replace(/`/g, '\\`').split('\\').join('\\\\')}\`]`;
+                            }
+                            else {
+                                return `${body}${name}`;
+                            }
+                        });
+                    }
+                }
+            });
+            core.command({
+                name: 'module',
+                permission: 'grakkit.command.module',
+                error: '\xa7cYou lack the permission \xa74(grakkit.command.module) \xa7cto use that command!',
+                execute: (player, option, key, version) => {
+                    if (option) {
+                        option = option.toLowerCase();
+                        switch (option) {
+                            case 'list':
+                                const keys = Object.keys(core.module.modules);
+                                player.sendMessage(`\xa77Installed modules: ${core.format.output(keys)}`);
+                                break;
+                            case 'add':
+                            case 'change':
+                            case 'create':
+                            case 'remove':
+                            case 'update':
+                                switch (key) {
+                                    case '':
+                                    case void 0:
+                                        player.sendMessage('\xa7cYou must specify a repository!');
+                                        break;
+                                    case '*':
+                                        switch (option) {
+                                            case 'add':
+                                                player.sendMessage('\xa77One sec, just gotta download the entire GitHub database...');
+                                                break;
+                                            case 'change':
+                                                player.sendMessage('\xa77Not every module uses the same release tags, dipshit.');
+                                                break;
+                                            case 'create':
+                                                player.sendMessage("\xa77So you're saying there's a finite number of possible names?");
+                                                break;
+                                            default:
+                                                for (const key in core.module.modules)
+                                                    core.module.action(player, option, key);
+                                        }
+                                        break;
+                                    default:
+                                        core.module.action(player, option, key, version);
+                                }
+                                break;
+                            default:
+                                player.sendMessage('\xa7cThat option is invalid!');
+                        }
+                    }
+                    else {
+                        player.sendMessage('\xa7cYou must specify an option!');
+                    }
+                },
+                tabComplete: (player, ...args) => {
+                    switch (args.length) {
+                        case 1:
+                            return core.util.filter(args[0], ['add', 'change', 'create', 'list', 'remove', 'update']);
+                        case 2:
+                            switch (args[0]) {
+                                case 'change':
+                                case 'remove':
+                                case 'update':
+                                    return ['*', ...core.util.filter(args[1], Object.keys(core.module.modules))];
+                            }
+                    }
+                }
+            });
             core.command({
                 name: 'grakkit',
                 permission: 'grakkit.command.grakkit',
@@ -774,45 +756,10 @@ const index = (function () {
                     if (action) {
                         action = action.toLowerCase();
                         switch (action) {
-                            case 'refresh':
-                                player.sendMessage('\xa77Refreshing...');
-                                core.refresh();
-                                player.sendMessage('\xa77Refresh Complete.');
-                                break;
-                            case 'toggle':
-                                if (target) {
-                                    target = target.toLowerCase();
-                                    switch (target) {
-                                        case 'dict':
-                                        case 'js':
-                                        case 'module':
-                                        case 'scripts':
-                                        case 'user':
-                                            core.toggles[target] = core.toggles[target] === false ? true : false;
-                                            const status = core.toggles[target] ? 'en' : 'dis';
-                                            player.sendMessage(`\xa77Toggle "${target}" has now been ${status}abled.`);
-                                            break;
-                                        default:
-                                            player.sendMessage('\xa7cThat toggle is invalid!');
-                                    }
-                                }
-                                else {
-                                    player.sendMessage('\xa7cYou must specify a toggle!');
-                                }
-                                break;
-                            case 'update':
-                                player.sendMessage('\xa77Updating...');
-                                try {
-                                    const process = Runtime.getRuntime().exec(`grakkit update core --root "${core.root.io.getAbsolutePath()}"`);
-                                    process.waitFor();
-                                    core.refresh(true);
-                                    core.root.file('index.js').execute();
-                                    player.sendMessage('\xa77Update Complete.');
-                                }
-                                catch (error) {
-                                    player.sendMessage('\xa7cUpdate Failed!');
-                                    throw error;
-                                }
+                            case 'reload':
+                                player.sendMessage('\xa77Reloading...');
+                                core.plugin.reload();
+                                player.sendMessage('\xa77Reload Complete.');
                                 break;
                             default:
                                 player.sendMessage('\xa7cThat action is invalid!');
@@ -825,31 +772,22 @@ const index = (function () {
                 tabComplete: (player, ...args) => {
                     switch (args.length) {
                         case 1:
-                            return core.util.filter(args[0], ['refresh', 'toggle', 'update']);
-                        case 2:
-                            switch (args[0]) {
-                                case 'toggle':
-                                    return core.util.filter(args[1], [
-                                        'dict',
-                                        'js',
-                                        'module',
-                                        'scripts',
-                                        'user'
-                                    ]);
-                            }
+                            return core.util.filter(args[0], ['reload']);
                     }
                 }
             });
             core.event('org.bukkit.event.server.PluginDisableEvent', (event) => {
-                event.getPlugin() === core.plugin && core.refresh(true);
+                if (event.getPlugin() === core.plugin) {
+                    HandlerList.unregisterAll(core.plugin);
+                    server.getScheduler().cancelTasks(core.plugin);
+                    for (const path in core.session.data) {
+                        const data = JSON.stringify(core.format.serialize(core.session.data[path], true));
+                        core.root.file('data', `${path}.json`).add().write(data);
+                    }
+                }
             });
-            core.module.dict();
-            if (core.toggles.user !== false) {
-                core.root.file('user.js').add().execute();
-            }
-            if (core.toggles.scripts !== false) {
-                core.root.file('scripts').dir().execute();
-            }
+            core.root.file('user.js').add().execute();
+            core.root.file('scripts').dir().execute();
         },
         manager,
         module: {
@@ -966,16 +904,14 @@ const index = (function () {
                 return core.data('../dependencies');
             },
             dict() {
-                if (core.toggles.dict !== false) {
-                    core.root.file('dict/imports.d.ts').add().write([
-                        'export interface imports {',
-                        ...Object.keys(core.module.modules).map((key) => {
-                            return `   '@${key}': typeof import('./../modules/${key}/index').Main;`;
-                        }),
-                        '   [x: string]: any;',
-                        '}'
-                    ].join('\n'));
-                }
+                core.root.file('dict/imports.d.ts').add().write([
+                    'export interface imports {',
+                    ...Object.keys(core.module.modules).map((key) => {
+                        return `   '@${key}': typeof import('./../modules/${key}/index').Main;`;
+                    }),
+                    '   [x: string]: any;',
+                    '}'
+                ].join('\n'));
             },
             download(key, version, dependency) {
                 let target;
@@ -1091,20 +1027,6 @@ const index = (function () {
             }
         },
         plugin,
-        refresh(disable) {
-            HandlerList.unregisterAll(core.plugin);
-            server.getScheduler().cancelTasks(core.plugin);
-            for (const key in core.session.command)
-                core.session.command[key].instance.unregister(core.registry);
-            for (const path in core.session.data) {
-                const data = JSON.stringify(core.format.serialize(core.session.data[path], true));
-                core.root.file('data', `${path}.json`).add().write(data);
-            }
-            for (const key in globalThis)
-                delete globalThis[key];
-            storage = {};
-            disable || core.init();
-        },
         registry,
         root,
         task: {
@@ -1129,14 +1051,12 @@ const index = (function () {
             }
         },
         session: (() => {
-            const command = {};
             const event = {};
             const __export__ = [];
             const scope = {};
             const stack = [];
             const task = [];
             return {
-                command,
                 data: {},
                 event,
                 export: __export__,
@@ -1151,9 +1071,6 @@ const index = (function () {
         })(),
         get storage() {
             return storage;
-        },
-        get toggles() {
-            return core.data('../toggles');
         },
         type,
         util: {
