@@ -35,9 +35,7 @@ const index = (function () {
     commandMap.setAccessible(true);
     const registry = commandMap.get(server);
     const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-    const remote = 'https://raw.githubusercontent.com/grakkit/grakkit/master';
     let storage = {};
-    let trusted = [];
     const file = (...path) => {
         const io = Paths.get(path[0], ...path.slice(1)).normalize().toFile();
         const thing = {
@@ -759,8 +757,6 @@ const index = (function () {
                                 return core.util.filter(args[0], ['add', 'change', 'create', 'list', 'remove', 'update']);
                             case 2:
                                 switch (args[0]) {
-                                    case 'add':
-                                        return core.util.filter(args[1], trusted);
                                     case 'change':
                                     case 'remove':
                                     case 'update':
@@ -791,7 +787,6 @@ const index = (function () {
                                         case 'js':
                                         case 'module':
                                         case 'scripts':
-                                        case 'trusted':
                                         case 'user':
                                             core.toggles[target] = core.toggles[target] === false ? true : false;
                                             const status = core.toggles[target] ? 'en' : 'dis';
@@ -839,7 +834,6 @@ const index = (function () {
                                         'js',
                                         'module',
                                         'scripts',
-                                        'trusted',
                                         'user'
                                     ]);
                             }
@@ -850,16 +844,6 @@ const index = (function () {
                 event.getPlugin() === core.plugin && core.refresh(true);
             });
             core.module.dict();
-            if (core.toggles.trusted !== false) {
-                try {
-                    console.log('Downloading trusted module list...');
-                    trusted = core.fetch(`${remote}/modules.json`).json();
-                }
-                catch (error) {
-                    console.error('An error occured while attempting to download the trusted module list!');
-                    console.error(error.stack || error.message || error);
-                }
-            }
             if (core.toggles.user !== false) {
                 core.root.file('user.js').add().execute();
             }
@@ -1119,7 +1103,6 @@ const index = (function () {
             for (const key in globalThis)
                 delete globalThis[key];
             storage = {};
-            trusted = [];
             disable || core.init();
         },
         registry,

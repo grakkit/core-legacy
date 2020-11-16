@@ -70,9 +70,7 @@ export const index = (function () {
    //@ts-expect-error
    const registry: obcCommandMap = commandMap.get(server);
    const base64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
-   const remote = 'https://raw.githubusercontent.com/grakkit/grakkit/master';
    let storage = {};
-   let trusted = [];
 
    const file = (...path: string[]) => {
       const io = Paths.get(path[0], ...path.slice(1)).normalize().toFile();
@@ -850,8 +848,6 @@ export const index = (function () {
                         return core.util.filter(args[0], [ 'add', 'change', 'create', 'list', 'remove', 'update' ]);
                      case 2:
                         switch (args[0]) {
-                           case 'add':
-                              return core.util.filter(args[1], trusted);
                            case 'change':
                            case 'remove':
                            case 'update':
@@ -882,7 +878,6 @@ export const index = (function () {
                               case 'js':
                               case 'module':
                               case 'scripts':
-                              case 'trusted':
                               case 'user':
                                  core.toggles[target] = core.toggles[target] === false ? true : false;
                                  const status = core.toggles[target] ? 'en' : 'dis';
@@ -934,7 +929,6 @@ export const index = (function () {
                               'js',
                               'module',
                               'scripts',
-                              'trusted',
                               'user'
                            ]);
                      }
@@ -945,15 +939,6 @@ export const index = (function () {
             event.getPlugin() === core.plugin && core.refresh(true);
          });
          core.module.dict();
-         if (core.toggles.trusted !== false) {
-            try {
-               console.log('Downloading trusted module list...');
-               trusted = core.fetch(`${remote}/modules.json`).json();
-            } catch (error) {
-               console.error('An error occured while attempting to download the trusted module list!');
-               console.error(error.stack || error.message || error);
-            }
-         }
          if (core.toggles.user !== false) {
             core.root.file('user.js').add().execute();
          }
@@ -1209,7 +1194,6 @@ export const index = (function () {
          }
          for (const key in globalThis) delete globalThis[key];
          storage = {};
-         trusted = [];
          disable || core.init();
       },
       /** The command map used to register custom commands. */
@@ -1289,7 +1273,7 @@ export const index = (function () {
       },
       /** A set of toggles used to control behavior in the initialization phase. */
       get toggles (): {
-         /** Toggle for dictionary file downloads. */
+         /** Toggle for dictionary file generation. */
          dict: boolean;
          /** Toggle for js command. */
          js: boolean;
@@ -1297,8 +1281,6 @@ export const index = (function () {
          module: boolean;
          /** Toggle for scripts folder evaluation. */
          scripts: boolean;
-         /** Toggle for trusted module list fetching. */
-         trusted: boolean;
          /** Toggle for user file creation. */
          user: boolean;
       } {
